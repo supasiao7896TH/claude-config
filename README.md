@@ -48,8 +48,22 @@ New-Item -ItemType Junction -Path "$env:USERPROFILE\.claude\agents" -Target "$en
 - vibe-coding-firebase
 - vibe-coding-workflow
 
-## รายการ Subagents (3 ตัว)
+## รายการ Subagents
 
-- sa-explore
-- sa-code-reviewer
-- sa-debugger
+| Subagent | บทบาท | สิทธิ์ |
+|---|---|---|
+| sa-explore | ค้นหา/สรุปโครงสร้างโค้ด ประหยัด context | Read-only |
+| sa-architect | ร่าง Architecture Blueprint ก่อนเขียนโค้ด (รออนุมัติก่อนเสมอ) | Read-only |
+| sa-code-reviewer | รีวิวโค้ดตาม Security Checklist ก่อน commit | Read-only |
+| sa-debugger | ไล่บั๊กด้วย Five Whys + แก้ไขจริง | Edit |
+| sa-handoff | สรุปสถานะงานข้ามเครื่องผ่าน HANDOFF.md | Write (เฉพาะ HANDOFF.md) |
+
+## Workflow แนะนำ
+
+1. sa-explore → สำรวจโค้ดที่เกี่ยวข้องก่อน
+2. sa-architect → ร่าง Blueprint แล้วรอ "อนุมัติ"
+3. Plan Mode (Opus) → วางแผนละเอียด
+4. Accept Edits (Sonnet) → ลงมือเขียนโค้ด
+5. sa-code-reviewer → รีวิวก่อน commit
+6. sa-debugger → ถ้าเจอ Critical issue
+7. sa-handoff → ก่อนปิดเครื่อง/สลับเครื่อง
