@@ -1,3 +1,6 @@
+<!-- โปรไฟล์ผู้ใช้งาน — โหลดทุก session เพื่อรู้จักพี่ A -->
+@USER.md
+
 # Global preferences (all projects)
 
 ## Communication style
