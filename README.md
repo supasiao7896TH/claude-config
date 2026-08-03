@@ -84,7 +84,7 @@ Copy-Item "$env:USERPROFILE\claude-config\CLAUDE.md" "$env:USERPROFILE\.claude\C
 
 ไฟล์นี้เก็บ preference ที่ apply กับทุก project เช่น communication style (ตอนนี้คือ 30% Thai / 70% English) — Claude Code จะ load ไฟล์นี้อัตโนมัติทุก session ไม่ว่าจะเปิด project ไหนก็ตาม
 
-## รายการ Skills (13 ตัว)
+## รายการ Skills (16 ตัว)
 
 - pta-exapilot-logic
 - pta-industry-insight
@@ -99,6 +99,31 @@ Copy-Item "$env:USERPROFILE\claude-config\CLAUDE.md" "$env:USERPROFILE\.claude\C
 - vibe-coding-core
 - vibe-coding-firebase
 - vibe-coding-workflow
+- domain-modeling
+- grilling
+- grill-with-docs
+
+### Engineering Skills เพิ่มเติม: domain-modeling / grilling / grill-with-docs
+
+เพิ่มเข้ามาเมื่อ 2026-08-03 ผ่าน `mattpocock/skills` (source: [`mattpocock/skills`](https://github.com/mattpocock/skills), ดู `skills-lock.json`) — เป็น skill ทั่วไป (ไม่เจาะจงโปรเจกต์ PTA) สำหรับงานออกแบบ/ตัดสินใจ:
+
+| Skill | ทำหน้าที่อะไร |
+|---|---|
+| `domain-modeling` | สร้าง/ลับคม domain model ของโปรเจกต์ — ทักท้วงเมื่อใช้คำศัพท์กำกวมหรือขัดแย้งกับที่นิยามไว้ก่อน แล้วบันทึกลง `CONTEXT.md` (glossary, หรือ `CONTEXT-MAP.md` ถ้ามีหลาย context) พร้อมช่วยเขียน ADR สั้นๆ ลง `docs/adr/` เมื่อเจอการตัดสินใจที่ reverse ยาก + surprising + มี trade-off จริง |
+| `grilling` | ซักถามอย่างเข้มข้น (interview) เพื่อ stress-test แผน/ไอเดีย/การตัดสินใจ — ถามทีละคำถามพร้อมข้อเสนอแนะ รอ feedback ก่อนถามข้อถัดไป ไม่ลงมือทำจนกว่าจะเข้าใจตรงกันครบทุกแขนงของ decision tree |
+| `grill-with-docs` | ผสม `grilling` + `domain-modeling` — ซักถามพร้อมบันทึกผลเป็น ADR/glossary ไปด้วยระหว่างคุย (`disable-model-invocation: true` — ต้องพิมพ์ `/grill-with-docs` เรียกตรงๆ เท่านั้น ไม่ auto-trigger) |
+
+**วิธีเรียกใช้ใน Claude Code (รวมถึง VS Code extension)**
+
+VS Code extension เป็น UI wrapper ของ engine เดียวกับ terminal ดังนั้นเรียกใช้เหมือนกันทุกประการ:
+
+1. เปิด Claude Code panel ใน VS Code (sidebar icon หรือ `Ctrl+Esc`)
+2. พิมพ์ `/` ในช่อง prompt จะเห็น autocomplete list ของ skills ที่มี (personal-scope ใช้ได้ทุกโปรเจกต์บนเครื่องนี้ผ่าน junction)
+3. เลือก/พิมพ์ต่อ เช่น `/grilling หัวข้อที่อยากซัก` แล้ว Enter
+   - `/domain-modeling` และ `/grilling` เรียกตรงๆ ได้ หรือปล่อยให้ Claude auto-trigger เองถ้าบทสนทนาเข้าเงื่อนไข (เช่น พูดคำว่า "grill" หรือกำลังนิยามศัพท์ในโดเมน)
+   - `/grill-with-docs` ต้องพิมพ์เรียกตรงๆ เท่านั้น
+
+> หมายเหตุ: session ที่เปิดค้างไว้ตั้งแต่ก่อน `git pull` อัปเดต skill ใหม่ อาจยังไม่เห็นใน list — ต้องเปิด session ใหม่ในโปรเจกต์นั้นถึงจะ refresh
 
 ## รายการ Subagents
 
