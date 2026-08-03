@@ -74,6 +74,16 @@ Copy-Item "$env:USERPROFILE\claude-config\statusline.ps1" "$env:USERPROFILE\.cla
 '{"model":{"display_name":"Test"},"workspace":{"current_dir":"C:\\test"},"cost":{"total_cost_usd":0.1,"total_duration_ms":60000},"context_window":{"used_percentage":10}}' | powershell -NoProfile -File "$env:USERPROFILE\.claude\statusline.ps1"
 ```
 
+### วิธีติดตั้ง CLAUDE.md (Global preferences)
+
+`CLAUDE.md` เป็นไฟล์เดี่ยวเหมือน `statusline.ps1` — ใช้วิธี **copy** เช่นกัน (ไม่ auto-sync):
+
+```powershell
+Copy-Item "$env:USERPROFILE\claude-config\CLAUDE.md" "$env:USERPROFILE\.claude\CLAUDE.md" -Force
+```
+
+ไฟล์นี้เก็บ preference ที่ apply กับทุก project เช่น communication style (ตอนนี้คือ 30% Thai / 70% English) — Claude Code จะ load ไฟล์นี้อัตโนมัติทุก session ไม่ว่าจะเปิด project ไหนก็ตาม
+
 ## รายการ Skills (13 ตัว)
 
 - pta-exapilot-logic
