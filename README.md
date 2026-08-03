@@ -137,6 +137,8 @@ VS Code extension เป็น UI wrapper ของ engine เดียวกั
 
 > **หมายเหตุสำคัญ:** plugin ที่ติดตั้งแบบ user scope นี้ **ไม่ sync ผ่าน git** (ต่างจาก skills/agents ในโฟลเดอร์นี้ที่ sync อัตโนมัติผ่าน Junction) — ต้องรันคำสั่งชุดข้างต้นซ้ำใหม่ทุกเครื่องที่ต้องการใช้งาน
 
+> **Root cause ที่เจอจริง (`example-skills`):** หลัง `/plugin install` แล้ว plugin บางตัวอาจอยู่ในสถานะ **"disabled"** โดยอัตโนมัติ — ไม่ปรากฏใน `/skills` แม้ `/reload-plugins` แล้วก็ตาม ต้องเข้า `/plugin` → `Installed` ค้นหาชื่อ plugin แล้วกด **Space** เพื่อ toggle เป็น enabled ด้วยตนเอง จากนั้นรัน `/reload-plugins` อีกครั้งถึงจะเห็น skills จริงใน `/skills` (ต่างจาก `document-skills` ที่ enabled อัตโนมัติหลังติดตั้ง)
+
 ## รายการ Subagents
 
 | Subagent | บทบาท | สิทธิ์ |
