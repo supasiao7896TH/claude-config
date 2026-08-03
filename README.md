@@ -125,6 +125,18 @@ VS Code extension เป็น UI wrapper ของ engine เดียวกั
 
 > หมายเหตุ: session ที่เปิดค้างไว้ตั้งแต่ก่อน `git pull` อัปเดต skill ใหม่ อาจยังไม่เห็นใน list — ต้องเปิด session ใหม่ในโปรเจกต์นั้นถึงจะ refresh
 
+## Official Plugin Skills
+
+นอกจาก skills ส่วนตัวในโฟลเดอร์ `skills/` ของ repo นี้ ยังติดตั้ง official plugin skills จาก Anthropic เพิ่มเติมแบบ **user scope** (ใช้ได้ทุกโปรเจกต์บนเครื่องนี้) ผ่านคำสั่ง:
+
+```
+/plugin marketplace add anthropics/skills
+/plugin install document-skills@anthropic-agent-skills
+/plugin install example-skills@anthropic-agent-skills
+```
+
+> **หมายเหตุสำคัญ:** plugin ที่ติดตั้งแบบ user scope นี้ **ไม่ sync ผ่าน git** (ต่างจาก skills/agents ในโฟลเดอร์นี้ที่ sync อัตโนมัติผ่าน Junction) — ต้องรันคำสั่งชุดข้างต้นซ้ำใหม่ทุกเครื่องที่ต้องการใช้งาน
+
 ## รายการ Subagents
 
 | Subagent | บทบาท | สิทธิ์ |
