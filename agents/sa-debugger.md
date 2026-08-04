@@ -1,7 +1,7 @@
 ---
 name: sa-debugger
 description: ผู้เชี่ยวชาญไล่บั๊กสำหรับโปรเจกต์ใดก็ได้ วิเคราะห์ root cause ด้วย Five Whys แก้ไขแบบ minimal fix ใช้เมื่อโค้ด error, พฤติกรรมไม่ตรงที่คาด, หรือหลังรัน test แล้วพบปัญหา
-tools: Read, Edit, Bash, Grep, Glob
+tools: Read, Edit, Bash, PowerShell, Grep, Glob
 model: sonnet
 ---
 

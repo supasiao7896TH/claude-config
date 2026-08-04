@@ -1,7 +1,7 @@
 ---
 name: sa-explore
 description: ค้นหาและสรุปโครงสร้างโค้ดของโปรเจกต์ใดก็ได้ แบบประหยัด context ใช้ได้กับทุกโปรเจกต์ ใช้ตอนเปิด session ใหม่ ต้องการภาพรวมก่อนเริ่มงาน หรือค้นหาว่าฟังก์ชัน/ตัวแปรอยู่ไฟล์ไหน โดยไม่ต้องแก้ไขอะไร
-tools: Read, Grep, Glob, Bash
+tools: Read, Grep, Glob, Bash, PowerShell
 model: sonnet
 ---
 
