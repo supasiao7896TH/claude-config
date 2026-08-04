@@ -141,6 +141,27 @@ VS Code extension เป็น UI wrapper ของ engine เดียวกั
 
 > **Root cause ที่เจอจริง (`example-skills`):** หลัง `/plugin install` แล้ว plugin บางตัวอาจอยู่ในสถานะ **"disabled"** โดยอัตโนมัติ — ไม่ปรากฏใน `/skills` แม้ `/reload-plugins` แล้วก็ตาม ต้องเข้า `/plugin` → `Installed` ค้นหาชื่อ plugin แล้วกด **Space** เพื่อ toggle เป็น enabled ด้วยตนเอง จากนั้นรัน `/reload-plugins` อีกครั้งถึงจะเห็น skills จริงใน `/skills` (ต่างจาก `document-skills` ที่ enabled อัตโนมัติหลังติดตั้ง)
 
+### รายละเอียด `example-skills` (12 skills) — ประโยชน์และวิธีเรียกใช้
+
+`example-skills` เป็นชุด reference skill ที่ Anthropic ทำไว้โชว์แนวทาง (best practice) การสร้างโปรดักต์ต่างๆ ผ่าน Claude ส่วนใหญ่ **auto-trigger เองได้** ถ้าคำขอเข้าเงื่อนไข ไม่ต้องพิมพ์ชื่อ skill ตรงๆ — ถ้าอยากบังคับเรียกตรงๆ พิมพ์ `/example-skills:ชื่อ-skill` ได้เลย
+
+| Skill | ประโยชน์ | วิธีเรียกใช้ (พิมพ์แบบนี้ก็ trigger เอง) |
+|---|---|---|
+| `algorithmic-art` | สร้างงานศิลปะจาก code (p5.js) แบบ generative/flow field/particle system — ใช้ seeded randomness ให้ปรับ parameter ได้ | "สร้าง generative art แบบ..." / "อยากได้ flow field art" |
+| `brand-guidelines` | ใส่สี/ฟอนต์ตาม official brand ของ Anthropic ลงในงานที่ทำ (เช่น slide, artifact) | "ทำตาม Anthropic brand guideline" |
+| `canvas-design` | สร้างภาพ poster/ดีไซน์นิ่ง (.png/.pdf) แบบมีหลักการออกแบบ ไม่ใช่แค่ AI-generate มั่วๆ | "ทำโปสเตอร์ให้หน่อย" / "ออกแบบภาพนี้" |
+| `doc-coauthoring` | ช่วยเขียนเอกสารแบบ structured (proposal, spec, decision doc) เป็นขั้นตอน วนซักถามจนเนื้อหาแน่นก่อนส่งจริง | "ช่วยร่าง proposal/spec เรื่อง..." |
+| `frontend-design` | ช่วยออกแบบ UI ให้มีทิศทางสวยงามเฉพาะตัว ไม่ให้หน้าตา "เทมเพลตทั่วไป" | "ออกแบบ UI ให้ดูมีเอกลักษณ์" |
+| `internal-comms` | เขียนเอกสารสื่อสารภายในองค์กร (status report, leadership update, incident report, FAQ) ตาม format ที่บริษัทนิยม | "เขียน status report ส่งหัวหน้า" |
+| `mcp-builder` | คู่มือสร้าง MCP server คุณภาพดี (Python FastMCP / Node TS) เชื่อม API ภายนอกเข้ากับ Claude | "อยากสร้าง MCP server เชื่อม API..." |
+| `skill-creator` | สร้าง/แก้/ทดสอบ skill ใหม่ + วัดประสิทธิภาพ (eval) | "สร้าง skill ใหม่ให้หน่อย" / "ปรับปรุง SKILL.md นี้" |
+| `slack-gif-creator` | สร้าง GIF เคลื่อนไหวที่ optimize สำหรับโพสต์ใน Slack | "ทำ GIF สำหรับ Slack" |
+| `theme-factory` | ใส่ธีมสำเร็จรูป (10 แบบ) ให้ artifact/slide/doc/HTML landing page | "เปลี่ยนธีมของ artifact นี้" |
+| `web-artifacts-builder` | สร้าง artifact HTML ซับซ้อน (React + Tailwind + shadcn/ui) ที่มี state/routing — เหมาะกับ artifact ใหญ่ ไม่ใช่ single-file ง่ายๆ | "สร้าง dashboard/app ที่ซับซ้อนใน artifact" |
+| `webapp-testing` | ทดสอบเว็บแอป local ด้วย Playwright — คลิก/screenshot/ดู console log อัตโนมัติ | "ช่วยทดสอบเว็บแอปนี้หน่อย" |
+
+> ถ้าเรียกแล้วไม่ trigger ให้ตรวจว่า plugin ยัง enabled อยู่ผ่าน `/plugin` → `Installed` (ดู root cause ด้านบน)
+
 ## รายการ Subagents
 
 | Subagent | บทบาท | สิทธิ์ |
