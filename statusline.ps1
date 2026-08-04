@@ -24,7 +24,7 @@ $line1 = "$CYAN[$model]$RESET $FOLDER $dirName"
 if ($branch) { $line1 += " | $BRANCH_ICON $branch" }
 Write-Host $line1
 
-# Line 2: color-coded context bar + pct + cost + duration
+# Line 2: color-coded context bar + pct + token count + cost + duration
 $ctxPctRaw = $inputJson.context_window.used_percentage
 if ($null -eq $ctxPctRaw) { $ctxPctRaw = 0 }
 $pct = [int][math]::Floor([double]$ctxPctRaw)
@@ -38,6 +38,23 @@ if ($pct -ge 90) { $barColor = $RED }
 elseif ($pct -ge 70) { $barColor = $YELLOW }
 else { $barColor = $GREEN }
 
+function Format-TokenShort {
+    param([double]$Tokens)
+    if ($Tokens -ge 1000) {
+        $k = $Tokens / 1000
+        if ($k -eq [math]::Floor($k)) { return ("{0}k" -f [int]$k) }
+        return ("{0:F1}k" -f $k)
+    }
+    return [string][int]$Tokens
+}
+
+$usedTokensRaw = $inputJson.context_window.total_input_tokens
+if ($null -eq $usedTokensRaw) { $usedTokensRaw = 0 }
+$limitTokensRaw = $inputJson.context_window.context_window_size
+if ($null -eq $limitTokensRaw) { $limitTokensRaw = 0 }
+$usedFmt = Format-TokenShort -Tokens ([double]$usedTokensRaw)
+$limitFmt = Format-TokenShort -Tokens ([double]$limitTokensRaw)
+
 $cost = $inputJson.cost.total_cost_usd
 if ($null -eq $cost) { $cost = 0 }
 $costFmt = '$' + ("{0:F2}" -f [double]$cost)
@@ -48,7 +65,7 @@ $totalSec = [math]::Floor([double]$durationMs / 1000)
 $mins = [math]::Floor($totalSec / 60)
 $secs = $totalSec % 60
 
-$line2 = "$barColor$bar$RESET ${pct}% | $YELLOW$costFmt$RESET | $CLOCK ${mins}m ${secs}s"
+$line2 = "$barColor$bar$RESET ${pct}% (${usedFmt}/${limitFmt}) | $YELLOW$costFmt$RESET | $CLOCK ${mins}m ${secs}s"
 Write-Host $line2
 
 function Format-LimitBar {

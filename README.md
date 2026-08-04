@@ -73,7 +73,13 @@ Copy-Item "$env:USERPROFILE\claude-config\statusline.ps1" "$env:USERPROFILE\.cla
 ทดสอบว่า script ทำงานถูกต้องก่อนใช้จริง:
 
 ```powershell
-'{"model":{"display_name":"Test"},"workspace":{"current_dir":"C:\\test"},"cost":{"total_cost_usd":0.1,"total_duration_ms":60000},"context_window":{"used_percentage":10}}' | powershell -NoProfile -File "$env:USERPROFILE\.claude\statusline.ps1"
+'{"model":{"display_name":"Test"},"workspace":{"current_dir":"C:\\test"},"cost":{"total_cost_usd":0.1,"total_duration_ms":60000},"context_window":{"used_percentage":10,"total_input_tokens":20000,"context_window_size":200000}}' | powershell -NoProfile -File "$env:USERPROFILE\.claude\statusline.ps1"
+```
+
+**บรรทัดที่ 2** โชว์ context bar สีไล่ตามระดับใช้งาน (เขียว/เหลือง/แดง) พร้อม `%` และจำนวน token ที่ใช้จริงเทียบกับ limit แบบย่อ `k` (มาจาก `context_window.total_input_tokens` / `context_window.context_window_size` — field เดียวกับที่ใช้คำนวณ `%` อยู่แล้ว จึงตรงกันเป๊ะ):
+
+```
+████░░░░░░ 45% (92.3k/200k) | $1.23 | ⏱ 12m 34s
 ```
 
 ### วิธีติดตั้ง CLAUDE.md (Global preferences)
