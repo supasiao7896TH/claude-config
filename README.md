@@ -5,6 +5,8 @@ Master repo สำหรับ Skills และ Subagents ส่วนตัว�
 
 Single source of truth สำหรับ Claude Code Skills และ Subagents ของ Supasit.A — รวมจาก CLAUDE-Docc-For-Code เมื่อ 2026-07-31
 
+> **Last sync:** 2026-08-04 — pull ที่เครื่องที่ทำงาน (agents 6 ไฟล์ / skills 16 โฟลเดอร์)
+
 ## โครงสร้าง
 
 ```
