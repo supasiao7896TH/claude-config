@@ -18,10 +18,36 @@ description: >
 
 | | |
 |---|---|
-| **Version** | 1.0 |
+| **Version** | 1.1 |
 | **Updated** | 2026-08 |
 | **Brand** | A-Class WebCraft · Code • Share • Inspire · by Supasit.A |
 | **แยกออกมาจาก** | `vibe-coding-firebase` §20 (เดิมฝังอยู่ผิดที่ใต้ skill ชื่อ Firebase ทั้งที่ไม่เกี่ยว Firebase) |
+
+---
+
+## ตัวอย่างประโยคสั่งงาน (copy ไปใช้ได้เลย)
+
+> เก็บไว้กันลืม — พี่ A พิมพ์ประมาณนี้ตอนเริ่มโปรเจกต์ใหม่ได้เลย ไม่ต้องจำ syntax หรือชื่อ skill
+
+**กรณี Local-First ธรรมดา ไม่มี real-time (เหมือน PM-500 Runtime Tracker):**
+```
+ช่วยสร้างเว็บแอปใหม่ให้หน่อยครับ เป็น Local-First (ไม่ต้อง real-time/หลาย user)
+แต่ต้องการ deploy ขึ้น Cloudflare Workers ให้ได้ URL เดียวไปแปะในหน้า Excel
+ให้คนอื่นเปิดใช้งานได้ ตั้ง auto-deploy ผ่าน GitHub Actions + wrangler ด้วย
+```
+
+**กรณีต้องการ real-time หลาย user sync ข้อมูลกันสด (ผสาน `vibe-coding-firebase`):**
+```
+ช่วยสร้างเว็บแอปใหม่ให้หน่อยครับ ต้องการให้หลาย user เปิดพร้อมกันแล้วเห็นข้อมูล
+sync กันแบบ real-time (ใช้ Firebase Firestore) และ deploy frontend ขึ้น
+Cloudflare Workers ให้ได้ URL ไปแชร์ทีมได้เลย
+```
+
+**กรณีโปรเจกต์เดิมมีอยู่แล้ว แค่ยังไม่มี auto-deploy (แก้ปัญหาแบบ PM-500 เจอ):**
+```
+ช่วยตั้ง auto-deploy ให้โปรเจกต์นี้หน่อยครับ ตอนนี้ deploy Cloudflare Workers
+แบบ manual upload อยู่ อยากให้ push ขึ้น GitHub แล้ว deploy เองอัตโนมัติ
+```
 
 ---
 
@@ -157,6 +183,6 @@ jobs:
 
 ---
 
-*SKILL: cloudflare-workers-deploy v1.0*
+*SKILL: cloudflare-workers-deploy v1.1*
 *Supasit.A × A-Class WebCraft | Code • Share • Inspire*
 *Updated: August 2026 (พ.ศ. 2569)*
