@@ -16,7 +16,7 @@ description: >
 
 | | |
 |---|---|
-| **Version** | 6.1 |
+| **Version** | 6.2 |
 | **Updated** | 2026-08 |
 | **Brand** | A-Class WebCraft · Code • Share • Inspire · by Supasit.A |
 | **Sections in this file** | §20 |
@@ -37,8 +37,8 @@ description: >
 | Database | **Firebase Firestore** (real-time `onSnapshot`) | Sync ทุก client อัตโนมัติ |
 | Auth | **Firebase Anonymous Auth + `inMemoryPersistence`** | ⚠️ ห้ามใช้ default — LINE/FB WebView บล็อก IndexedDB |
 | Push Notification | **Firebase Cloud Messaging (FCM)** + Cloud Functions v2 | ส่ง notification ข้าม device |
-| Hosting | GitHub Pages *หรือ* Cloudflare Workers (static assets) | ดู §20 GitHub Actions Deploy Flow / Cloudflare Workers Deploy Flow |
-| CI/CD | **GitHub Actions** | deploy Pages + Functions (หรือ Cloudflare Workers) อัตโนมัติเมื่อ push to `main` |
+| Hosting | GitHub Pages *หรือ* Cloudflare Workers (static assets) | Cloudflare Workers deploy flow แยกไปอยู่ skill `cloudflare-workers-deploy` แล้ว (ใช้ได้แม้ไม่มี Firebase) |
+| CI/CD | **GitHub Actions** | deploy Pages + Functions อัตโนมัติเมื่อ push to `main` (ดู "GitHub Actions Deploy Flow" ด้านล่าง) |
 | PWA | Service Worker (`sw.js`) + `manifest.json` | เหมือนเดิม |
 
 ### กฎบังคับ (ห้ามข้าม)
@@ -213,80 +213,9 @@ Setup ครั้งเดียวต่อโปรเจกต์ (นอก
      แคบกว่า FIREBASE_TOKEN เดิมมาก แต่ยังต้อง manage key file เอง
 ```
 
-### Cloudflare Workers Deploy Flow (ทางเลือกแทน GitHub Pages)
-
-> **WHY:** ใช้ทางเลือกนี้เมื่อ hosting เป็น Cloudflare Workers (static assets) แทน GitHub Pages
-> — เจอเคสจริงที่โปรเจกต์ตั้งค่า Worker ผูกกับ GitHub repo ไว้ใน Cloudflare dashboard แล้ว
-> แต่ deploy ยังเป็นแบบ **"Manually deployed"** (ต้องกด "New deployment" → อัปโหลดไฟล์เอง
-> ทุกครั้ง) ทำให้ push ขึ้น `main` ไม่ทำให้ production อัปเดตจริง — โค้ด fix ที่ push ไปแล้ว
-> ค้างอยู่ ไม่ได้ใช้งานจริงจนกว่าจะจำได้ว่าต้องมา deploy manual ซ้ำ (PM-500 Runtime Tracker
-> เจอเคสนี้ตรงๆ เมื่อ 2569-08-06 — บั๊กที่ "แก้แล้วในโค้ดแต่ยังไม่หาย" กลายเป็นปัญหา
-> deploy ไม่ใช่ปัญหาโค้ด) วิธีข้างล่างนี้ทำให้ push = deploy จริง ไม่ต้องพึ่งความจำอีก
->
-> **ข้อดีสำคัญ:** ทั้ง `wrangler deploy` และ Node.js รันบน GitHub-hosted runner (cloud)
-> ทั้งหมด — เครื่อง PC ของผู้ใช้ (บ้าน/ที่ทำงาน) **ไม่ต้องติดตั้ง Node.js เลย** เหมาะกับ
-> เครื่องที่ฝ่าย IT บล็อกการติดตั้งซอฟต์แวร์เพิ่มด้วย
-
-`wrangler.jsonc` (วางไว้ที่ root repo, commit เข้า git ปกติ — ไม่ใช่ความลับ):
-
-```jsonc
-{
-  "name": "ชื่อ-worker-ตรงกับใน-cloudflare-dashboard",
-  "account_id": "account-id-จาก-cloudflare-dashboard",  // ไม่ใช่ความลับ เห็นได้ใน URL ของ dashboard
-  "compatibility_date": "2026-08-06",
-  "assets": {
-    "directory": "./"          // path ไปยังโฟลเดอร์ที่มี index.html — ปกติคือ root
-  },
-  "observability": {
-    "enabled": false,
-    "head_sampling_rate": 1,
-    "logs": {
-      "enabled": true,          // เปิด Workers Logs ให้ค่านี้ "เป็นโค้ด" จะได้ไม่หายตอน deploy รอบหน้า
-      "head_sampling_rate": 1,
-      "persist": true,
-      "invocation_logs": true
-    },
-    "traces": { "enabled": false, "persist": true, "head_sampling_rate": 1 }
-  }
-}
-```
-
-`.github/workflows/deploy.yml`:
-
-```yaml
-name: Deploy
-on:
-  push:
-    branches: [main]
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Deploy to Cloudflare Workers
-        uses: cloudflare/wrangler-action@v4
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-```
-
-```
-Setup ครั้งเดียวต่อโปรเจกต์ (นอก CI, ต้องทำเองเสมอ — ห้าม AI แตะ credential):
-  1. สร้าง Cloudflare API Token ที่ https://dash.cloudflare.com/profile/api-tokens
-     → "Create Token" → เลือก permission "Edit Cloudflare Workers" เท่านั้น
-     (scope แคบสุด ไม่ใช้ Global API Key) → จำกัดให้เหลือแค่ account ที่ต้องการ
-  2. เอา token ไปตั้งเป็น GitHub Secret ของ repo นี้:
-     Settings → Secrets and variables → Actions → New repository secret
-     → ชื่อ CLOUDFLARE_API_TOKEN
-  3. ยืนยันค่าใน wrangler.jsonc (name, account_id, compatibility_date) ให้ตรงกับที่
-     เห็นจริงในหน้า Cloudflare dashboard ของ Worker นั้นก่อน push ครั้งแรก
-```
-
-> **⚠️ อย่าลืม:** ถ้า Worker เดิมเคย deploy แบบ manual upload มาก่อน (ผ่านปุ่ม
-> "New deployment" → "file") ให้เช็ค observability settings (Workers Logs/Traces)
-> ในหน้า dashboard เทียบกับ `wrangler.jsonc` ก่อน push ครั้งแรกด้วย — ค่าที่เคยตั้งไว้ผ่าน
-> dashboard อย่างเดียว (ไม่ได้เขียนลง `wrangler.jsonc`) มีโอกาสถูก deploy ผ่าน CI ทับ/รีเซ็ต
-> กลับเป็นค่า default ได้
+> **หมายเหตุ:** ถ้า hosting เป็น **Cloudflare Workers** แทน GitHub Pages ให้ใช้ skill
+> แยกต่างหาก **`cloudflare-workers-deploy`** แทน section นี้ — ย้ายออกไปเมื่อ 2569-08
+> เพราะเนื้อหานั้นใช้ได้กับทุกเว็บแอป ไม่จำเป็นต้องมี Firebase/real-time เลย
 
 ### Decision Table — ใช้ Stack ไหน?
 
@@ -302,7 +231,7 @@ Setup ครั้งเดียวต่อโปรเจกต์ (นอก
 
 ---
 
-*SKILL: vibe-coding-firebase v6.1 | Section: §20*
+*SKILL: vibe-coding-firebase v6.2 | Section: §20*
 *Supasit.A × A-Class WebCraft | Code • Share • Inspire*
 *Related: vibe-coding-core (โหลดร่วมกันเสมอ)*
 *Updated: August 2026 (พ.ศ. 2569)*
