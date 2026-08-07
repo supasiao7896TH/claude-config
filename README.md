@@ -92,8 +92,10 @@ Copy-Item "$env:USERPROFILE\claude-config\CLAUDE.md" "$env:USERPROFILE\.claude\C
 
 ไฟล์นี้เก็บ preference ที่ apply กับทุก project เช่น communication style (ตอนนี้คือ 30% Thai / 70% English) — Claude Code จะ load ไฟล์นี้อัตโนมัติทุก session ไม่ว่าจะเปิด project ไหนก็ตาม
 
-## รายการ Skills (16 ตัว)
+## รายการ Skills (18 ตัว)
 
+- aicoder-branding
+- cloudflare-workers-deploy
 - pta-exapilot-logic
 - pta-industry-insight
 - pta-kaizen-writer
@@ -110,6 +112,16 @@ Copy-Item "$env:USERPROFILE\claude-config\CLAUDE.md" "$env:USERPROFILE\.claude\C
 - domain-modeling
 - grilling
 - grill-with-docs
+
+### Brand Skill: aicoder-branding
+
+Brand kit ของ **A(i)CODER** — palette, lockup, ground, การกระพริบแบบนีออน และ icon system
+พร้อม `references/renderer.mjs` ที่ generate โลโก้ได้ทุกขนาดโดยไม่ต้องพึ่ง repo นี้
+เนื้อหาต้นทางและเหตุผลเบื้องหลังอยู่ใน [`branding/`](./branding/)
+
+ใช้เมื่อขอ "ใส่ branding", ทำ header/favicon/splash/OG image หรือ banner README
+`branding/tools/verify.mjs` มี check ที่เทียบพิกเซลระหว่าง renderer ของ skill กับของหน้า mockup
+ถ้าแก้ที่เดียวแล้วลืมอีกที่ จะจับได้ทันที
 
 ### Engineering Skills เพิ่มเติม: domain-modeling / grilling / grill-with-docs
 

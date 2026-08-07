@@ -73,6 +73,39 @@ for (const f of svgFiles) {
   await page.close();
 }
 
+/* ── The skill's renderer has not drifted ──────────────────────────── */
+
+/* skills/aicoder-branding/references/renderer.mjs is a hand-maintained
+   copy of the same drawing code, shipped so another project can generate
+   marks without this repo. Two copies drift silently, so rasterise both
+   at the same size and compare pixels. */
+{
+  const { mark, resetIds } = await import(
+    pathToFileURL(resolve(ROOT, "../skills/aicoder-branding/references/renderer.mjs")).href);
+
+  /* Both go in with their keyframes stripped. animations:"disabled" does
+     not reach inside an <img>, so a live pair would just be two different
+     moments of the flicker; without the <style> every tube sits at its
+     base opacity and the comparison is about the drawing, not the timing. */
+  const static_ = (s) => s.replace(/<style>[\s\S]*?<\/style>/g, "");
+
+  const dir = mkdtempSync(join(tmpdir(), "sc-drift-"));
+  resetIds();
+  writeFileSync(join(dir, "a.svg"), static_(mark({ mode: "night", ground: "glow", width: 1200 })));
+  writeFileSync(join(dir, "b.svg"), static_(readFileSync(resolve(EXPORTS, "d2-crt-night-glow.svg"), "utf8")));
+
+  const shots = [];
+  for (const f of ["a.svg", "b.svg"]) {
+    writeFileSync(join(dir, "t.html"),
+      `<body style="margin:0"><img src="${f}" width="1200"></body>`);
+    const page = await browser.newPage({ viewport: { width: 1200, height: 300 } });
+    await page.goto(pathToFileURL(join(dir, "t.html")).href);
+    shots.push(await page.screenshot({ animations: "disabled" }));
+    await page.close();
+  }
+  check("skill renderer matches the page renderer", shots[0].equals(shots[1]));
+}
+
 /* ── The page ──────────────────────────────────────────────────────── */
 
 for (const scheme of ["light", "dark"]) {
