@@ -1,0 +1,1170 @@
+<title>SOICODER — Three Identity Directions</title>
+
+<style>
+/* ── Faces ────────────────────────────────────────────────────────────
+   Tektur     — display. Machined, faceted, arcade-adjacent without being
+                a pixel font (the logo already owns pixel).
+   Instrument — body. Warm grotesque, quiet next to Tektur's angles.
+   DM Mono    — data. Hex values, dimensions, specs.
+   Inlined as data URIs: the artifact CSP blocks font CDNs.            */
+
+@font-face {
+  font-family: "SC Display";
+  src: url(data:font/ttf;base64,__TEKTUR__) format("truetype");
+  font-weight: 500; font-style: normal; font-display: block;
+}
+@font-face {
+  font-family: "SC Body";
+  src: url(data:font/ttf;base64,__INSTRUMENT_REG__) format("truetype");
+  font-weight: 400; font-style: normal; font-display: block;
+}
+@font-face {
+  font-family: "SC Body";
+  src: url(data:font/ttf;base64,__INSTRUMENT_BOLD__) format("truetype");
+  font-weight: 700; font-style: normal; font-display: block;
+}
+@font-face {
+  font-family: "SC Mono";
+  src: url(data:font/ttf;base64,__DMMONO__) format("truetype");
+  font-weight: 400; font-style: normal; font-display: block;
+}
+
+/* ── Page tokens ──────────────────────────────────────────────────────
+   The page chrome is a near-monochrome gallery with a violet bias in
+   the neutrals, so the brand's actual colour lives only inside the
+   mockups. Complete light palette on bare :root; dark redefines tokens
+   twice (media query + explicit stamp) so both directions win.        */
+
+:root {
+  --ground:    #F2F0F6;
+  --surface:   #FCFBFE;
+  --surface-2: #E8E5F0;
+  --ink:       #17131F;
+  --ink-2:     #453E53;
+  --muted:     #746D84;
+  --rule:      #DBD5E6;
+  --rule-soft: #E6E2EE;
+  --mark:      #3B2F55;
+  --grid:      rgba(59, 47, 85, .055);
+  --shadow:    0 1px 2px rgba(23,19,31,.05), 0 12px 32px -18px rgba(23,19,31,.28);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground:    #121017;
+    --surface:   #1B1724;
+    --surface-2: #241F30;
+    --ink:       #F0ECF7;
+    --ink-2:     #C7C0D6;
+    --muted:     #938BA5;
+    --rule:      #2E2839;
+    --rule-soft: #241F30;
+    --mark:      #BCA9EC;
+    --grid:      rgba(188, 169, 236, .05);
+    --shadow:    0 1px 2px rgba(0,0,0,.3), 0 12px 32px -18px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"] {
+  --ground:    #121017;
+  --surface:   #1B1724;
+  --surface-2: #241F30;
+  --ink:       #F0ECF7;
+  --ink-2:     #C7C0D6;
+  --muted:     #938BA5;
+  --rule:      #2E2839;
+  --rule-soft: #241F30;
+  --mark:      #BCA9EC;
+  --grid:      rgba(188, 169, 236, .05);
+  --shadow:    0 1px 2px rgba(0,0,0,.3), 0 12px 32px -18px rgba(0,0,0,.7);
+}
+
+/* ── Brand tokens ─────────────────────────────────────────────────────
+   Fixed values. These never respond to theme — a logo that changes
+   colour with the viewer's OS setting is not a logo.                  */
+:root {
+  --sc-violet:      #B39DF3;
+  --sc-violet-hi:   #C4AFFF;
+  --sc-violet-deep: #8C74E0;
+  --sc-pink:        #FF5C8A;
+  --sc-pink-hot:    #FF4D7E;
+  --sc-paw-pink:    #FF6FA5;
+  --sc-red:         #F4614B;
+  --sc-navy:        #3D4EA3;
+  --sc-paper:       #F7F5FB;
+  --sc-night:       #0D0B14;
+  --sc-hairline:    #C9D6D2;
+  --sc-ink:         #1B1533;
+  --sc-lilac:       #EFEAFB;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background-color: var(--ground);
+  /* 8px bitmap ground — the page sits on the same grid the logo is drawn on */
+  background-image:
+    repeating-linear-gradient(to right,  var(--grid) 0 1px, transparent 1px 8px),
+    repeating-linear-gradient(to bottom, var(--grid) 0 1px, transparent 1px 8px);
+  color: var(--ink);
+  font-family: "SC Body", system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 28px 96px;
+}
+
+/* ── Type scale ───────────────────────────────────────────────────── */
+
+h1, h2, h3 {
+  font-family: "SC Display", system-ui, sans-serif;
+  font-weight: 500;
+  text-wrap: balance;
+  margin: 0;
+  letter-spacing: -.01em;
+}
+h1 { font-size: clamp(2.1rem, 5.5vw, 3.4rem); line-height: 1.04; }
+h2 { font-size: clamp(1.5rem, 3.4vw, 2.1rem); line-height: 1.1; }
+h3 { font-size: 1.02rem; line-height: 1.35; letter-spacing: 0; }
+p  { margin: 0; }
+
+.lede    { font-size: 1.06rem; color: var(--ink-2); max-width: 62ch; }
+.note    { font-size: .9rem;  color: var(--muted); max-width: 66ch; }
+.eyebrow {
+  font-family: "SC Mono", ui-monospace, monospace;
+  font-size: .72rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--mark);
+}
+.mono { font-family: "SC Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+
+/* ── Masthead ─────────────────────────────────────────────────────── */
+
+.masthead {
+  padding: 72px 0 44px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.masthead-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 26px;
+  align-items: baseline;
+  font-family: "SC Mono", ui-monospace, monospace;
+  font-size: .74rem;
+  color: var(--muted);
+  letter-spacing: .04em;
+}
+.masthead-meta b { color: var(--ink-2); font-weight: 400; }
+
+/* A rule made of pixels rather than a hairline. */
+.pixrule {
+  height: 4px;
+  background-image: repeating-linear-gradient(to right, var(--rule) 0 4px, transparent 4px 8px);
+  border: 0;
+  margin: 0;
+}
+
+/* ── Brief ────────────────────────────────────────────────────────── */
+
+.brief {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 28px 40px;
+  padding: 36px 0 8px;
+}
+.brief-item { display: flex; flex-direction: column; gap: 7px; }
+.brief-item h3 { color: var(--ink); }
+.brief-item p  { font-size: .92rem; color: var(--muted); }
+
+/* ── Direction sections ───────────────────────────────────────────── */
+
+.dir { padding: 68px 0 0; display: flex; flex-direction: column; gap: 26px; }
+
+.dir-head { display: flex; flex-direction: column; gap: 12px; }
+.dir-id {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.dir-badge {
+  font-family: "SC Mono", ui-monospace, monospace;
+  font-size: .78rem;
+  letter-spacing: .1em;
+  padding: 4px 10px;
+  border: 1px solid var(--rule);
+  background: var(--surface);
+  color: var(--mark);
+}
+.dir-for {
+  font-family: "SC Mono", ui-monospace, monospace;
+  font-size: .74rem;
+  color: var(--muted);
+  letter-spacing: .03em;
+}
+
+/* Every mockup surface. The scroller keeps wide artwork from pushing
+   the page sideways. */
+.stage {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  box-shadow: var(--shadow);
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+.stage > svg { display: block; width: 100%; min-width: 640px; height: auto; }
+
+.apps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(268px, 1fr));
+  gap: 18px;
+}
+.app { display: flex; flex-direction: column; gap: 9px; }
+.app-frame {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+/* No min-width here: these tiles are compositions to compare, so they
+   scale down to the column rather than clipping into a scroller. */
+.app-frame > svg { display: block; width: 100%; height: auto; }
+.app-cap {
+  font-family: "SC Mono", ui-monospace, monospace;
+  font-size: .7rem;
+  letter-spacing: .05em;
+  color: var(--muted);
+}
+
+/* ── Spec block ───────────────────────────────────────────────────── */
+
+.spec {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: 30px 44px;
+  padding: 8px 0 4px;
+}
+@media (max-width: 720px) { .spec { grid-template-columns: 1fr; } }
+
+.swatches { display: flex; flex-wrap: wrap; gap: 10px; }
+.sw { display: flex; flex-direction: column; gap: 6px; width: 92px; }
+.sw-chip { height: 46px; border: 1px solid var(--rule); }
+.sw-hex  { font-family: "SC Mono", ui-monospace, monospace; font-size: .68rem; color: var(--ink-2); letter-spacing: .02em; }
+.sw-role { font-size: .68rem; color: var(--muted); line-height: 1.3; }
+
+.speclist { display: flex; flex-direction: column; gap: 0; }
+.speclist div {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--rule-soft);
+  font-size: .84rem;
+}
+.speclist div:last-child { border-bottom: 0; }
+.speclist dt, .speclist span:first-child { color: var(--muted); }
+.speclist span:last-child {
+  font-family: "SC Mono", ui-monospace, monospace;
+  color: var(--ink-2);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Comparison ───────────────────────────────────────────────────── */
+
+.compare { padding: 76px 0 0; display: flex; flex-direction: column; gap: 22px; }
+.table-scroll { overflow-x: auto; border: 1px solid var(--rule); background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 620px; font-size: .87rem; }
+th, td { text-align: left; padding: 13px 16px; border-bottom: 1px solid var(--rule-soft); vertical-align: top; }
+thead th {
+  font-family: "SC Mono", ui-monospace, monospace;
+  font-size: .7rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--mark);
+  border-bottom: 1px solid var(--rule);
+  white-space: nowrap;
+}
+tbody th { font-weight: 400; color: var(--ink); white-space: nowrap; }
+td { color: var(--ink-2); }
+tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
+
+.closing { padding: 56px 0 0; display: flex; flex-direction: column; gap: 14px; }
+
+/* ── Motion ───────────────────────────────────────────────────────── */
+
+.rise { opacity: 0; transform: translateY(14px); transition: opacity .5s ease, transform .5s ease; }
+.rise.in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .rise { opacity: 1; transform: none; transition: none; }
+}
+:focus-visible { outline: 2px solid var(--mark); outline-offset: 3px; }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <span class="eyebrow">Identity study · round 01</span>
+    <h1>SOICODER</h1>
+    <p class="lede">
+      Three ways to take the original banner further. Same wordmark, same paw, same
+      tricolour bar — treated three different ways so the choice is about
+      <em>where the mark has to survive</em>, not about taste alone.
+    </p>
+    <hr class="pixrule">
+    <div class="masthead-meta">
+      <span>SOURCE <b>banner artwork, supplied</b></span>
+      <span>OWNER <b>supasiao7896TH</b></span>
+      <span>USE <b>dev persona · web app</b></span>
+      <span>YEAR MARK <b>2025, retained</b></span>
+    </div>
+  </header>
+
+  <section class="brief rise">
+    <div class="brief-item">
+      <h3>The name is the story</h3>
+      <p><em>Soi</em> — ซอย, the side street. A soi dog and a coder share the same
+         address. The paw is not an ornament bolted onto a wordmark; it is the
+         half of the name that letters cannot spell.</p>
+    </div>
+    <div class="brief-item">
+      <h3>Drawn, not typed</h3>
+      <p>The wordmark is a 5 × 7 bitmap rendered as vector rectangles. No font
+         dependency, no licence to track, and it stays exactly as crisp at 2400 px
+         as it is at 24.</p>
+    </div>
+    <div class="brief-item">
+      <h3>What the round decides</h3>
+      <p>Pick one direction. The next round turns it into the full kit — icon set,
+         clear-space rules, motion, and the app shell it has to live in.</p>
+    </div>
+  </section>
+
+  <!-- D1 ─────────────────────────────────────────────────────────── -->
+  <section class="dir rise" id="d1">
+    <div class="dir-head">
+      <div class="dir-id">
+        <span class="dir-badge">D1</span>
+        <h2>Neon Arcade</h2>
+        <span class="dir-for">→ light README · web app header · social card</span>
+      </div>
+      <p class="note">
+        The supplied artwork, resolved. Spacing put on the same 8 px grid the letters
+        are drawn on, the bloom rebuilt as a two-pass Gaussian so it survives export,
+        and the paws re-cut so the pads read as pads at any size. This is the safest
+        of the three: nothing about the original is argued with.
+      </p>
+    </div>
+    <div class="stage" id="d1-hero"></div>
+    <div class="apps" id="d1-apps"></div>
+    <div class="spec">
+      <div>
+        <div class="swatches" id="d1-sw"></div>
+      </div>
+      <div class="speclist" id="d1-spec"></div>
+    </div>
+  </section>
+
+  <!-- D2 ─────────────────────────────────────────────────────────── -->
+  <section class="dir rise" id="d2">
+    <div class="dir-head">
+      <div class="dir-id">
+        <span class="dir-badge">D2</span>
+        <h2>CRT Night</h2>
+        <span class="dir-for">→ terminal · dark README · PWA splash</span>
+      </div>
+      <p class="note">
+        Same lockup, moved to a phosphor screen. Bloom runs hotter, a pink ghost sits
+        one pixel off-register the way a cheap CRT actually misconverges, and a 3 px
+        scanline field holds the whole plate together. This is the direction that
+        matches a terminal-first workflow and the existing dark-mode house style.
+      </p>
+    </div>
+    <div class="stage" id="d2-hero"></div>
+    <div class="apps" id="d2-apps"></div>
+    <div class="spec">
+      <div>
+        <div class="swatches" id="d2-sw"></div>
+      </div>
+      <div class="speclist" id="d2-spec"></div>
+    </div>
+  </section>
+
+  <!-- D3 ─────────────────────────────────────────────────────────── -->
+  <section class="dir rise" id="d3">
+    <div class="dir-head">
+      <div class="dir-id">
+        <span class="dir-badge">D3</span>
+        <h2>Soi Sticker</h2>
+        <span class="dir-for">→ avatar · favicon · PWA icon · merch</span>
+      </div>
+      <p class="note">
+        Glow is a luxury of large sizes. Below about 64 px it turns a mark into a
+        smudge — so this direction trades it for flat colour, a die-cut keyline and a
+        hard offset shadow, and stacks the wordmark to fit a square. The paw is
+        promoted to lead. It is the only one of the three that is still legible as a
+        16 px favicon.
+      </p>
+    </div>
+    <div class="stage" id="d3-hero"></div>
+    <div class="apps" id="d3-apps"></div>
+    <div class="spec">
+      <div>
+        <div class="swatches" id="d3-sw"></div>
+      </div>
+      <div class="speclist" id="d3-spec"></div>
+    </div>
+  </section>
+
+  <!-- Comparison ─────────────────────────────────────────────────── -->
+  <section class="compare rise">
+    <div class="dir-head">
+      <span class="eyebrow">How to choose</span>
+      <h2>Where each one holds up</h2>
+    </div>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Test</th>
+            <th scope="col">D1 Neon Arcade</th>
+            <th scope="col">D2 CRT Night</th>
+            <th scope="col">D3 Soi Sticker</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Legible at 16 px</th>
+            <td>No — bloom fills the counters</td>
+            <td>No — bloom fills the counters</td>
+            <td>Yes, paw only</td>
+          </tr>
+          <tr>
+            <th scope="row">Works on a white page</th>
+            <td>Yes, native</td>
+            <td>Needs its own dark plate</td>
+            <td>Yes, native</td>
+          </tr>
+          <tr>
+            <th scope="row">Works on a dark page</th>
+            <td>Weak — pastel on black loses the glow</td>
+            <td>Yes, native</td>
+            <td>Yes, keyline carries it</td>
+          </tr>
+          <tr>
+            <th scope="row">Printable / embroiderable</th>
+            <td>No — gradients and blur</td>
+            <td>No — gradients and blur</td>
+            <td>Yes — five flat spot colours</td>
+          </tr>
+          <tr>
+            <th scope="row">Closest to the supplied art</th>
+            <td>Direct descendant</td>
+            <td>Same lockup, new ground</td>
+            <td>Re-composed</td>
+          </tr>
+          <tr>
+            <th scope="row">Cost to extend into a full kit</th>
+            <td>Low</td>
+            <td>Low</td>
+            <td>Medium — needs a mono lockup drawn</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">
+      These are not mutually exclusive. The usual resolution is one primary plus one
+      utility: <b>D1 or D2 as the primary voice, D3 as the icon system underneath it</b>,
+      since something has to be the 16 px favicon regardless.
+    </p>
+  </section>
+
+  <section class="closing rise">
+    <hr class="pixrule">
+    <span class="eyebrow">Next</span>
+    <p class="note">
+      Name a direction and the second round produces: the full icon set at 512 / 192 /
+      64 / 32 / 16, clear-space and minimum-size rules, a monochrome lockup for stamps
+      and single-colour print, the app shell header in situ, and the exported asset
+      pack. Everything on this page is drawn from four primitives — a 5 × 7 glyph
+      table, a paw, a tricolour bar, and a bloom filter — so extending it is
+      composition, not redrawing.
+    </p>
+  </section>
+
+</div>
+
+<script>
+/* ══ Primitives ══════════════════════════════════════════════════════
+   Everything on this page is composed from four things: a 5 × 7 glyph
+   table, a paw, a tricolour bar, and a bloom filter.                  */
+
+const GW = 5, GH = 7;
+
+const GLYPHS = {
+  S: ["01110","10001","10000","01110","00001","10001","01110"],
+  O: ["01110","10001","10001","10001","10001","10001","01110"],
+  I: ["11111","00100","00100","00100","00100","00100","11111"],
+  C: ["01110","10001","10000","10000","10000","10001","01110"],
+  D: ["11110","10001","10001","10001","10001","10001","11110"],
+  E: ["11111","10000","10000","11110","10000","10000","11111"],
+  R: ["11110","10001","10001","11110","10100","10010","10001"],
+  0: ["01110","10001","10001","10001","10001","10001","01110"],
+  1: ["00100","01100","00100","00100","00100","00100","01110"],
+  2: ["01110","10001","00001","00110","01000","10000","11111"],
+  3: ["11111","00010","00100","00010","00001","10001","01110"],
+  4: ["00010","00110","01010","10010","11111","00010","00010"],
+  5: ["11111","10000","11110","00001","00001","10001","01110"],
+  6: ["00110","01000","10000","11110","10001","10001","01110"],
+  7: ["11111","00001","00010","00100","01000","01000","01000"],
+  8: ["01110","10001","10001","01110","10001","10001","01110"],
+  9: ["01110","10001","10001","01111","00001","00010","01100"]
+};
+
+/* Collect the lit cells of a string, then merge each row's runs into one
+   rect. Fewer nodes, and no hairline seam between neighbouring pixels. */
+function glyphRuns(text, tracking) {
+  const rows = new Map();
+  let cursor = 0;
+  for (const ch of String(text).toUpperCase()) {
+    const g = GLYPHS[ch];
+    if (g) {
+      g.forEach((row, y) => {
+        for (let x = 0; x < GW; x++) {
+          if (row[x] === "1") {
+            if (!rows.has(y)) rows.set(y, []);
+            rows.get(y).push(cursor + x);
+          }
+        }
+      });
+    }
+    cursor += GW + tracking;
+  }
+  const runs = [];
+  for (const [y, xs] of rows) {
+    xs.sort((a, b) => a - b);
+    let start = xs[0], prev = xs[0];
+    for (let i = 1; i < xs.length; i++) {
+      if (xs[i] === prev + 1) { prev = xs[i]; continue; }
+      runs.push([start, y, prev - start + 1]);
+      start = prev = xs[i];
+    }
+    runs.push([start, y, prev - start + 1]);
+  }
+  return { runs, cols: cursor - tracking, rows: GH };
+}
+
+function wordmarkWidth(text, px, tracking = 2) {
+  return (String(text).length * (GW + tracking) - tracking) * px;
+}
+
+/* px = size of one logical pixel in user units. */
+function wordmark(text, opts = {}) {
+  const { px = 12, tracking = 2, fill = "#000", x = 0, y = 0, radius = 0, attrs = "" } = opts;
+  const { runs } = glyphRuns(text, tracking);
+  const body = runs.map(([cx, cy, len]) =>
+    `<rect x="${x + cx * px}" y="${y + cy * px}" width="${len * px}" height="${px}"` +
+    (radius ? ` rx="${radius}"` : "") + `/>`
+  ).join("");
+  return `<g fill="${fill}" shape-rendering="crispEdges" ${attrs}>${body}</g>`;
+}
+
+/* Paw drawn in a 0–100 box: four toes on an arc, one pad. Toes are sized
+   and placed to clear the pad, so a die-cut keyline never crosses itself. */
+const PAW_PAD = "M50 51C58 51 66 53 73 58C81 63 86 70 85 77C84 87 69 95 50 95C31 95 16 87 15 77C14 70 19 63 27 58C34 53 42 51 50 51Z";
+const PAW_TOES = [
+  [20, 41, 11,   13.5, -26],
+  [41, 25, 11.5, 15,    -9],
+  [62, 25, 11.5, 15,     9],
+  [83, 41, 11,   13.5,  26]
+];
+function pawShapes() {
+  return PAW_TOES.map(([cx, cy, rx, ry, rot]) =>
+    `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" transform="rotate(${rot} ${cx} ${cy})"/>`
+  ).join("") + `<path d="${PAW_PAD}"/>`;
+}
+function paw(opts = {}) {
+  const { x = 0, y = 0, size = 100, fill = "#000", attrs = "" } = opts;
+  const s = size / 100;
+  return `<g transform="translate(${x} ${y}) scale(${s})" fill="${fill}" ${attrs}>${pawShapes()}</g>`;
+}
+
+/* Tricolour bar. Segment ratios read off the supplied artwork. */
+const BAR = [[0, 0.365, "var(--sc-red)"], [0.365, 0.25, "#F4F2F6"], [0.615, 0.385, "var(--sc-navy)"]];
+function bar(opts = {}) {
+  const { x = 0, y = 0, w = 160, h = 20, white = "#FFFFFF", attrs = "" } = opts;
+  const id = "clip" + Math.random().toString(36).slice(2, 8);
+  const segs = BAR.map(([o, len, c]) =>
+    `<rect x="${x + o * w}" y="${y}" width="${len * w + 0.5}" height="${h}" fill="${c === "#F4F2F6" ? white : c}"/>`
+  ).join("");
+  return `<g ${attrs}><defs><clipPath id="${id}">` +
+    `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${h / 2}"/></clipPath></defs>` +
+    `<g clip-path="url(#${id})">${segs}</g></g>`;
+}
+
+/* Two-pass bloom: a wide low halo plus a tight core. Built as an SVG
+   filter rather than CSS blur so it screenshots at 2× without breaking. */
+function bloomDef(id, far, near, doubled = true) {
+  return `<filter id="${id}" x="-60%" y="-120%" width="220%" height="340%" color-interpolation-filters="sRGB">
+    <feGaussianBlur in="SourceGraphic" stdDeviation="${far}" result="far"/>
+    <feGaussianBlur in="SourceGraphic" stdDeviation="${near}" result="near"/>
+    <feMerge>
+      <feMergeNode in="far"/>${doubled ? '<feMergeNode in="far"/>' : ""}
+      <feMergeNode in="near"/>
+      <feMergeNode in="SourceGraphic"/>
+    </feMerge>
+  </filter>`;
+}
+
+function svg(w, h, inner, extra = "") {
+  return `<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" xmlns="http://www.w3.org/2000/svg" ${extra}>${inner}</svg>`;
+}
+
+/* ══ Horizontal lockup geometry ══════════════════════════════════════
+   One place decides where everything sits, for any plate size. The
+   wordmark, year and right padding are measured back from the right
+   edge, so no plate can push its own content off the end.             */
+
+const UNIT_WORD = wordmarkWidth("SOICODER", 1);
+const UNIT_YEAR = wordmarkWidth("2025", 1);
+
+function lockupGeometry(W, H) {
+  const px   = Math.max(2, Math.floor((W * 0.58) / UNIT_WORD));
+  const yrPx = Math.max(1, Math.round(px / 2));
+  const gap  = Math.round(W * 0.035);
+  const pad  = Math.round(W * 0.045);
+  const wmW  = UNIT_WORD * px;
+  const yrW  = UNIT_YEAR * yrPx;
+  const wmX  = W - pad - yrW - gap - wmW;
+  const wmY  = Math.round((H - GH * px) / 2);
+  const yrX  = wmX + wmW + gap;
+  const yrY  = wmY + GH * px - GH * yrPx;
+  return {
+    px, yrPx, wmW, yrW, wmX, wmY, yrX, yrY,
+    barY: yrY + GH * yrPx + Math.round(H * 0.07),
+    barH: Math.max(4, Math.round(H * 0.055))
+  };
+}
+
+/* Two paws walking up-right into the wordmark, sized off the plate
+   height and kept clear of wmX. */
+function pawCluster(H, trail, lead) {
+  const sTrail = H * 0.28, sLead = H * 0.34;
+  const x1 = Math.round(H * 0.26), y1 = Math.round(H * 0.50);
+  return paw({ x: x1, y: y1, size: sTrail, fill: trail }) +
+         paw({ x: x1 + Math.round(sTrail * 0.74), y: Math.round(H * 0.245), size: sLead, fill: lead });
+}
+
+/* ══ D1 — Neon Arcade ════════════════════════════════════════════════ */
+
+function heroD1() {
+  const W = 1200, H = 300;
+  const g = lockupGeometry(W, H);
+
+  return svg(W, H, `
+    <defs>
+      ${bloomDef("d1-bloom", 15, 2)}
+      ${bloomDef("d1-paw", 18, 4)}
+    </defs>
+    <rect width="${W}" height="${H}" fill="var(--sc-paper)"/>
+    <line x1="0" y1="0.5" x2="${W}" y2="0.5" stroke="var(--sc-hairline)" stroke-width="1"/>
+    <line x1="0" y1="${H - 0.5}" x2="${W}" y2="${H - 0.5}" stroke="var(--sc-hairline)" stroke-width="1"/>
+
+    <g filter="url(#d1-paw)" opacity=".92">
+      ${pawCluster(H, "var(--sc-violet-deep)", "var(--sc-paw-pink)")}
+    </g>
+
+    ${wordmark("SOICODER", { px: g.px, x: g.wmX, y: g.wmY, fill: "var(--sc-violet)", attrs: 'filter="url(#d1-bloom)"' })}
+    ${wordmark("2025", { px: g.yrPx, x: g.yrX, y: g.yrY, fill: "var(--sc-pink)", attrs: 'filter="url(#d1-bloom)"' })}
+    ${bar({ x: g.yrX, y: g.barY, w: g.yrW, h: g.barH })}
+  `);
+}
+
+function appsD1() {
+  return [
+    { cap: "GitHub README banner", svg: ghCard(false) },
+    { cap: "Web app header — light", svg: appBar() },
+    { cap: "Social card 1200 × 630", svg: socialCard() }
+  ];
+}
+
+/* Repo card containing the banner, light or dark. */
+function ghCard(dark) {
+  const W = 560, H = 300;
+  const ground = dark ? "#0D1117" : "#FFFFFF";
+  const chrome = dark ? "#161B22" : "#F6F8FA";
+  const rule   = dark ? "#30363D" : "#D8DEE4";
+  const text   = dark ? "#C9D1D9" : "#24292F";
+  const dim    = dark ? "#8B949E" : "#6E7781";
+  const plate  = dark ? heroD2Plate(520, 130) : heroD1Plate(520, 130);
+  return svg(W, H, `
+    <rect width="${W}" height="${H}" fill="${ground}"/>
+    <rect width="${W}" height="34" fill="${chrome}"/>
+    <line x1="0" y1="34.5" x2="${W}" y2="34.5" stroke="${rule}"/>
+    <circle cx="18" cy="17" r="4.5" fill="#FF5F57"/><circle cx="33" cy="17" r="4.5" fill="#FEBC2E"/><circle cx="48" cy="17" r="4.5" fill="#28C840"/>
+    <text x="68" y="21" font-family="SC Mono, monospace" font-size="10.5" fill="${dim}">supasiao7896TH / soicoder</text>
+    <g transform="translate(20 56)">${plate}</g>
+    <g fill="${text}" opacity=".9">
+      <rect x="20" y="206" width="150" height="9" rx="4.5"/>
+      <rect x="20" y="230" width="380" height="7" rx="3.5" opacity=".42"/>
+      <rect x="20" y="248" width="320" height="7" rx="3.5" opacity=".42"/>
+      <rect x="20" y="266" width="355" height="7" rx="3.5" opacity=".42"/>
+    </g>
+  `);
+}
+
+/* The lockup at banner proportions, reusable inside app frames. */
+function heroD1Plate(W, H) {
+  const g = lockupGeometry(W, H);
+  const uid = "p" + Math.random().toString(36).slice(2, 7);
+  return `
+    <defs>${bloomDef(uid + "b", H / 9, H / 65)}</defs>
+    <rect width="${W}" height="${H}" fill="var(--sc-paper)"/>
+    <line x1="0" y1="0.5" x2="${W}" y2="0.5" stroke="var(--sc-hairline)"/>
+    <line x1="0" y1="${H - 0.5}" x2="${W}" y2="${H - 0.5}" stroke="var(--sc-hairline)"/>
+    <g filter="url(#${uid}b)" opacity=".92">
+      ${pawCluster(H, "var(--sc-violet-deep)", "var(--sc-paw-pink)")}
+    </g>
+    ${wordmark("SOICODER", { px: g.px, x: g.wmX, y: g.wmY, fill: "var(--sc-violet)", attrs: `filter="url(#${uid}b)"` })}
+    ${wordmark("2025", { px: g.yrPx, x: g.yrX, y: g.yrY, fill: "var(--sc-pink)", attrs: `filter="url(#${uid}b)"` })}
+    ${bar({ x: g.yrX, y: g.barY, w: g.yrW, h: g.barH })}
+  `;
+}
+
+function heroD2Plate(W, H) {
+  const g = lockupGeometry(W, H);
+  const uid = "q" + Math.random().toString(36).slice(2, 7);
+  return `
+    <defs>
+      ${bloomDef(uid + "b", H / 8, H / 65, false)}
+      <pattern id="${uid}s" width="3" height="3" patternUnits="userSpaceOnUse">
+        <rect width="3" height="1" fill="#FFFFFF" opacity=".05"/>
+      </pattern>
+    </defs>
+    <rect width="${W}" height="${H}" fill="var(--sc-night)"/>
+    <g filter="url(#${uid}b)">
+      ${pawCluster(H, "var(--sc-violet)", "var(--sc-paw-pink)")}
+    </g>
+    ${wordmark("SOICODER", { px: g.px, x: g.wmX - 2, y: g.wmY, fill: "var(--sc-pink)", attrs: `filter="url(#${uid}b)" opacity=".5"` })}
+    ${wordmark("SOICODER", { px: g.px, x: g.wmX, y: g.wmY, fill: "var(--sc-violet-hi)", attrs: `filter="url(#${uid}b)"` })}
+    ${wordmark("2025", { px: g.yrPx, x: g.yrX, y: g.yrY, fill: "var(--sc-pink-hot)", attrs: `filter="url(#${uid}b)"` })}
+    ${bar({ x: g.yrX, y: g.barY, w: g.yrW, h: g.barH, white: "#E4DFF0" })}
+    <rect width="${W}" height="${H}" fill="url(#${uid}s)"/>
+  `;
+}
+
+/* Compact horizontal mark: paw + SOICODER on one line. */
+function compactMark(x, y, h, wordFill, pawFill) {
+  const px = Math.max(2, Math.round(h / 7));
+  return `${paw({ x, y: y - h * 0.06, size: h * 1.12, fill: pawFill })}` +
+         wordmark("SOICODER", { px, x: x + h * 1.5, y, fill: wordFill });
+}
+
+function appBar() {
+  const W = 560, H = 300;
+  return svg(W, H, `
+    <rect width="${W}" height="${H}" fill="#F4F2F8"/>
+    <rect width="${W}" height="56" fill="#FFFFFF"/>
+    <line x1="0" y1="56.5" x2="${W}" y2="56.5" stroke="#E3DEEC"/>
+    ${compactMark(22, 21, 15, "var(--sc-violet-deep)", "var(--sc-paw-pink)")}
+    <g font-family="SC Body, sans-serif" font-size="11" fill="#6B6478">
+      <text x="286" y="32">Dashboard</text><text x="356" y="32">Logs</text><text x="398" y="32">Settings</text>
+    </g>
+    <circle cx="468" cy="28" r="4" fill="#22C55E"/>
+    <text x="478" y="31.5" font-family="SC Mono, monospace" font-size="9" fill="#6B6478">Online</text>
+    <circle cx="536" cy="28" r="11" fill="var(--sc-lilac)" stroke="#E3DEEC"/>
+    ${paw({ x: 529, y: 21, size: 14, fill: "var(--sc-violet-deep)" })}
+    <g fill="#FFFFFF" stroke="#E9E4F2">
+      <rect x="22" y="78" width="240" height="90" rx="10"/>
+      <rect x="278" y="78" width="260" height="90" rx="10"/>
+      <rect x="22" y="182" width="516" height="94" rx="10"/>
+    </g>
+    <g font-family="SC Mono, monospace" font-size="8.5" fill="#8B8399">
+      <text x="38" y="100">BATCH THROUGHPUT</text><text x="294" y="100">SYNC STATUS</text><text x="38" y="204">RECENT RUNS</text>
+    </g>
+    <text x="38" y="132" font-family="SC Display, sans-serif" font-size="26" fill="#241D33">1,284</text>
+    <text x="294" y="132" font-family="SC Display, sans-serif" font-size="26" fill="#241D33">Synced</text>
+    ${bar({ x: 38, y: 146, w: 120, h: 8 })}
+    ${bar({ x: 294, y: 146, w: 120, h: 8 })}
+    <g fill="#E9E4F2">
+      <rect x="38" y="220" width="484" height="6" rx="3"/>
+      <rect x="38" y="238" width="430" height="6" rx="3"/>
+      <rect x="38" y="256" width="462" height="6" rx="3"/>
+    </g>
+  `);
+}
+
+function socialCard() {
+  const W = 560, H = 300;
+  const px = 9;
+  const wmW = wordmarkWidth("SOICODER", px);
+  return svg(W, H, `
+    <defs>${bloomDef("soc-b", 11, 3)}</defs>
+    <rect width="${W}" height="${H}" fill="var(--sc-paper)"/>
+    <rect width="${W}" height="${H}" fill="none" stroke="var(--sc-hairline)"/>
+    <g filter="url(#soc-b)" opacity=".9">
+      ${paw({ x: (W - 92) / 2, y: 52, size: 50, fill: "var(--sc-violet-deep)" })}
+      ${paw({ x: (W - 92) / 2 + 40, y: 40, size: 58, fill: "var(--sc-paw-pink)" })}
+    </g>
+    ${wordmark("SOICODER", { px, x: (W - wmW) / 2, y: 140, fill: "var(--sc-violet)", attrs: 'filter="url(#soc-b)"' })}
+    <text x="${W / 2}" y="228" text-anchor="middle" font-family="SC Mono, monospace" font-size="10.5" letter-spacing="2.4" fill="#7C7490">CODE · SHARE · INSPIRE</text>
+    ${bar({ x: (W - 110) / 2, y: 246, w: 110, h: 9 })}
+  `);
+}
+
+/* ══ D2 — CRT Night ══════════════════════════════════════════════════ */
+
+function heroD2() {
+  const W = 1200, H = 300;
+  const g = lockupGeometry(W, H);
+
+  return svg(W, H, `
+    <defs>
+      ${bloomDef("d2-bloom", 17, 2, false)}
+      ${bloomDef("d2-paw", 20, 4, false)}
+      <radialGradient id="d2-vig" cx="45%" cy="50%" r="72%">
+        <stop offset="0%"  stop-color="#241C3C" stop-opacity=".85"/>
+        <stop offset="60%" stop-color="#130F20" stop-opacity=".4"/>
+        <stop offset="100%" stop-color="#000000" stop-opacity=".55"/>
+      </radialGradient>
+      <pattern id="d2-scan" width="3" height="3" patternUnits="userSpaceOnUse">
+        <rect width="3" height="1" fill="#FFFFFF" opacity=".055"/>
+      </pattern>
+    </defs>
+    <rect width="${W}" height="${H}" fill="var(--sc-night)"/>
+    <rect width="${W}" height="${H}" fill="url(#d2-vig)"/>
+
+    <g filter="url(#d2-paw)">
+      ${pawCluster(H, "var(--sc-violet)", "var(--sc-paw-pink)")}
+    </g>
+
+    ${wordmark("SOICODER", { px: g.px, x: g.wmX - 5, y: g.wmY, fill: "var(--sc-pink)", attrs: 'filter="url(#d2-bloom)" opacity=".5"' })}
+    ${wordmark("SOICODER", { px: g.px, x: g.wmX, y: g.wmY, fill: "var(--sc-violet-hi)", attrs: 'filter="url(#d2-bloom)"' })}
+    ${wordmark("2025", { px: g.yrPx, x: g.yrX, y: g.yrY, fill: "var(--sc-pink-hot)", attrs: 'filter="url(#d2-bloom)"' })}
+    ${bar({ x: g.yrX, y: g.barY, w: g.yrW, h: g.barH, white: "#E4DFF0" })}
+
+    <rect width="${W}" height="${H}" fill="url(#d2-scan)"/>
+    <line x1="0" y1="0.5" x2="${W}" y2="0.5" stroke="#3A2F55"/>
+    <line x1="0" y1="${H - 0.5}" x2="${W}" y2="${H - 0.5}" stroke="#3A2F55"/>
+  `);
+}
+
+function appsD2() {
+  return [
+    { cap: "Terminal — shell greeting", svg: terminal() },
+    { cap: "PWA splash — 390 × 844", svg: splash() },
+    { cap: "GitHub README banner — dark", svg: ghCard(true) }
+  ];
+}
+
+function terminal() {
+  const W = 560, H = 300;
+  const px = 5;
+  const wmW = wordmarkWidth("SOICODER", px);
+  return svg(W, H, `
+    <defs>${bloomDef("term-b", 5, 1.6)}
+      <pattern id="term-s" width="3" height="3" patternUnits="userSpaceOnUse">
+        <rect width="3" height="1" fill="#FFFFFF" opacity=".045"/>
+      </pattern>
+    </defs>
+    <rect width="${W}" height="${H}" fill="#0B0912"/>
+    <rect width="${W}" height="30" fill="#171223"/>
+    <circle cx="17" cy="15" r="4.5" fill="#FF5F57"/><circle cx="32" cy="15" r="4.5" fill="#FEBC2E"/><circle cx="47" cy="15" r="4.5" fill="#28C840"/>
+    <text x="${W / 2}" y="19" text-anchor="middle" font-family="SC Mono, monospace" font-size="9.5" fill="#6B6089">zsh — soicoder</text>
+
+    <g filter="url(#term-b)">
+      ${paw({ x: 26, y: 50, size: 34, fill: "var(--sc-paw-pink)" })}
+      ${wordmark("SOICODER", { px, x: 74, y: 54, fill: "var(--sc-violet-hi)" })}
+      ${wordmark("2025", { px: 3, x: 74 + wmW + 14, y: 54 + GH * px - GH * 3, fill: "var(--sc-pink-hot)" })}
+    </g>
+
+    <g font-family="SC Mono, monospace" font-size="10.5">
+      <text x="26" y="126" fill="#5E5580">~/dev/soicoder</text>
+      <text x="26" y="150" fill="var(--sc-violet-hi)">❯<tspan fill="#D9D2EC" dx="8">git status</tspan></text>
+      <text x="26" y="170" fill="#6F6693">On branch </text>
+      <text x="94" y="170" fill="var(--sc-pink-hot)">main</text>
+      <text x="26" y="190" fill="#6F6693">nothing to commit, working tree clean</text>
+      <text x="26" y="216" fill="var(--sc-violet-hi)">❯<tspan fill="#D9D2EC" dx="8">soicoder build --watch</tspan></text>
+      <text x="26" y="236" fill="#6F6693">watching 14 files…</text>
+      <text x="26" y="262" fill="var(--sc-violet-hi)">❯</text>
+    </g>
+    <rect x="42" y="252" width="9" height="14" fill="var(--sc-pink-hot)"/>
+    ${bar({ x: 26, y: 278, w: 96, h: 6, white: "#E4DFF0" })}
+    <rect width="${W}" height="${H}" fill="url(#term-s)"/>
+  `);
+}
+
+function splash() {
+  const W = 560, H = 300;
+  const pw = 176, ph = 268, pxx = (W - pw) / 2, pyy = (H - ph) / 2;
+  const px = 3;
+  const wmW = wordmarkWidth("SOICODER", px);
+  return svg(W, H, `
+    <defs>${bloomDef("sp-b", 6, 2)}</defs>
+    <rect width="${W}" height="${H}" fill="#1A1626"/>
+    <g font-family="SC Mono, monospace" font-size="9" fill="#6B6089">
+      <text x="40" y="${H / 2 - 6}">install</text>
+      <text x="40" y="${H / 2 + 10}">prompt</text>
+      <text x="${W - 40}" y="${H / 2 - 6}" text-anchor="end">cold</text>
+      <text x="${W - 40}" y="${H / 2 + 10}" text-anchor="end">start</text>
+    </g>
+    <rect x="${pxx}" y="${pyy}" width="${pw}" height="${ph}" rx="20" fill="var(--sc-night)" stroke="#3A2F55"/>
+    <rect x="${pxx + pw / 2 - 22}" y="${pyy + 8}" width="44" height="7" rx="3.5" fill="#2A2340"/>
+    <g filter="url(#sp-b)">
+      ${paw({ x: pxx + pw / 2 - 34, y: pyy + 84, size: 34, fill: "var(--sc-violet)" })}
+      ${paw({ x: pxx + pw / 2 - 2, y: pyy + 70, size: 40, fill: "var(--sc-paw-pink)" })}
+      ${wordmark("SOICODER", { px, x: pxx + (pw - wmW) / 2, y: pyy + 142, fill: "var(--sc-violet-hi)" })}
+    </g>
+    <text x="${pxx + pw / 2}" y="${pyy + 178}" text-anchor="middle" font-family="SC Mono, monospace" font-size="6.5" letter-spacing="1.6" fill="#6B6089">CODE · SHARE · INSPIRE</text>
+    ${bar({ x: pxx + (pw - 84) / 2, y: pyy + 206, w: 84, h: 7, white: "#E4DFF0" })}
+    <text x="${pxx + pw / 2}" y="${pyy + 236}" text-anchor="middle" font-family="SC Mono, monospace" font-size="6.5" fill="#4E4670">v1.0.0 · 2025</text>
+  `);
+}
+
+/* ══ D3 — Soi Sticker ════════════════════════════════════════════════ */
+
+const INK = "var(--sc-ink)";
+
+function heroD3() {
+  const W = 1200, H = 300;
+  /* The shadow is offset by exactly one logical pixel. On a bitmap wordmark
+     an arbitrary offset reads as a mistake; one unit reads as the grid. */
+  const px = 13, off = px;
+  const soiW = wordmarkWidth("SOI", px);
+  const codW = wordmarkWidth("CODER", px);
+  const stackH = GH * px * 2 + 24;
+  const wmX = 430, l1Y = Math.round((H - stackH) / 2), l2Y = l1Y + GH * px + 24;
+
+  const pawInner = `<g transform="translate(130 48) scale(1.85)">${pawShapes()}</g>`;
+  const soiRuns = wordmark("SOI",   { px, x: wmX, y: l1Y, fill: "currentColor" });
+  const codRuns = wordmark("CODER", { px, x: wmX, y: l2Y, fill: "currentColor" });
+
+  /* Badge rides line 1, bar rides line 2 — the stagger fills the corner the
+     short top line leaves open. */
+  const yrPx = 7, badgeH = GH * yrPx + 26;
+  const badgeW = wordmarkWidth("2025", yrPx) + 44;
+  const badgeX = wmX + soiW + 34;
+  const badgeY = Math.round(l1Y + (GH * px - badgeH) / 2);
+  const barH = 20, barW = badgeW;
+  const barX = wmX + codW + 34;
+  const barY = Math.round(l2Y + (GH * px - barH) / 2);
+
+  return svg(W, H, `
+    <defs>
+      <pattern id="d3-dots" width="16" height="16" patternUnits="userSpaceOnUse">
+        <circle cx="2" cy="2" r="1.4" fill="var(--sc-violet-deep)" opacity=".16"/>
+      </pattern>
+    </defs>
+    <rect width="${W}" height="${H}" fill="var(--sc-lilac)"/>
+    <rect width="${W}" height="${H}" fill="url(#d3-dots)"/>
+
+    <g transform="translate(${off} ${off})" fill="${INK}">${pawInner}</g>
+    <g fill="var(--sc-paw-pink)" stroke="${INK}" stroke-width="2.4" stroke-linejoin="round">${pawInner}</g>
+
+    <!-- No shadow on the letters: the strokes are one unit wide, so any
+         offset copy lands inside the counters and closes them up. The
+         solid shapes carry the sticker depth instead. -->
+    <g color="var(--sc-violet-deep)">${soiRuns}</g>
+    <g color="${INK}">${codRuns}</g>
+
+    <g transform="translate(${off} ${off})">
+      <rect x="${badgeX}" y="${badgeY}" width="${badgeW}" height="${badgeH}" rx="${badgeH / 2}" fill="${INK}"/>
+    </g>
+    <rect x="${badgeX}" y="${badgeY}" width="${badgeW}" height="${badgeH}" rx="${badgeH / 2}" fill="var(--sc-pink)" stroke="${INK}" stroke-width="3"/>
+    ${wordmark("2025", { px: yrPx, x: badgeX + 22, y: badgeY + 13, fill: "#FFFFFF" })}
+
+    <g transform="translate(${off} ${off})"><rect x="${barX}" y="${barY}" width="${barW}" height="${barH}" rx="${barH / 2}" fill="${INK}"/></g>
+    ${bar({ x: barX, y: barY, w: barW, h: barH })}
+    <rect x="${barX}" y="${barY}" width="${barW}" height="${barH}" rx="${barH / 2}" fill="none" stroke="${INK}" stroke-width="3"/>
+  `);
+}
+
+function appsD3() {
+  return [
+    { cap: "Avatar — 512 px", svg: avatar() },
+    { cap: "Favicon — 64 / 32 / 16 px", svg: favicons() },
+    { cap: "Die-cut sticker sheet", svg: stickerSheet() }
+  ];
+}
+
+function avatar() {
+  const W = 560, H = 300, r = 108, cx = W / 2, cy = H / 2;
+  return svg(W, H, `
+    <rect width="${W}" height="${H}" fill="#DED6F2"/>
+    <circle cx="${cx + 6}" cy="${cy + 6}" r="${r}" fill="${INK}"/>
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="var(--sc-lilac)" stroke="${INK}" stroke-width="4"/>
+    <g transform="translate(${cx - 62} ${cy - 86}) scale(1.24)" fill="var(--sc-paw-pink)" stroke="${INK}" stroke-width="2.6" stroke-linejoin="round">${pawShapes()}</g>
+    ${wordmark("SOI", { px: 5, x: cx - wordmarkWidth("SOI", 5) / 2, y: cy + 44, fill: INK })}
+  `);
+}
+
+function favicons() {
+  const W = 560, H = 300;
+  const sizes = [124, 70, 38];
+  const labels = ["64", "32", "16"];
+  let x = 96;
+  let out = `<rect width="${W}" height="${H}" fill="#DED6F2"/>`;
+  sizes.forEach((s, i) => {
+    const y = (H - s) / 2 - 10;
+    out += `<rect x="${x + 4}" y="${y + 4}" width="${s}" height="${s}" rx="${s * 0.22}" fill="${INK}"/>`;
+    out += `<rect x="${x}" y="${y}" width="${s}" height="${s}" rx="${s * 0.22}" fill="var(--sc-lilac)" stroke="${INK}" stroke-width="${Math.max(1.5, s * 0.03)}"/>`;
+    out += `<g transform="translate(${x + s * 0.14} ${y + s * 0.16}) scale(${s * 0.0072})" fill="var(--sc-paw-pink)" stroke="${INK}" stroke-width="${3.2}">${pawShapes()}</g>`;
+    out += `<text x="${x + s / 2}" y="${y + s + 26}" text-anchor="middle" font-family="SC Mono, monospace" font-size="10" fill="#5B5279">${labels[i]} px</text>`;
+    x += s + 46;
+  });
+  return svg(W, H, out);
+}
+
+function stickerSheet() {
+  const W = 560, H = 300;
+  const pxs = 6;
+  const soiW = wordmarkWidth("SOI", pxs);
+  return svg(W, H, `
+    <rect width="${W}" height="${H}" fill="#F6F3FC"/>
+    <g stroke="#CFC6E6" stroke-dasharray="4 5" fill="none">
+      <rect x="20" y="20" width="${W - 40}" height="${H - 40}" rx="8"/>
+    </g>
+
+    <g transform="translate(58 62)">
+      <circle cx="46" cy="46" r="46" transform="translate(5 5)" fill="${INK}"/>
+      <circle cx="46" cy="46" r="46" fill="var(--sc-violet)" stroke="${INK}" stroke-width="3.5"/>
+      <g transform="translate(18 14) scale(0.56)" fill="#FFFFFF" stroke="${INK}" stroke-width="4">${pawShapes()}</g>
+    </g>
+
+    <g transform="translate(186 74)">
+      <rect x="5" y="5" width="150" height="62" rx="31" fill="${INK}"/>
+      <rect width="150" height="62" rx="31" fill="var(--sc-paper)" stroke="${INK}" stroke-width="3.5"/>
+      ${wordmark("SOI", { px: pxs, x: (150 - soiW) / 2, y: (62 - GH * pxs) / 2, fill: "var(--sc-violet-deep)" })}
+    </g>
+
+    <g transform="translate(366 74)">
+      <rect x="5" y="5" width="160" height="62" rx="10" fill="${INK}"/>
+      <rect width="160" height="62" rx="10" fill="var(--sc-pink)" stroke="${INK}" stroke-width="3.5"/>
+      ${wordmark("2025", { px: 5, x: (160 - wordmarkWidth("2025", 5)) / 2, y: (62 - GH * 5) / 2, fill: "#FFFFFF" })}
+    </g>
+
+    <g transform="translate(58 186)">
+      <rect x="5" y="5" width="330" height="60" rx="10" fill="${INK}"/>
+      <rect width="330" height="60" rx="10" fill="var(--sc-lilac)" stroke="${INK}" stroke-width="3.5"/>
+      ${wordmark("CODER", { px: pxs, x: 26, y: (60 - GH * pxs) / 2, fill: INK })}
+      ${bar({ x: 250, y: 24, w: 60, h: 12 })}
+    </g>
+
+    <g transform="translate(414 186)">
+      <rect x="5" y="5" width="86" height="60" rx="10" fill="${INK}"/>
+      <rect width="86" height="60" rx="10" fill="#FFFFFF" stroke="${INK}" stroke-width="3.5"/>
+      <g transform="translate(20.5 3) scale(0.45)" fill="var(--sc-violet-deep)">${pawShapes()}</g>
+    </g>
+  `);
+}
+
+/* ══ Palettes and specs ══════════════════════════════════════════════ */
+
+const PALETTES = {
+  d1: [
+    ["#F7F5FB", "Paper ground"],
+    ["#B39DF3", "Wordmark"],
+    ["#FF5C8A", "Year mark"],
+    ["#FF6FA5", "Paw · lead"],
+    ["#8C74E0", "Paw · trail"],
+    ["#F4614B", "Bar 1"],
+    ["#3D4EA3", "Bar 3"],
+    ["#C9D6D2", "Hairline"]
+  ],
+  d2: [
+    ["#0D0B14", "Night ground"],
+    ["#C4AFFF", "Wordmark"],
+    ["#FF4D7E", "Year · ghost"],
+    ["#FF6FA5", "Paw · lead"],
+    ["#B39DF3", "Paw · trail"],
+    ["#F4614B", "Bar 1"],
+    ["#3D4EA3", "Bar 3"],
+    ["#3A2F55", "Screen edge"]
+  ],
+  d3: [
+    ["#EFEAFB", "Lilac ground"],
+    ["#1B1533", "Keyline · shadow"],
+    ["#8C74E0", "SOI"],
+    ["#FF6FA5", "Paw"],
+    ["#FF5C8A", "Year badge"],
+    ["#F4614B", "Bar 1"],
+    ["#3D4EA3", "Bar 3"],
+    ["#FFFFFF", "Die-cut edge"]
+  ]
+};
+
+const SPECS = {
+  d1: [
+    ["Lockup", "horizontal, 1200 × 300"],
+    ["Glyph grid", "5 × 7, tracking 2"],
+    ["Pixel unit", "12 u · wordmark 648 u"],
+    ["Bloom", "σ 16 far + σ 4.5 near"],
+    ["Minimum width", "240 px"],
+    ["Clear space", "2 pixel units all sides"]
+  ],
+  d2: [
+    ["Lockup", "horizontal, 1200 × 300"],
+    ["Ghost offset", "3 u left, 38% pink"],
+    ["Scanline", "1 px on 3 px, 5.5% white"],
+    ["Bloom", "σ 15 far + σ 4 near"],
+    ["Minimum width", "280 px"],
+    ["Requires", "own dark plate, never on white"]
+  ],
+  d3: [
+    ["Lockup", "stacked, 1200 × 300"],
+    ["Keyline", "3 – 4 px, #1B1533"],
+    ["Shadow", "1 unit, solid shapes only"],
+    ["Colours", "5 flat, no gradients"],
+    ["Minimum size", "16 px, paw only"],
+    ["Clear space", "1 keyline width all sides"]
+  ]
+};
+
+/* ══ Assembly ════════════════════════════════════════════════════════ */
+
+function mountApps(id, list) {
+  document.getElementById(id).innerHTML = list.map(a =>
+    `<figure class="app"><div class="app-frame">${a.svg}</div>` +
+    `<figcaption class="app-cap">${a.cap}</figcaption></figure>`
+  ).join("");
+}
+
+function mountSwatches(id, palette) {
+  document.getElementById(id).innerHTML = palette.map(([hex, role]) =>
+    `<div class="sw"><div class="sw-chip" style="background:${hex}"></div>` +
+    `<span class="sw-hex">${hex}</span><span class="sw-role">${role}</span></div>`
+  ).join("");
+}
+
+function mountSpec(id, rows) {
+  document.getElementById(id).innerHTML = rows.map(([k, v]) =>
+    `<div><span>${k}</span><span>${v}</span></div>`
+  ).join("");
+}
+
+document.getElementById("d1-hero").innerHTML = heroD1();
+document.getElementById("d2-hero").innerHTML = heroD2();
+document.getElementById("d3-hero").innerHTML = heroD3();
+
+mountApps("d1-apps", appsD1());
+mountApps("d2-apps", appsD2());
+mountApps("d3-apps", appsD3());
+
+["d1", "d2", "d3"].forEach(d => {
+  mountSwatches(d + "-sw", PALETTES[d]);
+  mountSpec(d + "-spec", SPECS[d]);
+});
+
+/* Scroll reveal, honouring reduced-motion via the CSS above. */
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
+}, { rootMargin: "0px 0px -8% 0px" });
+document.querySelectorAll(".rise").forEach(el => io.observe(el));
+</script>
