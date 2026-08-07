@@ -163,6 +163,40 @@ p  { margin: 0; }
 }
 .masthead-meta b { color: var(--ink-2); font-weight: 400; }
 
+/* Controls: the ground picker and the motion switch. Deliberately plain —
+   they are page furniture, not part of the identity being judged. */
+
+#motion-toggle, .ground-pick button {
+  font-family: "SC Mono", ui-monospace, monospace;
+  font-size: .7rem;
+  letter-spacing: .06em;
+  color: var(--ink-2);
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  padding: 4px 11px;
+  cursor: pointer;
+  transition: background .15s ease, color .15s ease, border-color .15s ease;
+}
+#motion-toggle:hover, .ground-pick button:hover { border-color: var(--mark); color: var(--ink); }
+#motion-toggle[aria-pressed="true"] { background: var(--mark); border-color: var(--mark); color: var(--surface); }
+
+.ground-pick { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+.ground-pick button.on { background: var(--mark); border-color: var(--mark); color: var(--surface); }
+.ground-label {
+  font-family: "SC Mono", ui-monospace, monospace;
+  font-size: .68rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-right: 3px;
+}
+
+/* Stopping the flicker drops the animations entirely rather than pausing
+   them, so the signs settle lit instead of freezing mid-dropout. */
+body.no-motion .tube,
+body.no-motion .tube-s,
+body.no-motion .tube-b { animation: none; opacity: 1; }
+
 /* A rule made of pixels rather than a hairline. */
 .pixrule {
   height: 4px;
@@ -212,6 +246,10 @@ p  { margin: 0; }
 
 /* Every mockup surface. The scroller keeps wide artwork from pushing
    the page sideways. */
+/* The stage is the surface a mark is being previewed on, so it is set to
+   the mode's own world rather than the page's. Without that, "bare" has
+   nothing to be bare against and "glow" reads as a stain. Both are held a
+   step away from the mark's own ground so a plate still reads as a slab. */
 .stage {
   background: var(--surface);
   border: 1px solid var(--rule);
@@ -219,6 +257,8 @@ p  { margin: 0; }
   overflow-x: auto;
   overflow-y: hidden;
 }
+.stage[data-surface="light"] { background: #E4E1EC; }
+.stage[data-surface="night"] { background: #08060D; border-color: #241C33; }
 .stage > svg { display: block; width: 100%; min-width: 640px; height: auto; }
 
 .apps {
@@ -324,6 +364,7 @@ tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
       <span>OWNER <b>supasiao7896TH</b></span>
       <span>USE <b>dev persona · web app</b></span>
       <span>YEAR MARK <b>2025, retained</b></span>
+      <button type="button" id="motion-toggle" aria-pressed="false">Stop the flicker</button>
     </div>
   </header>
 
@@ -358,11 +399,18 @@ tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
       <p class="note">
         The supplied artwork, resolved. Spacing put on the same 8 px grid the letters
         are drawn on, the bloom rebuilt as a two-pass Gaussian so it survives export,
-        and the paws re-cut so the pads read as pads at any size. This is the safest
-        of the three: nothing about the original is argued with.
+        and the paws re-cut so the pads read as pads at any size. Every glyph and paw
+        is a separate tube on its own phase, so the sign strikes unevenly and never
+        blinks in unison.
       </p>
     </div>
-    <div class="stage" id="d1-hero"></div>
+    <div class="ground-pick" data-for="d1">
+      <span class="ground-label">Ground</span>
+      <button type="button" data-g="bare">Bare</button>
+      <button type="button" data-g="glow" class="on">Glow</button>
+      <button type="button" data-g="plate">Plate</button>
+    </div>
+    <div class="stage" data-surface="light" id="d1-hero"></div>
     <div class="apps" id="d1-apps"></div>
     <div class="spec">
       <div>
@@ -383,11 +431,18 @@ tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
       <p class="note">
         Same lockup, moved to a phosphor screen. Bloom runs hotter, a pink ghost sits
         one pixel off-register the way a cheap CRT actually misconverges, and a 3 px
-        scanline field holds the whole plate together. This is the direction that
-        matches a terminal-first workflow and the existing dark-mode house style.
+        scanline field holds the whole plate together. The ghost lives inside the same
+        tube as its letter, so a dropout takes both — a ghost left glowing over a dead
+        letter is the tell that gives away a fake.
       </p>
     </div>
-    <div class="stage" id="d2-hero"></div>
+    <div class="ground-pick" data-for="d2">
+      <span class="ground-label">Ground</span>
+      <button type="button" data-g="bare">Bare</button>
+      <button type="button" data-g="glow" class="on">Glow</button>
+      <button type="button" data-g="plate">Plate</button>
+    </div>
+    <div class="stage" data-surface="night" id="d2-hero"></div>
     <div class="apps" id="d2-apps"></div>
     <div class="spec">
       <div>
@@ -420,6 +475,38 @@ tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
         <div class="swatches" id="d3-sw"></div>
       </div>
       <div class="speclist" id="d3-spec"></div>
+    </div>
+  </section>
+
+  <!-- The dark-surface problem ───────────────────────────────────── -->
+  <section class="dir rise" id="dark-test">
+    <div class="dir-head">
+      <span class="eyebrow">The question</span>
+      <h2>What happens on a dark app surface</h2>
+      <p class="note">
+        A plate is a rectangle of light. Drop one into a dark interface and the eye
+        finds the box before it finds the logo — four hard edges and two hairlines all
+        announcing themselves. The fix is not a better rectangle. It is to stop
+        shipping the ground attached to the mark.
+      </p>
+    </div>
+    <div class="apps" id="dark-apps"></div>
+    <p class="note">
+      Left is the problem. Middle is the same mark with no ground at all, which is what
+      belongs in a header, a README or a splash screen. Right is the glow ground: light
+      that falls off into the surface with no straight edge anywhere, which is what
+      neon does to the air around it.
+    </p>
+    <div class="spec">
+      <div class="speclist" id="ground-rules"></div>
+      <p class="note" style="align-self:start">
+        One more rule worth stating plainly: <b>D1 and D2 are not two logos.</b> They are
+        one logo with a light mode and a dark mode. “D1 on a dark background” is not a
+        thing to be fixed — the answer is D2 bare. Pastel violet
+        <span class="mono">#B39DF3</span> does not carry enough contrast on
+        <span class="mono">#0D0B14</span>, which is the whole reason D2 lifts the
+        wordmark to <span class="mono">#C4AFFF</span>.
+      </p>
     </div>
   </section>
 
@@ -507,6 +594,12 @@ tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
    table, a paw, a tricolour bar, and a bloom filter.                  */
 
 const GW = 5, GH = 7;
+
+/* Element ids must be unique across the document but stable across builds —
+   a random id would make every rebuild a fresh git diff and would break the
+   byte-comparison in tools/verify.mjs. */
+let UID_N = 0;
+const uid = (prefix) => prefix + (++UID_N).toString(36);
 
 const GLYPHS = {
   S: ["01110","10001","10000","01110","00001","10001","01110"],
@@ -600,7 +693,7 @@ function paw(opts = {}) {
 const BAR = [[0, 0.365, "var(--sc-red)"], [0.365, 0.25, "#F4F2F6"], [0.615, 0.385, "var(--sc-navy)"]];
 function bar(opts = {}) {
   const { x = 0, y = 0, w = 160, h = 20, white = "#FFFFFF", attrs = "" } = opts;
-  const id = "clip" + Math.random().toString(36).slice(2, 8);
+  const id = uid("clip");
   const segs = BAR.map(([o, len, c]) =>
     `<rect x="${x + o * w}" y="${y}" width="${len * w + 0.5}" height="${h}" fill="${c === "#F4F2F6" ? white : c}"/>`
   ).join("");
@@ -625,6 +718,89 @@ function bloomDef(id, far, near, doubled = true) {
 
 function svg(w, h, inner, extra = "") {
   return `<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" xmlns="http://www.w3.org/2000/svg" ${extra}>${inner}</svg>`;
+}
+
+/* ══ Neon flicker ════════════════════════════════════════════════════
+   A Yaowarat sign at 2am does three things at once, so a tube stacks
+   three animations on three nested groups — nesting rather than one
+   list, because CSS lets only the last animation win a property, while
+   nested opacities multiply.
+
+     .tube    warm-up   fires once on load: hard, irregular strikes
+     .tube-s  stutter   a long quiet loop broken by a ~60ms dropout
+     .tube-b  breathe   a slow swell, the ballast hum
+
+   Two rules keep the PNG export honest. Playwright's animations:"disabled"
+   fast-forwards finite animations and cancels infinite ones to their base
+   style, so warm-up may start dark (it ends lit) but breathe and stutter
+   must sit at full opacity at 0%.
+
+   The filter goes on the innermost group, which never changes geometry.
+   Opacity composites after filtering, so the blur is computed once and
+   cached; animating opacity on an ancestor of a filtered group instead
+   would re-run the Gaussian every frame.                              */
+
+const NEON_CSS = `
+.tube   { animation: sc-warm 2.6s steps(1, end) var(--wd, 0s) 1 both; }
+.tube-s { animation: sc-stut var(--sp, 13s) steps(1, end) var(--sd, 0s) infinite; }
+.tube-b { animation: sc-breathe var(--bp, 6s) ease-in-out var(--bd, 0s) infinite; }
+
+@keyframes sc-warm {
+  0%   { opacity: 0; }
+  3%   { opacity: 1; }
+  6%   { opacity: .06; }
+  10%  { opacity: .85; }
+  13%  { opacity: 0; }
+  21%  { opacity: 1; }
+  25%  { opacity: .1; }
+  28%  { opacity: 1; }
+  32%  { opacity: .35; }
+  36%  { opacity: 1; }
+  41%  { opacity: .15; }
+  46%  { opacity: 1; }
+  100% { opacity: 1; }
+}
+
+/* Lit at 0% so a cancelled animation leaves the sign on. */
+@keyframes sc-stut {
+  0%, 95.6%   { opacity: 1; }
+  96%         { opacity: .07; }
+  96.4%       { opacity: 1; }
+  97.2%       { opacity: .14; }
+  97.6%, 100% { opacity: 1; }
+}
+
+@keyframes sc-breathe {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: .87; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tube, .tube-s, .tube-b { animation: none; opacity: 1; }
+}
+`;
+
+/* Deterministic phase per tube. Real neon never blinks in unison, and a
+   seeded hash keeps every tube out of step while the build stays
+   byte-reproducible. */
+function tubeVars(i) {
+  const h = (salt) => {
+    const x = Math.sin((i + 1) * 12.9898 + salt * 78.233) * 43758.5453;
+    return x - Math.floor(x);
+  };
+  const r = (v) => Math.round(v * 100) / 100;
+  const bp = 5 + h(1) * 2.6;
+  const sp = 9 + h(2) * 8;
+  return `--wd:${r(h(3) * 0.5)}s;` +
+         `--bp:${r(bp)}s;--bd:${r(-h(4) * bp)}s;` +
+         `--sp:${r(sp)}s;--sd:${r(-h(5) * sp)}s`;
+}
+
+/* Wrap artwork in the three flicker layers. `i` picks the phase. */
+function tube(i, inner, filterId) {
+  const f = filterId ? ` filter="url(#${filterId})"` : "";
+  return `<g class="tube" style="${tubeVars(i)}"><g class="tube-s">` +
+         `<g class="tube-b"${f}>${inner}</g></g></g>`;
 }
 
 /* ══ Horizontal lockup geometry ══════════════════════════════════════
@@ -654,37 +830,156 @@ function lockupGeometry(W, H) {
 }
 
 /* Two paws walking up-right into the wordmark, sized off the plate
-   height and kept clear of wmX. */
+   height and kept clear of wmX. Returned separately so each can be its
+   own tube. */
 function pawCluster(H, trail, lead) {
   const sTrail = H * 0.28, sLead = H * 0.34;
   const x1 = Math.round(H * 0.26), y1 = Math.round(H * 0.50);
-  return paw({ x: x1, y: y1, size: sTrail, fill: trail }) +
-         paw({ x: x1 + Math.round(sTrail * 0.74), y: Math.round(H * 0.245), size: sLead, fill: lead });
+  return [
+    paw({ x: x1, y: y1, size: sTrail, fill: trail }),
+    paw({ x: x1 + Math.round(sTrail * 0.74), y: Math.round(H * 0.245), size: sLead, fill: lead })
+  ];
+}
+
+/* The wordmark as one tube per glyph, so letters strike independently.
+   Tracking is 2 empty columns, so a merged run never spans two glyphs —
+   rendering them one at a time is identical to rendering the string. */
+function wordmarkTubes(text, opts = {}) {
+  const {
+    px = 12, tracking = 2, x = 0, y = 0, filterId = null, seed = 0,
+    layers = [{ fill: "#000" }]
+  } = opts;
+  const step = (GW + tracking) * px;
+  return [...String(text).toUpperCase()].map((ch, i) => {
+    if (!GLYPHS[ch]) return "";
+    /* Every layer of a glyph — core plus any ghost — goes inside the same
+       tube, so a dropout takes the whole letter with it. */
+    const art = layers.map(l => wordmark(ch, {
+      px, tracking, fill: l.fill, x: x + i * step + (l.dx || 0), y, attrs: l.attrs || ""
+    })).join("");
+    return tube(seed + i, art, filterId);
+  }).join("");
+}
+
+/* ══ Ground treatments ═══════════════════════════════════════════════
+   The lockup is identical in all three; only what sits behind it moves.
+
+     bare   nothing at all — transparent, for a surface that already has
+            a ground of its own. This is the one that stops the mark
+            reading as a bright slab on a dark app.
+     glow   a radial haze with no straight edge anywhere, which is what
+            neon actually does to the air around it.
+     plate  the opaque banner, for cards that want a frame.            */
+
+function scanPattern(id, opacity) {
+  return `<pattern id="${id}" width="3" height="3" patternUnits="userSpaceOnUse">` +
+         `<rect width="3" height="1" fill="#FFFFFF" opacity="${opacity}"/></pattern>`;
+}
+
+function groundLayer(kind, W, H, mode) {
+  const night = mode === "night";
+  const fill = night ? "var(--sc-night)" : "var(--sc-paper)";
+  if (kind === "bare") return { defs: "", back: "", front: "" };
+
+  if (kind === "glow") {
+    const gid = uid("gg"), mid = uid("gm"), sid = uid("gs");
+    return {
+      defs:
+        /* Four stops, not two: a straight white-to-black ramp leaves a
+           visible ring where the falloff turns over, which is the one
+           thing a glow ground exists to avoid. */
+        `<radialGradient id="${gid}" cx="50%" cy="52%" r="72%">` +
+        `<stop offset="0%" stop-color="#FFFFFF"/>` +
+        `<stop offset="38%" stop-color="#FFFFFF" stop-opacity=".94"/>` +
+        `<stop offset="68%" stop-color="#FFFFFF" stop-opacity=".45"/>` +
+        `<stop offset="88%" stop-color="#FFFFFF" stop-opacity=".12"/>` +
+        `<stop offset="100%" stop-color="#000000"/></radialGradient>` +
+        `<mask id="${mid}"><rect width="${W}" height="${H}" fill="url(#${gid})"/></mask>` +
+        (night ? scanPattern(sid, ".055") : ""),
+      back:
+        `<g mask="url(#${mid})"><rect width="${W}" height="${H}" fill="${fill}"/>` +
+        (night ? `<rect width="${W}" height="${H}" fill="url(#${sid})"/>` : "") + `</g>`,
+      front: ""
+    };
+  }
+
+  if (night) {
+    const vid = uid("pv"), sid = uid("ps");
+    return {
+      defs:
+        `<radialGradient id="${vid}" cx="45%" cy="50%" r="72%">` +
+        `<stop offset="0%" stop-color="#241C3C" stop-opacity=".85"/>` +
+        `<stop offset="60%" stop-color="#130F20" stop-opacity=".4"/>` +
+        `<stop offset="100%" stop-color="#000000" stop-opacity=".55"/></radialGradient>` +
+        scanPattern(sid, ".055"),
+      back: `<rect width="${W}" height="${H}" fill="${fill}"/><rect width="${W}" height="${H}" fill="url(#${vid})"/>`,
+      front:
+        `<rect width="${W}" height="${H}" fill="url(#${sid})"/>` +
+        `<line x1="0" y1="0.5" x2="${W}" y2="0.5" stroke="#3A2F55"/>` +
+        `<line x1="0" y1="${H - 0.5}" x2="${W}" y2="${H - 0.5}" stroke="#3A2F55"/>`
+    };
+  }
+  return {
+    defs: "",
+    back: `<rect width="${W}" height="${H}" fill="${fill}"/>`,
+    front:
+      `<line x1="0" y1="0.5" x2="${W}" y2="0.5" stroke="var(--sc-hairline)"/>` +
+      `<line x1="0" y1="${H - 0.5}" x2="${W}" y2="${H - 0.5}" stroke="var(--sc-hairline)"/>`
+  };
 }
 
 /* ══ D1 — Neon Arcade ════════════════════════════════════════════════ */
 
-function heroD1() {
-  const W = 1200, H = 300;
+/* ══ The lockup ══════════════════════════════════════════════════════
+   D1 and D2 are one lockup in two modes, so they get one renderer. Two
+   functions is how they drifted apart the first time.                 */
+
+const MODES = {
+  light: {
+    bloom: [15, 2, true], pawBloom: [18, 4, true],
+    paws: ["var(--sc-violet-deep)", "var(--sc-paw-pink)"],
+    pawOpacity: ".92",
+    core: "var(--sc-violet)", ghost: null,
+    year: "var(--sc-pink)", barWhite: "#FFFFFF"
+  },
+  night: {
+    bloom: [17, 2, false], pawBloom: [20, 4, false],
+    paws: ["var(--sc-violet)", "var(--sc-paw-pink)"],
+    pawOpacity: "1",
+    core: "var(--sc-violet-hi)", ghost: "var(--sc-pink)",
+    year: "var(--sc-pink-hot)", barWhite: "#E4DFF0"
+  }
+};
+
+function lockupInner(mode, groundKind, W, H, standalone = false) {
+  const m = MODES[mode];
   const g = lockupGeometry(W, H);
+  const gr = groundLayer(groundKind, W, H, mode);
+  const bloom = uid("b"), pawB = uid("b");
+  const [trail, lead] = pawCluster(H, m.paws[0], m.paws[1]);
+  const k = H / 300;                       // bloom scales with the plate
+  const bl = (v) => [v[0] * k, v[1] * k, v[2]];
 
-  return svg(W, H, `
-    <defs>
-      ${bloomDef("d1-bloom", 15, 2)}
-      ${bloomDef("d1-paw", 18, 4)}
-    </defs>
-    <rect width="${W}" height="${H}" fill="var(--sc-paper)"/>
-    <line x1="0" y1="0.5" x2="${W}" y2="0.5" stroke="var(--sc-hairline)" stroke-width="1"/>
-    <line x1="0" y1="${H - 0.5}" x2="${W}" y2="${H - 0.5}" stroke="var(--sc-hairline)" stroke-width="1"/>
+  /* Ghost offset is a fraction of the pixel unit, so misconvergence stays
+     proportional instead of turning into a smear on a small plate. */
+  const layers = m.ghost
+    ? [{ fill: m.ghost, dx: -Math.max(1, Math.round(g.px * 0.42)), attrs: 'opacity=".5"' }, { fill: m.core }]
+    : [{ fill: m.core }];
 
-    <g filter="url(#d1-paw)" opacity=".92">
-      ${pawCluster(H, "var(--sc-violet-deep)", "var(--sc-paw-pink)")}
-    </g>
+  return `
+    ${standalone ? `<style>${NEON_CSS}</style>` : ""}
+    <defs>${gr.defs}${bloomDef(bloom, ...bl(m.bloom))}${bloomDef(pawB, ...bl(m.pawBloom))}</defs>
+    ${gr.back}
+    <g opacity="${m.pawOpacity}">${tube(20, trail, pawB)}${tube(21, lead, pawB)}</g>
+    ${wordmarkTubes("SOICODER", { px: g.px, x: g.wmX, y: g.wmY, filterId: bloom, seed: 0, layers })}
+    ${wordmarkTubes("2025", { px: g.yrPx, x: g.yrX, y: g.yrY, filterId: bloom, seed: 30, layers: [{ fill: m.year }] })}
+    <g class="tube-b" style="${tubeVars(40)}">${bar({ x: g.yrX, y: g.barY, w: g.yrW, h: g.barH, white: m.barWhite })}</g>
+    ${gr.front}
+  `;
+}
 
-    ${wordmark("SOICODER", { px: g.px, x: g.wmX, y: g.wmY, fill: "var(--sc-violet)", attrs: 'filter="url(#d1-bloom)"' })}
-    ${wordmark("2025", { px: g.yrPx, x: g.yrX, y: g.yrY, fill: "var(--sc-pink)", attrs: 'filter="url(#d1-bloom)"' })}
-    ${bar({ x: g.yrX, y: g.barY, w: g.yrW, h: g.barH })}
-  `);
+function heroD1(groundKind = "glow", standalone = false) {
+  return svg(1200, 300, lockupInner("light", groundKind, 1200, 300, standalone));
 }
 
 function appsD1() {
@@ -720,45 +1015,11 @@ function ghCard(dark) {
   `);
 }
 
-/* The lockup at banner proportions, reusable inside app frames. */
-function heroD1Plate(W, H) {
-  const g = lockupGeometry(W, H);
-  const uid = "p" + Math.random().toString(36).slice(2, 7);
-  return `
-    <defs>${bloomDef(uid + "b", H / 9, H / 65)}</defs>
-    <rect width="${W}" height="${H}" fill="var(--sc-paper)"/>
-    <line x1="0" y1="0.5" x2="${W}" y2="0.5" stroke="var(--sc-hairline)"/>
-    <line x1="0" y1="${H - 0.5}" x2="${W}" y2="${H - 0.5}" stroke="var(--sc-hairline)"/>
-    <g filter="url(#${uid}b)" opacity=".92">
-      ${pawCluster(H, "var(--sc-violet-deep)", "var(--sc-paw-pink)")}
-    </g>
-    ${wordmark("SOICODER", { px: g.px, x: g.wmX, y: g.wmY, fill: "var(--sc-violet)", attrs: `filter="url(#${uid}b)"` })}
-    ${wordmark("2025", { px: g.yrPx, x: g.yrX, y: g.yrY, fill: "var(--sc-pink)", attrs: `filter="url(#${uid}b)"` })}
-    ${bar({ x: g.yrX, y: g.barY, w: g.yrW, h: g.barH })}
-  `;
-}
-
-function heroD2Plate(W, H) {
-  const g = lockupGeometry(W, H);
-  const uid = "q" + Math.random().toString(36).slice(2, 7);
-  return `
-    <defs>
-      ${bloomDef(uid + "b", H / 8, H / 65, false)}
-      <pattern id="${uid}s" width="3" height="3" patternUnits="userSpaceOnUse">
-        <rect width="3" height="1" fill="#FFFFFF" opacity=".05"/>
-      </pattern>
-    </defs>
-    <rect width="${W}" height="${H}" fill="var(--sc-night)"/>
-    <g filter="url(#${uid}b)">
-      ${pawCluster(H, "var(--sc-violet)", "var(--sc-paw-pink)")}
-    </g>
-    ${wordmark("SOICODER", { px: g.px, x: g.wmX - 2, y: g.wmY, fill: "var(--sc-pink)", attrs: `filter="url(#${uid}b)" opacity=".5"` })}
-    ${wordmark("SOICODER", { px: g.px, x: g.wmX, y: g.wmY, fill: "var(--sc-violet-hi)", attrs: `filter="url(#${uid}b)"` })}
-    ${wordmark("2025", { px: g.yrPx, x: g.yrX, y: g.yrY, fill: "var(--sc-pink-hot)", attrs: `filter="url(#${uid}b)"` })}
-    ${bar({ x: g.yrX, y: g.barY, w: g.yrW, h: g.barH, white: "#E4DFF0" })}
-    <rect width="${W}" height="${H}" fill="url(#${uid}s)"/>
-  `;
-}
+/* The lockup at banner proportions, for embedding in an app frame.
+   Same renderer as the heroes — these used to be hand-copied, which is
+   exactly how the two drifted out of sync. */
+const heroD1Plate = (W, H) => lockupInner("light", "plate", W, H);
+const heroD2Plate = (W, H) => lockupInner("night", "plate", W, H);
 
 /* Compact horizontal mark: paw + SOICODER on one line. */
 function compactMark(x, y, h, wordFill, pawFill) {
@@ -821,39 +1082,8 @@ function socialCard() {
 
 /* ══ D2 — CRT Night ══════════════════════════════════════════════════ */
 
-function heroD2() {
-  const W = 1200, H = 300;
-  const g = lockupGeometry(W, H);
-
-  return svg(W, H, `
-    <defs>
-      ${bloomDef("d2-bloom", 17, 2, false)}
-      ${bloomDef("d2-paw", 20, 4, false)}
-      <radialGradient id="d2-vig" cx="45%" cy="50%" r="72%">
-        <stop offset="0%"  stop-color="#241C3C" stop-opacity=".85"/>
-        <stop offset="60%" stop-color="#130F20" stop-opacity=".4"/>
-        <stop offset="100%" stop-color="#000000" stop-opacity=".55"/>
-      </radialGradient>
-      <pattern id="d2-scan" width="3" height="3" patternUnits="userSpaceOnUse">
-        <rect width="3" height="1" fill="#FFFFFF" opacity=".055"/>
-      </pattern>
-    </defs>
-    <rect width="${W}" height="${H}" fill="var(--sc-night)"/>
-    <rect width="${W}" height="${H}" fill="url(#d2-vig)"/>
-
-    <g filter="url(#d2-paw)">
-      ${pawCluster(H, "var(--sc-violet)", "var(--sc-paw-pink)")}
-    </g>
-
-    ${wordmark("SOICODER", { px: g.px, x: g.wmX - 5, y: g.wmY, fill: "var(--sc-pink)", attrs: 'filter="url(#d2-bloom)" opacity=".5"' })}
-    ${wordmark("SOICODER", { px: g.px, x: g.wmX, y: g.wmY, fill: "var(--sc-violet-hi)", attrs: 'filter="url(#d2-bloom)"' })}
-    ${wordmark("2025", { px: g.yrPx, x: g.yrX, y: g.yrY, fill: "var(--sc-pink-hot)", attrs: 'filter="url(#d2-bloom)"' })}
-    ${bar({ x: g.yrX, y: g.barY, w: g.yrW, h: g.barH, white: "#E4DFF0" })}
-
-    <rect width="${W}" height="${H}" fill="url(#d2-scan)"/>
-    <line x1="0" y1="0.5" x2="${W}" y2="0.5" stroke="#3A2F55"/>
-    <line x1="0" y1="${H - 0.5}" x2="${W}" y2="${H - 0.5}" stroke="#3A2F55"/>
-  `);
+function heroD2(groundKind = "glow", standalone = false) {
+  return svg(1200, 300, lockupInner("night", groundKind, 1200, 300, standalone));
 }
 
 function appsD2() {
@@ -1065,6 +1295,43 @@ function stickerSheet() {
   `);
 }
 
+/* ══ The dark-surface test ═══════════════════════════════════════════
+   The mark dropped into a dark app header, so the three grounds can be
+   judged where the problem actually shows up rather than in isolation. */
+
+function darkSurface(mode, groundKind) {
+  const W = 560, H = 300, PW = 520, PH = 96;
+  return svg(W, H, `
+    <rect width="${W}" height="${H}" fill="#0E0C15"/>
+    <rect width="${W}" height="${H}" fill="none" stroke="#221C33"/>
+    <g transform="translate(20 24)">${lockupInner(mode, groundKind, PW, PH)}</g>
+    <g fill="#171223" stroke="#241D38">
+      <rect x="20" y="146" width="248" height="62" rx="8"/>
+      <rect x="284" y="146" width="256" height="62" rx="8"/>
+      <rect x="20" y="222" width="520" height="56" rx="8"/>
+    </g>
+    <g font-family="SC Mono, monospace" font-size="8" fill="#5B5280">
+      <text x="34" y="168">UPTIME</text><text x="298" y="168">QUEUE</text><text x="34" y="244">EVENTS</text>
+    </g>
+    <g font-family="SC Display, sans-serif" font-size="17" fill="#B9B1CE">
+      <text x="34" y="194">99.98%</text><text x="298" y="194">14</text>
+    </g>
+    <g fill="#241D38">
+      <rect x="34" y="256" width="380" height="5" rx="2.5"/>
+      <rect x="34" y="268" width="300" height="5" rx="2.5"/>
+    </g>
+  `);
+}
+
+const GROUND_RULES = [
+  ["Bare", "header · README · splash"],
+  ["Glow", "hero · dark app · social"],
+  ["Plate", "OG image · card · print"],
+  ["Light mode — D1", "grounds lighter than #E8E4F2"],
+  ["Dark mode — D2", "grounds darker than #1A1626"],
+  ["Never", "D1 on a dark ground"]
+];
+
 /* ══ Palettes and specs ══════════════════════════════════════════════ */
 
 const PALETTES = {
@@ -1105,17 +1372,23 @@ const SPECS = {
     ["Lockup", "horizontal, 1200 × 300"],
     ["Glyph grid", "5 × 7, tracking 2"],
     ["Pixel unit", "12 u · wordmark 648 u"],
-    ["Bloom", "σ 16 far + σ 4.5 near"],
+    ["Bloom", "σ 15 far ×2 + σ 2 near"],
+    ["Tubes", "14 — 8 + 4 glyphs, 2 paws"],
+    ["Flicker", "warm-up 2.6 s · breathe 5–7.6 s"],
+    ["Grounds", "bare · glow · plate"],
     ["Minimum width", "240 px"],
     ["Clear space", "2 pixel units all sides"]
   ],
   d2: [
     ["Lockup", "horizontal, 1200 × 300"],
-    ["Ghost offset", "3 u left, 38% pink"],
+    ["Ghost offset", "0.42 × pixel unit, 50% pink"],
     ["Scanline", "1 px on 3 px, 5.5% white"],
-    ["Bloom", "σ 15 far + σ 4 near"],
+    ["Bloom", "σ 17 far + σ 2 near"],
+    ["Tubes", "14 — ghost rides its letter"],
+    ["Flicker", "stutter 9–17 s, ~60 ms dropout"],
+    ["Grounds", "bare · glow · plate"],
     ["Minimum width", "280 px"],
-    ["Requires", "own dark plate, never on white"]
+    ["Requires", "a dark surface, never white"]
   ],
   d3: [
     ["Lockup", "stacked, 1200 × 300"],
@@ -1149,18 +1422,87 @@ function mountSpec(id, rows) {
   ).join("");
 }
 
-document.getElementById("d1-hero").innerHTML = heroD1();
-document.getElementById("d2-hero").innerHTML = heroD2();
+/* The flicker rules live in one string so the page and every standalone
+   SVG stay in step. The page gets them once, here. */
+const styleTag = document.createElement("style");
+styleTag.textContent = NEON_CSS;
+document.head.appendChild(styleTag);
+
+/* ── Ground picker ─────────────────────────────────────────────────
+   Re-rendering the hero on each pick is cheap and keeps one source of
+   truth; there is no second code path for "the D1 that is showing". */
+
+const HERO = { d1: heroD1, d2: heroD2 };
+
+function paintHero(dir, groundKind) {
+  document.getElementById(dir + "-hero").innerHTML = HERO[dir](groundKind);
+}
+
+document.querySelectorAll(".ground-pick").forEach(pick => {
+  const dir = pick.dataset.for;
+  pick.addEventListener("click", (e) => {
+    const btn = e.target.closest("button[data-g]");
+    if (!btn) return;
+    pick.querySelectorAll("button").forEach(b => b.classList.toggle("on", b === btn));
+    paintHero(dir, btn.dataset.g);
+  });
+  paintHero(dir, pick.querySelector("button.on").dataset.g);
+});
+
 document.getElementById("d3-hero").innerHTML = heroD3();
 
 mountApps("d1-apps", appsD1());
 mountApps("d2-apps", appsD2());
 mountApps("d3-apps", appsD3());
 
+mountApps("dark-apps", [
+  { cap: "D1 plate — the problem", svg: darkSurface("light", "plate") },
+  { cap: "D2 bare — no ground at all", svg: darkSurface("night", "bare") },
+  { cap: "D2 glow — light, no box", svg: darkSurface("night", "glow") }
+]);
+mountSpec("ground-rules", GROUND_RULES);
+
 ["d1", "d2", "d3"].forEach(d => {
   mountSwatches(d + "-sw", PALETTES[d]);
   mountSpec(d + "-spec", SPECS[d]);
 });
+
+/* ── Motion switch ─────────────────────────────────────────────────── */
+const motionBtn = document.getElementById("motion-toggle");
+motionBtn.addEventListener("click", () => {
+  const off = document.body.classList.toggle("no-motion");
+  motionBtn.setAttribute("aria-pressed", String(off));
+  motionBtn.textContent = off ? "Start the flicker" : "Stop the flicker";
+});
+
+/* ── Export hook ───────────────────────────────────────────────────
+   tools/build.mjs reads these through the page, so the exported SVGs
+   come off the same renderer as everything on screen. Brand colours are
+   CSS variables here but a standalone file has no :root to read, so they
+   are resolved to literals on the way out. */
+
+const BRAND = {
+  "--sc-violet": "#B39DF3", "--sc-violet-hi": "#C4AFFF", "--sc-violet-deep": "#8C74E0",
+  "--sc-pink": "#FF5C8A", "--sc-pink-hot": "#FF4D7E", "--sc-paw-pink": "#FF6FA5",
+  "--sc-red": "#F4614B", "--sc-navy": "#3D4EA3", "--sc-paper": "#F7F5FB",
+  "--sc-night": "#0D0B14", "--sc-hairline": "#C9D6D2", "--sc-ink": "#1B1533",
+  "--sc-lilac": "#EFEAFB"
+};
+
+function resolveTokens(s) {
+  return s.replace(/var\((--sc-[a-z-]+)\)/g, (whole, key) => BRAND[key] ?? whole);
+}
+
+window.__exportSVGs = () => {
+  const out = {};
+  for (const [dir, mode] of [["d1", "light"], ["d2", "night"]]) {
+    for (const groundKind of ["bare", "glow", "plate"]) {
+      const name = (dir === "d1" ? "d1-neon-arcade" : "d2-crt-night") + "-" + groundKind;
+      out[name] = resolveTokens(svg(1200, 300, lockupInner(mode, groundKind, 1200, 300, true)));
+    }
+  }
+  return out;
+};
 
 /* Scroll reveal, honouring reduced-motion via the CSS above. */
 const io = new IntersectionObserver((entries) => {

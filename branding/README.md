@@ -25,6 +25,77 @@ utility**: D1 or D2 as the voice, D3 as the icon system underneath it.
 
 ---
 
+## Ground: never ship the mark welded to a rectangle
+
+A plate is a rectangle of light. Drop one into a dark interface and the eye finds
+the box before it finds the logo. The fix is not a better rectangle — it is to
+stop shipping the ground attached to the mark. Every lockup comes in three:
+
+| Ground | What it draws | Use for |
+|---|---|---|
+| **bare** | nothing — transparent | header, README, splash: anywhere the surface already has a ground |
+| **glow** | a radial haze, no straight edge anywhere | hero, dark app, social — what neon actually does to the air |
+| **plate** | opaque banner + hairlines | OG image, card, print — where a frame is wanted |
+
+### D1 and D2 are not two logos
+
+They are **one logo with a light mode and a dark mode**. "D1 on a dark
+background" is not a problem to be solved — the answer is **D2 bare**. Pastel
+violet `#B39DF3` does not carry enough contrast on `#0D0B14`, which is exactly
+why D2 lifts the wordmark to `#C4AFFF`.
+
+- **D1** — grounds lighter than `#E8E4F2`
+- **D2** — grounds darker than `#1A1626`
+- **Never** — D1 on a dark ground
+
+The glow gradient uses four stops, not two. A straight white-to-black ramp
+leaves a visible ring where the falloff turns over, which is the one thing a
+glow ground exists to avoid.
+
+---
+
+## Flicker
+
+A Yaowarat sign at 2am does three things at once, so a tube stacks three
+animations on three nested groups — nested rather than listed, because CSS lets
+only the last animation win a property while nested opacities multiply.
+
+| Layer | Class | Behaviour |
+|---|---|---|
+| Warm-up | `.tube` | fires once on load: hard, irregular strikes over 2.6 s |
+| Stutter | `.tube-s` | a long quiet loop (9–17 s) broken by a ~60 ms dropout |
+| Breathe | `.tube-b` | a slow swell, 5–7.6 s — the ballast hum |
+
+**Every glyph and every paw is its own tube**, each on a phase from a seeded
+hash of its index. Signs that blink in unison read as a CSS animation; signs
+that don't read as neon. The seed is deterministic, so the build stays
+byte-reproducible — `tools/verify.mjs` depends on that.
+
+In D2 the pink ghost lives **inside the same tube as its letter**, so a dropout
+takes both. A ghost left glowing over a dead letter is the tell that gives away
+a fake.
+
+The tricolour bar breathes but never stutters. It is the one element that isn't
+a light source — enamel, not neon — so it anchors the composition while
+everything around it misbehaves.
+
+### Two rules that are easy to break
+
+**Put the `filter` on the same element that animates `opacity`.** Opacity
+composites *after* filtering, so the Gaussian is computed once and cached.
+Wrapping a filter around a group and animating a child's opacity instead
+re-runs the blur every frame.
+
+**Infinite animations must sit at full opacity at `0%`.** Playwright's
+`animations: "disabled"` fast-forwards finite animations but cancels infinite
+ones to their base style. Warm-up may start dark because it *ends* lit; breathe
+and stutter may not, or the exported PNG comes out as a dead sign.
+
+`prefers-reduced-motion: reduce` drops all three animations and leaves every
+tube lit — in the page **and** inside each standalone SVG.
+
+---
+
 ## Palette
 
 Brand colours are fixed — they never respond to the viewer's light/dark setting.
@@ -101,15 +172,32 @@ gradients, which is also what makes D3 the printable and embroiderable one.
 
 ---
 
+## Using the animated SVGs
+
+Each `exports/*.svg` is self-contained and carries its own `<style>`, which is
+what lets it flicker inside an `<img>` — scripts and external references do not
+run in image context, but CSS animation does. Point a README straight at one:
+
+```markdown
+![SOICODER](branding/exports/d2-crt-night-glow.svg)
+```
+
+Pick by surface, not by taste: `d2-*` on dark, `d1-*` on light, `-bare` when the
+page already has a ground, `-glow` for a hero, `-plate` when a frame is wanted.
+
+The three PNGs are the plate variants, flattened and lit, for the places an SVG
+can't go.
+
 ## Files
 
 ```
 branding/
 ├── soicoder-mockups.html      generated — open this
 ├── src/mockups.template.html  source of truth; edit this
-├── tools/build.mjs            inlines fonts, exports PNGs
+├── tools/build.mjs            inlines fonts, exports PNGs and SVGs
+├── tools/verify.mjs           checks the build; non-zero exit on failure
 ├── fonts/                     Tektur · Instrument Sans · DM Mono (all OFL)
-└── exports/                   d1-neon-arcade · d2-crt-night · d3-soi-sticker
+└── exports/                   3 PNG (static) · 6 SVG (animated)
 ```
 
 `soicoder-mockups.html` is generated. **Edit `src/mockups.template.html`**, then
@@ -118,17 +206,27 @@ rebuild — direct edits to the generated file are overwritten.
 ## Build
 
 ```bash
-node branding/tools/build.mjs          # build HTML + export PNGs at 2×
-node branding/tools/build.mjs --html   # build HTML only, no browser needed
+node branding/tools/build.mjs          # HTML + PNGs at 2× + 6 animated SVGs
+node branding/tools/build.mjs --html   # HTML only, no browser needed
+node branding/tools/verify.mjs         # run after building
 ```
 
 Step 1 inlines the four OFL fonts as data URIs, because the artifact CSP blocks
 every external host and a linked webfont would fall back silently. Step 2
-screenshots each hero with Playwright.
+screenshots each hero. Step 3 pulls the standalone SVGs off the same renderer
+the page uses — an exported file can never disagree with what was approved on
+screen. Brand colours are CSS variables in the page but a standalone file has no
+`:root` to read, so they are resolved to literals on the way out.
 
 Playwright resolves from a local `node_modules` first, then from the global
 install. Chromium is expected to be on disk already — do not run
 `playwright install`.
+
+`verify.mjs` covers: brand tokens resolved in every SVG, each SVG carrying its
+own keyframes and reduced-motion rule, **the SVGs actually animating inside an
+`<img>`**, no external requests, all three faces loaded, no horizontal scroll at
+1280 px or 390 px, both themes resolving, and reduced motion leaving every tube
+lit.
 
 ---
 

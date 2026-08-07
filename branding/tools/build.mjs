@@ -86,10 +86,31 @@ await page.evaluate(() => document.fonts.ready);
 // screenshot never catches a half-faded stage.
 await page.evaluate(() => document.querySelectorAll(".rise").forEach(el => el.classList.add("in")));
 
+/* Shoot the plate variant: a PNG has no surface to sit on, so the static
+   fallback has to carry its own ground. The page keeps its glow default. */
+for (const dir of ["d1", "d2"]) {
+  await page.click(`.ground-pick[data-for="${dir}"] button[data-g="plate"]`);
+}
+
 for (const [selector, name] of SHOTS) {
   const path = resolve(EXPORTS, name);
   await page.locator(selector).screenshot({ path, animations: "disabled" });
   console.log(`shot   ${path}`);
+}
+
+/* ── 3. Export the standalone animated SVGs ──────────────────────── */
+
+/* Pulled off the same renderer the page uses, so an exported file can
+   never disagree with what was approved on screen. Each one carries its
+   own <style>, which is what lets it flicker inside an <img> — a README
+   can point straight at it. */
+
+const svgs = await page.evaluate(() => window.__exportSVGs());
+
+for (const [name, markup] of Object.entries(svgs)) {
+  const path = resolve(EXPORTS, `${name}.svg`);
+  writeFileSync(path, markup.replace(/\n\s+/g, "\n").trim() + "\n");
+  console.log(`svg    ${path}`);
 }
 
 await browser.close();
