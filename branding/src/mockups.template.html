@@ -1,4 +1,4 @@
-<title>SOICODER — Three Identity Directions</title>
+<title>A(i)CODER — Identity Directions</title>
 
 <style>
 /* ── Faces ────────────────────────────────────────────────────────────
@@ -352,7 +352,7 @@ tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
 
   <header class="masthead">
     <span class="eyebrow">Identity study · round 01</span>
-    <h1>SOICODER</h1>
+    <h1>A(i)CODER</h1>
     <p class="lede">
       Three ways to take the original banner further. Same wordmark, same paw, same
       tricolour bar — treated three different ways so the choice is about
@@ -362,6 +362,7 @@ tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
     <div class="masthead-meta">
       <span>SOURCE <b>banner artwork, supplied</b></span>
       <span>OWNER <b>supasiao7896TH</b></span>
+      <span>RENAMED <b>from SOICODER</b></span>
       <span>USE <b>dev persona · web app</b></span>
       <span>YEAR MARK <b>2025, retained</b></span>
       <button type="button" id="motion-toggle" aria-pressed="false">Stop the flicker</button>
@@ -370,10 +371,10 @@ tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
 
   <section class="brief rise">
     <div class="brief-item">
-      <h3>The name is the story</h3>
-      <p><em>Soi</em> — ซอย, the side street. A soi dog and a coder share the same
-         address. The paw is not an ornament bolted onto a wordmark; it is the
-         half of the name that letters cannot spell.</p>
+      <h3>Two readings, one word</h3>
+      <p><b>A</b> is the owner. <b>(i)</b> makes it <em>AI</em>. The name says who
+         writes the code and what writes it with him, and the brackets are the
+         join — an aside inside a name, the way a thought interrupts a sentence.</p>
     </div>
     <div class="brief-item">
       <h3>Drawn, not typed</h3>
@@ -385,6 +386,47 @@ tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
       <h3>What the round decides</h3>
       <p>Pick one direction. The next round turns it into the full kit — icon set,
          clear-space rules, motion, and the app shell it has to live in.</p>
+    </div>
+  </section>
+
+  <!-- Naming ─────────────────────────────────────────────────────── -->
+  <section class="dir rise" id="naming">
+    <div class="dir-head">
+      <span class="eyebrow">Open question</span>
+      <h2>The brackets are the one thing worth arguing about</h2>
+      <p class="note">
+        The rename is right. <b>A(i)CODER</b> is true to the person and true to how the
+        work actually gets made, and it beats SOICODER on both counts. The double
+        reading is the good kind of clever — it survives being explained.
+        The brackets are a separate question, and they are the part that will cost
+        something later. Three versions, drawn at the same size:
+      </p>
+    </div>
+    <div class="apps" id="name-options"></div>
+    <div class="spec">
+      <div class="speclist" id="name-costs"></div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <p class="note">
+          What the brackets cost: they cannot be typed into a GitHub handle, an npm
+          package, a domain, or a filename. In a URL they become
+          <span class="mono">%28</span> and <span class="mono">%29</span>. So the
+          written name and the typed name split apart on day one — the logo says
+          A(i)CODER while everything addressable says <span class="mono">aicoder</span>,
+          and that gap never closes.
+        </p>
+        <p class="note">
+          The middle option gets the same two readings out of colour instead of
+          punctuation. One accent glyph, no punctuation to strip, and it stays
+          typeable everywhere. It also costs nothing to change your mind later:
+          the accent is a fill, not a character.
+        </p>
+        <p class="note">
+          <b>Honest read:</b> take the middle one. But this is a name, not a
+          measurement — if the brackets are what you picture when you picture the
+          brand, keep them. Everything on this page is already built for
+          A(i)CODER, so that choice is made and working.
+        </p>
+      </div>
     </div>
   </section>
 
@@ -457,7 +499,7 @@ tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
     <div class="dir-head">
       <div class="dir-id">
         <span class="dir-badge">D3</span>
-        <h2>Soi Sticker</h2>
+        <h2>Street Sticker</h2>
         <span class="dir-for">→ avatar · favicon · PWA icon · merch</span>
       </div>
       <p class="note">
@@ -523,7 +565,7 @@ tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
             <th scope="col">Test</th>
             <th scope="col">D1 Neon Arcade</th>
             <th scope="col">D2 CRT Night</th>
-            <th scope="col">D3 Soi Sticker</th>
+            <th scope="col">D3 Street Sticker</th>
           </tr>
         </thead>
         <tbody>
@@ -602,6 +644,7 @@ let UID_N = 0;
 const uid = (prefix) => prefix + (++UID_N).toString(36);
 
 const GLYPHS = {
+  A: ["01110","10001","10001","11111","10001","10001","10001"],
   S: ["01110","10001","10000","01110","00001","10001","01110"],
   O: ["01110","10001","10001","10001","10001","10001","01110"],
   I: ["11111","00100","00100","00100","00100","00100","11111"],
@@ -618,19 +661,43 @@ const GLYPHS = {
   6: ["00110","01000","10000","11110","10001","10001","01110"],
   7: ["11111","00001","00010","00100","01000","01000","01000"],
   8: ["01110","10001","10001","01110","10001","10001","01110"],
-  9: ["01110","10001","10001","01111","00001","00010","01100"]
+  9: ["01110","10001","10001","01111","00001","00010","01100"],
+
+  /* Narrow glyphs. A bracket is 2 units and a lowercase i is 1, because
+     padding them out to a 5-unit body would make the aside they enclose
+     shout as loudly as the word it interrupts. The i keeps its tittle —
+     it is the only lowercase form in the set and has to look deliberate. */
+  "(": ["01","10","10","10","10","10","01"],
+  ")": ["10","01","01","01","01","01","10"],
+  i:   ["1","0","1","1","1","1","1"]
 };
+
+/* Glyphs are variable width — a bracket or a lowercase i set on the same
+   5-unit body as a C would read as a mistake. Width comes from the rows
+   themselves, so adding a narrow glyph needs nothing else changed. */
+function glyphOf(ch) {
+  return GLYPHS[ch] || GLYPHS[ch.toUpperCase()] || null;
+}
+function glyphWidth(ch) {
+  const g = glyphOf(ch);
+  return g ? g[0].length : GW;
+}
+function textWidth(text, tracking) {
+  let w = 0;
+  for (const ch of String(text)) w += glyphWidth(ch) + tracking;
+  return w - tracking;
+}
 
 /* Collect the lit cells of a string, then merge each row's runs into one
    rect. Fewer nodes, and no hairline seam between neighbouring pixels. */
 function glyphRuns(text, tracking) {
   const rows = new Map();
   let cursor = 0;
-  for (const ch of String(text).toUpperCase()) {
-    const g = GLYPHS[ch];
+  for (const ch of String(text)) {
+    const g = glyphOf(ch);
     if (g) {
       g.forEach((row, y) => {
-        for (let x = 0; x < GW; x++) {
+        for (let x = 0; x < row.length; x++) {
           if (row[x] === "1") {
             if (!rows.has(y)) rows.set(y, []);
             rows.get(y).push(cursor + x);
@@ -638,7 +705,7 @@ function glyphRuns(text, tracking) {
         }
       });
     }
-    cursor += GW + tracking;
+    cursor += glyphWidth(ch) + tracking;
   }
   const runs = [];
   for (const [y, xs] of rows) {
@@ -655,7 +722,7 @@ function glyphRuns(text, tracking) {
 }
 
 function wordmarkWidth(text, px, tracking = 2) {
-  return (String(text).length * (GW + tracking) - tracking) * px;
+  return textWidth(text, tracking) * px;
 }
 
 /* px = size of one logical pixel in user units. */
@@ -808,8 +875,16 @@ function tube(i, inner, filterId) {
    wordmark, year and right padding are measured back from the right
    edge, so no plate can push its own content off the end.             */
 
-const UNIT_WORD = wordmarkWidth("SOICODER", 1);
-const UNIT_YEAR = wordmarkWidth("2025", 1);
+/* The name, in one place. Every lockup, mockup and export reads these,
+   so changing the brand is changing these two lines. HEAD/TAIL are the
+   stacked split D3 needs; they must concatenate back to WORDMARK. */
+const WORDMARK = "A(i)CODER";
+const HEAD = "A(i)", TAIL = "CODER";
+const INITIAL = "A";
+const YEARMARK = "2025";
+
+const UNIT_WORD = wordmarkWidth(WORDMARK, 1);
+const UNIT_YEAR = wordmarkWidth(YEARMARK, 1);
 
 function lockupGeometry(W, H) {
   const px   = Math.max(2, Math.floor((W * 0.58) / UNIT_WORD));
@@ -849,13 +924,19 @@ function wordmarkTubes(text, opts = {}) {
     px = 12, tracking = 2, x = 0, y = 0, filterId = null, seed = 0,
     layers = [{ fill: "#000" }]
   } = opts;
-  const step = (GW + tracking) * px;
-  return [...String(text).toUpperCase()].map((ch, i) => {
-    if (!GLYPHS[ch]) return "";
+  /* Case matters — the lowercase i is its own 1-unit glyph — and the
+     advance is per glyph, so this walks a cursor rather than multiplying
+     a fixed step. Uppercasing here is what silently made the mark wider
+     than the geometry that positioned it. */
+  let cursor = 0;
+  return [...String(text)].map((ch, i) => {
+    const xo = x + cursor * px;
+    cursor += glyphWidth(ch) + tracking;
+    if (!glyphOf(ch)) return "";
     /* Every layer of a glyph — core plus any ghost — goes inside the same
        tube, so a dropout takes the whole letter with it. */
     const art = layers.map(l => wordmark(ch, {
-      px, tracking, fill: l.fill, x: x + i * step + (l.dx || 0), y, attrs: l.attrs || ""
+      px, tracking, fill: l.fill, x: xo + (l.dx || 0), y, attrs: l.attrs || ""
     })).join("");
     return tube(seed + i, art, filterId);
   }).join("");
@@ -971,8 +1052,8 @@ function lockupInner(mode, groundKind, W, H, standalone = false) {
     <defs>${gr.defs}${bloomDef(bloom, ...bl(m.bloom))}${bloomDef(pawB, ...bl(m.pawBloom))}</defs>
     ${gr.back}
     <g opacity="${m.pawOpacity}">${tube(20, trail, pawB)}${tube(21, lead, pawB)}</g>
-    ${wordmarkTubes("SOICODER", { px: g.px, x: g.wmX, y: g.wmY, filterId: bloom, seed: 0, layers })}
-    ${wordmarkTubes("2025", { px: g.yrPx, x: g.yrX, y: g.yrY, filterId: bloom, seed: 30, layers: [{ fill: m.year }] })}
+    ${wordmarkTubes(WORDMARK, { px: g.px, x: g.wmX, y: g.wmY, filterId: bloom, seed: 0, layers })}
+    ${wordmarkTubes(YEARMARK, { px: g.yrPx, x: g.yrX, y: g.yrY, filterId: bloom, seed: 30, layers: [{ fill: m.year }] })}
     <g class="tube-b" style="${tubeVars(40)}">${bar({ x: g.yrX, y: g.barY, w: g.yrW, h: g.barH, white: m.barWhite })}</g>
     ${gr.front}
   `;
@@ -1004,7 +1085,7 @@ function ghCard(dark) {
     <rect width="${W}" height="34" fill="${chrome}"/>
     <line x1="0" y1="34.5" x2="${W}" y2="34.5" stroke="${rule}"/>
     <circle cx="18" cy="17" r="4.5" fill="#FF5F57"/><circle cx="33" cy="17" r="4.5" fill="#FEBC2E"/><circle cx="48" cy="17" r="4.5" fill="#28C840"/>
-    <text x="68" y="21" font-family="SC Mono, monospace" font-size="10.5" fill="${dim}">supasiao7896TH / soicoder</text>
+    <text x="68" y="21" font-family="SC Mono, monospace" font-size="10.5" fill="${dim}">supasiao7896TH / aicoder</text>
     <g transform="translate(20 56)">${plate}</g>
     <g fill="${text}" opacity=".9">
       <rect x="20" y="206" width="150" height="9" rx="4.5"/>
@@ -1021,11 +1102,11 @@ function ghCard(dark) {
 const heroD1Plate = (W, H) => lockupInner("light", "plate", W, H);
 const heroD2Plate = (W, H) => lockupInner("night", "plate", W, H);
 
-/* Compact horizontal mark: paw + SOICODER on one line. */
+/* Compact horizontal mark: paw + wordmark on one line. */
 function compactMark(x, y, h, wordFill, pawFill) {
   const px = Math.max(2, Math.round(h / 7));
   return `${paw({ x, y: y - h * 0.06, size: h * 1.12, fill: pawFill })}` +
-         wordmark("SOICODER", { px, x: x + h * 1.5, y, fill: wordFill });
+         wordmark(WORDMARK, { px, x: x + h * 1.5, y, fill: wordFill });
 }
 
 function appBar() {
@@ -1065,7 +1146,7 @@ function appBar() {
 function socialCard() {
   const W = 560, H = 300;
   const px = 9;
-  const wmW = wordmarkWidth("SOICODER", px);
+  const wmW = wordmarkWidth(WORDMARK, px);
   return svg(W, H, `
     <defs>${bloomDef("soc-b", 11, 3)}</defs>
     <rect width="${W}" height="${H}" fill="var(--sc-paper)"/>
@@ -1074,7 +1155,7 @@ function socialCard() {
       ${paw({ x: (W - 92) / 2, y: 52, size: 50, fill: "var(--sc-violet-deep)" })}
       ${paw({ x: (W - 92) / 2 + 40, y: 40, size: 58, fill: "var(--sc-paw-pink)" })}
     </g>
-    ${wordmark("SOICODER", { px, x: (W - wmW) / 2, y: 140, fill: "var(--sc-violet)", attrs: 'filter="url(#soc-b)"' })}
+    ${wordmark(WORDMARK, { px, x: (W - wmW) / 2, y: 140, fill: "var(--sc-violet)", attrs: 'filter="url(#soc-b)"' })}
     <text x="${W / 2}" y="228" text-anchor="middle" font-family="SC Mono, monospace" font-size="10.5" letter-spacing="2.4" fill="#7C7490">CODE · SHARE · INSPIRE</text>
     ${bar({ x: (W - 110) / 2, y: 246, w: 110, h: 9 })}
   `);
@@ -1097,7 +1178,7 @@ function appsD2() {
 function terminal() {
   const W = 560, H = 300;
   const px = 5;
-  const wmW = wordmarkWidth("SOICODER", px);
+  const wmW = wordmarkWidth(WORDMARK, px);
   return svg(W, H, `
     <defs>${bloomDef("term-b", 5, 1.6)}
       <pattern id="term-s" width="3" height="3" patternUnits="userSpaceOnUse">
@@ -1107,21 +1188,21 @@ function terminal() {
     <rect width="${W}" height="${H}" fill="#0B0912"/>
     <rect width="${W}" height="30" fill="#171223"/>
     <circle cx="17" cy="15" r="4.5" fill="#FF5F57"/><circle cx="32" cy="15" r="4.5" fill="#FEBC2E"/><circle cx="47" cy="15" r="4.5" fill="#28C840"/>
-    <text x="${W / 2}" y="19" text-anchor="middle" font-family="SC Mono, monospace" font-size="9.5" fill="#6B6089">zsh — soicoder</text>
+    <text x="${W / 2}" y="19" text-anchor="middle" font-family="SC Mono, monospace" font-size="9.5" fill="#6B6089">zsh — aicoder</text>
 
     <g filter="url(#term-b)">
       ${paw({ x: 26, y: 50, size: 34, fill: "var(--sc-paw-pink)" })}
-      ${wordmark("SOICODER", { px, x: 74, y: 54, fill: "var(--sc-violet-hi)" })}
-      ${wordmark("2025", { px: 3, x: 74 + wmW + 14, y: 54 + GH * px - GH * 3, fill: "var(--sc-pink-hot)" })}
+      ${wordmark(WORDMARK, { px, x: 74, y: 54, fill: "var(--sc-violet-hi)" })}
+      ${wordmark(YEARMARK, { px: 3, x: 74 + wmW + 14, y: 54 + GH * px - GH * 3, fill: "var(--sc-pink-hot)" })}
     </g>
 
     <g font-family="SC Mono, monospace" font-size="10.5">
-      <text x="26" y="126" fill="#5E5580">~/dev/soicoder</text>
+      <text x="26" y="126" fill="#5E5580">~/dev/aicoder</text>
       <text x="26" y="150" fill="var(--sc-violet-hi)">❯<tspan fill="#D9D2EC" dx="8">git status</tspan></text>
       <text x="26" y="170" fill="#6F6693">On branch </text>
       <text x="94" y="170" fill="var(--sc-pink-hot)">main</text>
       <text x="26" y="190" fill="#6F6693">nothing to commit, working tree clean</text>
-      <text x="26" y="216" fill="var(--sc-violet-hi)">❯<tspan fill="#D9D2EC" dx="8">soicoder build --watch</tspan></text>
+      <text x="26" y="216" fill="var(--sc-violet-hi)">❯<tspan fill="#D9D2EC" dx="8">aicoder build --watch</tspan></text>
       <text x="26" y="236" fill="#6F6693">watching 14 files…</text>
       <text x="26" y="262" fill="var(--sc-violet-hi)">❯</text>
     </g>
@@ -1135,7 +1216,7 @@ function splash() {
   const W = 560, H = 300;
   const pw = 176, ph = 268, pxx = (W - pw) / 2, pyy = (H - ph) / 2;
   const px = 3;
-  const wmW = wordmarkWidth("SOICODER", px);
+  const wmW = wordmarkWidth(WORDMARK, px);
   return svg(W, H, `
     <defs>${bloomDef("sp-b", 6, 2)}</defs>
     <rect width="${W}" height="${H}" fill="#1A1626"/>
@@ -1150,7 +1231,7 @@ function splash() {
     <g filter="url(#sp-b)">
       ${paw({ x: pxx + pw / 2 - 34, y: pyy + 84, size: 34, fill: "var(--sc-violet)" })}
       ${paw({ x: pxx + pw / 2 - 2, y: pyy + 70, size: 40, fill: "var(--sc-paw-pink)" })}
-      ${wordmark("SOICODER", { px, x: pxx + (pw - wmW) / 2, y: pyy + 142, fill: "var(--sc-violet-hi)" })}
+      ${wordmark(WORDMARK, { px, x: pxx + (pw - wmW) / 2, y: pyy + 142, fill: "var(--sc-violet-hi)" })}
     </g>
     <text x="${pxx + pw / 2}" y="${pyy + 178}" text-anchor="middle" font-family="SC Mono, monospace" font-size="6.5" letter-spacing="1.6" fill="#6B6089">CODE · SHARE · INSPIRE</text>
     ${bar({ x: pxx + (pw - 84) / 2, y: pyy + 206, w: 84, h: 7, white: "#E4DFF0" })}
@@ -1158,7 +1239,7 @@ function splash() {
   `);
 }
 
-/* ══ D3 — Soi Sticker ════════════════════════════════════════════════ */
+/* ══ D3 — Street Sticker ═════════════════════════════════════════════ */
 
 const INK = "var(--sc-ink)";
 
@@ -1167,19 +1248,19 @@ function heroD3() {
   /* The shadow is offset by exactly one logical pixel. On a bitmap wordmark
      an arbitrary offset reads as a mistake; one unit reads as the grid. */
   const px = 13, off = px;
-  const soiW = wordmarkWidth("SOI", px);
-  const codW = wordmarkWidth("CODER", px);
+  const soiW = wordmarkWidth(HEAD, px);
+  const codW = wordmarkWidth(TAIL, px);
   const stackH = GH * px * 2 + 24;
   const wmX = 430, l1Y = Math.round((H - stackH) / 2), l2Y = l1Y + GH * px + 24;
 
   const pawInner = `<g transform="translate(130 48) scale(1.85)">${pawShapes()}</g>`;
-  const soiRuns = wordmark("SOI",   { px, x: wmX, y: l1Y, fill: "currentColor" });
-  const codRuns = wordmark("CODER", { px, x: wmX, y: l2Y, fill: "currentColor" });
+  const soiRuns = wordmark(HEAD, { px, x: wmX, y: l1Y, fill: "currentColor" });
+  const codRuns = wordmark(TAIL, { px, x: wmX, y: l2Y, fill: "currentColor" });
 
   /* Badge rides line 1, bar rides line 2 — the stagger fills the corner the
      short top line leaves open. */
   const yrPx = 7, badgeH = GH * yrPx + 26;
-  const badgeW = wordmarkWidth("2025", yrPx) + 44;
+  const badgeW = wordmarkWidth(YEARMARK, yrPx) + 44;
   const badgeX = wmX + soiW + 34;
   const badgeY = Math.round(l1Y + (GH * px - badgeH) / 2);
   const barH = 20, barW = badgeW;
@@ -1208,7 +1289,7 @@ function heroD3() {
       <rect x="${badgeX}" y="${badgeY}" width="${badgeW}" height="${badgeH}" rx="${badgeH / 2}" fill="${INK}"/>
     </g>
     <rect x="${badgeX}" y="${badgeY}" width="${badgeW}" height="${badgeH}" rx="${badgeH / 2}" fill="var(--sc-pink)" stroke="${INK}" stroke-width="3"/>
-    ${wordmark("2025", { px: yrPx, x: badgeX + 22, y: badgeY + 13, fill: "#FFFFFF" })}
+    ${wordmark(YEARMARK, { px: yrPx, x: badgeX + 22, y: badgeY + 13, fill: "#FFFFFF" })}
 
     <g transform="translate(${off} ${off})"><rect x="${barX}" y="${barY}" width="${barW}" height="${barH}" rx="${barH / 2}" fill="${INK}"/></g>
     ${bar({ x: barX, y: barY, w: barW, h: barH })}
@@ -1231,7 +1312,7 @@ function avatar() {
     <circle cx="${cx + 6}" cy="${cy + 6}" r="${r}" fill="${INK}"/>
     <circle cx="${cx}" cy="${cy}" r="${r}" fill="var(--sc-lilac)" stroke="${INK}" stroke-width="4"/>
     <g transform="translate(${cx - 62} ${cy - 86}) scale(1.24)" fill="var(--sc-paw-pink)" stroke="${INK}" stroke-width="2.6" stroke-linejoin="round">${pawShapes()}</g>
-    ${wordmark("SOI", { px: 5, x: cx - wordmarkWidth("SOI", 5) / 2, y: cy + 44, fill: INK })}
+    ${wordmark(INITIAL, { px: 5, x: cx - wordmarkWidth(INITIAL, 5) / 2, y: cy + 44, fill: INK })}
   `);
 }
 
@@ -1255,7 +1336,7 @@ function favicons() {
 function stickerSheet() {
   const W = 560, H = 300;
   const pxs = 6;
-  const soiW = wordmarkWidth("SOI", pxs);
+  const soiW = wordmarkWidth(HEAD, pxs);
   return svg(W, H, `
     <rect width="${W}" height="${H}" fill="#F6F3FC"/>
     <g stroke="#CFC6E6" stroke-dasharray="4 5" fill="none">
@@ -1271,19 +1352,19 @@ function stickerSheet() {
     <g transform="translate(186 74)">
       <rect x="5" y="5" width="150" height="62" rx="31" fill="${INK}"/>
       <rect width="150" height="62" rx="31" fill="var(--sc-paper)" stroke="${INK}" stroke-width="3.5"/>
-      ${wordmark("SOI", { px: pxs, x: (150 - soiW) / 2, y: (62 - GH * pxs) / 2, fill: "var(--sc-violet-deep)" })}
+      ${wordmark(HEAD, { px: pxs, x: (150 - soiW) / 2, y: (62 - GH * pxs) / 2, fill: "var(--sc-violet-deep)" })}
     </g>
 
     <g transform="translate(366 74)">
       <rect x="5" y="5" width="160" height="62" rx="10" fill="${INK}"/>
       <rect width="160" height="62" rx="10" fill="var(--sc-pink)" stroke="${INK}" stroke-width="3.5"/>
-      ${wordmark("2025", { px: 5, x: (160 - wordmarkWidth("2025", 5)) / 2, y: (62 - GH * 5) / 2, fill: "#FFFFFF" })}
+      ${wordmark(YEARMARK, { px: 5, x: (160 - wordmarkWidth(YEARMARK, 5)) / 2, y: (62 - GH * 5) / 2, fill: "#FFFFFF" })}
     </g>
 
     <g transform="translate(58 186)">
       <rect x="5" y="5" width="330" height="60" rx="10" fill="${INK}"/>
       <rect width="330" height="60" rx="10" fill="var(--sc-lilac)" stroke="${INK}" stroke-width="3.5"/>
-      ${wordmark("CODER", { px: pxs, x: 26, y: (60 - GH * pxs) / 2, fill: INK })}
+      ${wordmark(TAIL, { px: pxs, x: 26, y: (60 - GH * pxs) / 2, fill: INK })}
       ${bar({ x: 250, y: 24, w: 60, h: 12 })}
     </g>
 
@@ -1292,6 +1373,34 @@ function stickerSheet() {
       <rect width="86" height="60" rx="10" fill="#FFFFFF" stroke="${INK}" stroke-width="3.5"/>
       <g transform="translate(20.5 3) scale(0.45)" fill="var(--sc-violet-deep)">${pawShapes()}</g>
     </g>
+  `);
+}
+
+/* ══ Naming options ══════════════════════════════════════════════════
+   The wordmark alone, large, on a night plate — no paw, no year, no
+   bar. A name has to survive being looked at on its own before it earns
+   a lockup around it. `accent` takes glyph indices that carry the
+   second colour. */
+
+function nameOption(text, accent = []) {
+  const W = 560, H = 150;
+  const px = Math.max(2, Math.floor((W * 0.82) / wordmarkWidth(text, 1)));
+  const x0 = Math.round((W - wordmarkWidth(text, px)) / 2);
+  const y0 = Math.round((H - GH * px) / 2);
+  const bloom = uid("n");
+
+  let cursor = 0;
+  const glyphs = [...text].map((ch, i) => {
+    const xo = x0 + cursor * px;
+    cursor += glyphWidth(ch) + 2;
+    const fill = accent.includes(i) ? "var(--sc-pink-hot)" : "var(--sc-violet-hi)";
+    return wordmark(ch, { px, x: xo, y: y0, fill });
+  }).join("");
+
+  return svg(W, H, `
+    <defs>${bloomDef(bloom, 9, 1.4, false)}</defs>
+    <rect width="${W}" height="${H}" fill="var(--sc-night)"/>
+    <g filter="url(#${bloom})">${glyphs}</g>
   `);
 }
 
@@ -1358,7 +1467,7 @@ const PALETTES = {
   d3: [
     ["#EFEAFB", "Lilac ground"],
     ["#1B1533", "Keyline · shadow"],
-    ["#8C74E0", "SOI"],
+    ["#8C74E0", "Head"],
     ["#FF6FA5", "Paw"],
     ["#FF5C8A", "Year badge"],
     ["#F4614B", "Bar 1"],
@@ -1454,6 +1563,20 @@ document.getElementById("d3-hero").innerHTML = heroD3();
 mountApps("d1-apps", appsD1());
 mountApps("d2-apps", appsD2());
 mountApps("d3-apps", appsD3());
+
+mountApps("name-options", [
+  { cap: "A(i)CODER — as asked", svg: nameOption("A(i)CODER") },
+  { cap: "AICODER — accent on the i", svg: nameOption("AICODER", [1]) },
+  { cap: "AICODER — flat, no second reading", svg: nameOption("AICODER") }
+]);
+mountSpec("name-costs", [
+  ["Two readings", "brackets · colour · none"],
+  ["Typeable as a handle", "no · yes · yes"],
+  ["Survives a URL", "no — %28 %29 · yes · yes"],
+  ["Works at 16 px", "no — brackets close up · yes · yes"],
+  ["Reads without explaining", "yes · mostly · no"],
+  ["Glyphs to draw", "3 new · 0 new · 0 new"]
+]);
 
 mountApps("dark-apps", [
   { cap: "D1 plate — the problem", svg: darkSurface("light", "plate") },

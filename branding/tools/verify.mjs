@@ -15,7 +15,7 @@ import { tmpdir } from "node:os";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(HERE, "..");
-const PAGE = pathToFileURL(resolve(ROOT, "soicoder-mockups.html")).href;
+const PAGE = pathToFileURL(resolve(ROOT, "aicoder-mockups.html")).href;
 const EXPORTS = resolve(ROOT, "exports");
 
 let failures = 0;

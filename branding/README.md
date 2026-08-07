@@ -1,10 +1,14 @@
-# SOICODER — Identity Study, Round 01
+# A(i)CODER — Identity Study
 
-Three directions for the `SOICODER 2025` mark, built from the supplied banner
-artwork. **Nothing here is final** — the round exists so one direction can be
+Three directions for the `A(i)CODER 2025` mark, built from the supplied banner
+artwork. **Nothing here is final** — the study exists so one direction can be
 picked before a full kit gets built.
 
-Open `soicoder-mockups.html` in any browser, or look at `exports/*.png`.
+Open `aicoder-mockups.html` in any browser, or look at `exports/`.
+
+> **Renamed from SOICODER.** `A` is the owner, `(i)` makes it *AI* — the name
+> now says who writes the code and what writes it with him. The brackets are
+> still an open question; see [The name](#the-name) below.
 
 ---
 
@@ -14,7 +18,7 @@ Open `soicoder-mockups.html` in any browser, or look at `exports/*.png`.
 |---|---|---|---|---|
 | **D1** | Neon Arcade | `#F7F5FB` paper | light README, web app header, social card | closest to the original; illegible below ~240 px |
 | **D2** | CRT Night | `#0D0B14` night | terminal, dark README, PWA splash | needs its own dark plate — never sits on white |
-| **D3** | Soi Sticker | `#EFEAFB` lilac | avatar, favicon, PWA icon, merch | re-composed to a stacked lockup; the only one legible at 16 px |
+| **D3** | Street Sticker | `#EFEAFB` lilac | avatar, favicon, PWA icon, merch | re-composed to a stacked lockup; the only one legible at 16 px |
 
 D1/D2 share one horizontal lockup and differ only in treatment, so choosing
 between them is choosing a ground, not a logo. D3 is stacked because its job —
@@ -96,6 +100,47 @@ tube lit — in the page **and** inside each standalone SVG.
 
 ---
 
+## The name
+
+`A(i)CODER` replaced `SOICODER`. The rename is a clear improvement: it is true
+to the owner and true to how the work actually gets made, and the double
+reading — *A CODER* and *AI CODER* — survives being explained, which is the
+test clever names usually fail.
+
+**The brackets are the open question.** They cost three things:
+
+| | `A(i)CODER` | `AICODER`, accent on the `i` |
+|---|---|---|
+| Two readings | yes, from punctuation | yes, from colour |
+| Typeable as a handle, package, domain | no | yes |
+| Survives a URL | no — `%28` `%29` | yes |
+| Legible at 16 px | no — the brackets close up | yes |
+| New glyphs to draw | 3 | 0 |
+
+The written name and the typed name split apart on day one: the logo says
+`A(i)CODER` while every addressable thing says `aicoder`, and that gap never
+closes. Brackets also cost size — at a fixed plate width the word is three
+units wider, so every letter is set smaller.
+
+The alternative gets the same two readings from an accent colour on a single
+glyph. No punctuation to strip, typeable everywhere, and cheap to reverse: the
+accent is a fill, not a character.
+
+**Recommendation: drop the brackets, keep the reading.** But this is a name,
+not a measurement — if the brackets are what you picture when you picture the
+brand, keep them. Everything in this repo is already built for `A(i)CODER`, and
+switching costs one edit to `WORDMARK`.
+
+### What the rename cost
+
+`SOI` meant *ซอย* — the side street — which is what tied the paw to the name:
+a soi dog and a coder at the same address. That link is gone. The paw is still
+honest (the owner does look after street dogs) but it is now a fact about the
+person rather than a letter in the word, which is a weaker join. D3 keeps the
+name **Street Sticker** to hold onto what is left of it.
+
+---
+
 ## Palette
 
 Brand colours are fixed — they never respond to the viewer's light/dark setting.
@@ -104,7 +149,7 @@ Brand colours are fixed — they never respond to the viewer's light/dark settin
 |---|---|---|
 | `--sc-violet` | `#B39DF3` | wordmark, D1 |
 | `--sc-violet-hi` | `#C4AFFF` | wordmark, D2 (lifted for a dark ground) |
-| `--sc-violet-deep` | `#8C74E0` | trailing paw, `SOI` in D3 |
+| `--sc-violet-deep` | `#8C74E0` | trailing paw, `A(i)` in D3 |
 | `--sc-pink` | `#FF5C8A` | year mark, D3 badge |
 | `--sc-pink-hot` | `#FF4D7E` | year mark on night ground |
 | `--sc-paw-pink` | `#FF6FA5` | leading paw |
@@ -123,14 +168,25 @@ round cap (`rx = height / 2`).
 
 ## The wordmark is drawn, not typed
 
-`SOICODER` is a **5 × 7 bitmap rendered as vector rectangles**, not a font.
+`A(i)CODER` is a **5 × 7 bitmap rendered as vector rectangles**, not a font.
 No font dependency, no licence to track, and it stays exactly as crisp at
 2400 px as at 24. The glyph table lives in `src/mockups.template.html`
-(`GLYPHS`) and covers `S O I C D E R` plus `0`–`9`, so the year is swappable.
+(`GLYPHS`) and covers `A S O I C D E R`, `0`–`9`, and the three narrow forms
+`( ) i`, so the year is swappable and so is the name.
+
+**Glyphs are variable width.** A bracket is 2 units and the lowercase `i` is 1;
+setting them on the same 5-unit body as a `C` would make the aside shout as
+loudly as the word it interrupts. Width is read off the glyph rows themselves,
+so adding a narrow form needs nothing else changed. Case is significant — `i`
+and `I` are different glyphs, and uppercasing the text before rendering is what
+silently made the mark wider than the geometry that positioned it.
 
 - **Tracking:** 2 empty columns between glyphs.
-- **One logical pixel** = the `px` argument. Wordmark width is
-  `(len × 7 − 2) × px`; height is always `7 × px`.
+- **One logical pixel** = the `px` argument. Height is always `7 × px`; width
+  comes from `textWidth()`, never from `text.length`.
+- **The name lives in one place** — `WORDMARK`, `HEAD`/`TAIL` (D3's stacked
+  split) and `INITIAL` (the avatar). Renaming the brand is editing those lines.
+  `HEAD + TAIL` must concatenate back to `WORDMARK`.
 - Row runs are merged into single rects before drawing, so neighbouring pixels
   never show a hairline seam at fractional scale.
 
@@ -141,7 +197,9 @@ No font dependency, no licence to track, and it stays exactly as crisp at
 plate at any size. Everything on the page routes through it — do not hand-place
 a lockup.
 
-- pixel unit = `floor(W × 0.58 / 54)`, year = half that
+- pixel unit = `floor(W × 0.58 / UNIT_WORD)`, year = half that —
+  `UNIT_WORD` is `textWidth(WORDMARK, 2)`, so the type resizes itself when the
+  name changes length
 - gap = `W × 0.035`, right padding = `W × 0.045`
 
 ### Minimum sizes
@@ -179,7 +237,7 @@ what lets it flicker inside an `<img>` — scripts and external references do no
 run in image context, but CSS animation does. Point a README straight at one:
 
 ```markdown
-![SOICODER](branding/exports/d2-crt-night-glow.svg)
+![A(i)CODER](branding/exports/d2-crt-night-glow.svg)
 ```
 
 Pick by surface, not by taste: `d2-*` on dark, `d1-*` on light, `-bare` when the
@@ -192,7 +250,7 @@ can't go.
 
 ```
 branding/
-├── soicoder-mockups.html      generated — open this
+├── aicoder-mockups.html       generated — open this
 ├── src/mockups.template.html  source of truth; edit this
 ├── tools/build.mjs            inlines fonts, exports PNGs and SVGs
 ├── tools/verify.mjs           checks the build; non-zero exit on failure
@@ -200,7 +258,7 @@ branding/
 └── exports/                   3 PNG (static) · 6 SVG (animated)
 ```
 
-`soicoder-mockups.html` is generated. **Edit `src/mockups.template.html`**, then
+`aicoder-mockups.html` is generated. **Edit `src/mockups.template.html`**, then
 rebuild — direct edits to the generated file are overwritten.
 
 ## Build

@@ -1,5 +1,5 @@
 /**
- * SOICODER branding build.
+ * A(i)CODER branding build.
  *
  *   node branding/tools/build.mjs          build HTML + export PNGs
  *   node branding/tools/build.mjs --html   build HTML only (skip the browser)
@@ -21,7 +21,7 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(HERE, "..");
 
 const TEMPLATE = resolve(ROOT, "src/mockups.template.html");
-const OUTPUT   = resolve(ROOT, "soicoder-mockups.html");
+const OUTPUT   = resolve(ROOT, "aicoder-mockups.html");
 const EXPORTS  = resolve(ROOT, "exports");
 
 const FONTS = {
@@ -34,7 +34,7 @@ const FONTS = {
 const SHOTS = [
   ["#d1-hero", "d1-neon-arcade.png"],
   ["#d2-hero", "d2-crt-night.png"],
-  ["#d3-hero", "d3-soi-sticker.png"]
+  ["#d3-hero", "d3-street-sticker.png"]
 ];
 
 /* ── 1. Inline the fonts ─────────────────────────────────────────── */
