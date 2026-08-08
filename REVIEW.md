@@ -66,3 +66,34 @@ Per `~/.claude/skills/skill-creator/SKILL.md`'s guidance (frontmatter needs only
   Scorecard and Falsification Test references now line up.
 - The repo copy under `skills/` and the live copy under `~/.claude/skills/` were diffed to confirm
   they're identical after sync.
+
+---
+
+## Follow-up spot-check — 2026-08-08
+
+The repo grew from 5 to 18 skill folders since the July review above (7 `pta-*` skills,
+`star-kaizen`, `domain-modeling`, `grilling`, `grill-with-docs`, `cloudflare-workers-deploy`,
+`vibe-coding-multifile`). Prompted by a broader Claude Code config audit against the official docs
+(permissions, hooks, skills structure), spot-checked the 12 skills that had never gone through the
+structural pass above:
+
+| Skill | Lines | Frontmatter keys |
+|---|---|---|
+| pta-exapilot-logic | 86 | name, description |
+| pta-industry-insight | 76 | name, description |
+| pta-kaizen-writer | 126 | name, description |
+| pta-pi-datalink-excel | 91 | name, description |
+| pta-plant-reference | 94 | name, description |
+| pta-process-diagnostic | 118 | name, description |
+| pta-safety-observation | 98 | name, description |
+| star-kaizen | 290 | name, description |
+| domain-modeling | 74 | name, description |
+| grilling | 12 | name, description |
+| grill-with-docs | 7 | name, description, disable-model-invocation |
+| cloudflare-workers-deploy | 188 | name, description |
+
+**Result: no fixes needed.** All 12 already carry minimal frontmatter (no dangling `related-skills`
+metadata like bug #4 above), all sit well under the ~500-line guideline, and none are long/deep
+enough to warrant splitting content into `references/` (the threshold that triggered it for
+`vibe-coding-core`/`vibe-coding-workflow` at 350-380 lines with 8-9 sub-topics). `vibe-coding-multifile`
+(added 2026-08-08, not in this table) was built following this same standard from the start.

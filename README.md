@@ -92,7 +92,23 @@ Copy-Item "$env:USERPROFILE\claude-config\CLAUDE.md" "$env:USERPROFILE\.claude\C
 
 ไฟล์นี้เก็บ preference ที่ apply กับทุก project เช่น communication style (ตอนนี้คือ 30% Thai / 70% English) — Claude Code จะ load ไฟล์นี้อัตโนมัติทุก session ไม่ว่าจะเปิด project ไหนก็ตาม
 
-## รายการ Skills (16 ตัว)
+### วิธีติดตั้ง settings.json (Hooks + Permissions + Plugins)
+
+`settings.json` เป็น**ไฟล์เดี่ยว**เหมือน `statusline.ps1`/`CLAUDE.md` — ใช้วิธี **copy** เช่นกัน (ไม่ auto-sync ผ่าน Junction ได้ ต้อง copy ใหม่ + commit ทั้งสองที่ทุกครั้งที่แก้):
+
+```powershell
+Copy-Item "$env:USERPROFILE\claude-config\settings.json" "$env:USERPROFILE\.claude\settings.json" -Force
+```
+
+**ต้องแก้ทีหลังก่อนใช้จริง:** field `statusLine.command` มี placeholder `<ชื่อ user บนเครื่องนี้>` อยู่ — แก้ให้ตรงกับ username ของเครื่องนั้นๆ เอง (เหตุผลเดียวกับ statusline.ps1 ด้านบน — `~` shorthand ใช้ไม่ได้จริงบนเครื่องนี้)
+
+ไฟล์นี้มีอะไรบ้าง:
+- **`permissions.deny`** — กันไม่ให้ Claude อ่านไฟล์ secret โดยไม่ตั้งใจ (`.env`, `secrets/**`, `*.pem`, `*.key`) แม้จะสั่ง "อ่านทุกไฟล์ในโปรเจกต์" ก็ตาม
+- **`hooks.SessionStart`** — `git pull --ff-only` อัตโนมัติที่ `claude-config` ทุกครั้งที่เปิด session ใหม่ กันลืม pull ก่อนเริ่มงาน (ถ้า offline หรือ pull ไม่ได้ hook จะเงียบๆ ผ่านไป ไม่ทำให้ session เปิดไม่ได้)
+- **`hooks.Stop` / `UserPromptSubmit` / `Notification`** — เสียงแจ้งเตือน Start/Stop/ขออนุมัติ permission ผ่าน Windows TTS
+- **`enabledPlugins` / `extraKnownMarketplaces`** — plugin ที่ติดตั้งไว้ (⚠️ ตัว plugin เองไม่ sync ผ่าน git ต้องรัน `/plugin install` ซ้ำที่เครื่องใหม่ — ดูหัวข้อด้านล่าง ไฟล์นี้แค่บันทึกว่าเปิดใช้ตัวไหนอยู่)
+
+## รายการ Skills (18 ตัว)
 
 - pta-exapilot-logic
 - pta-industry-insight
@@ -107,6 +123,8 @@ Copy-Item "$env:USERPROFILE\claude-config\CLAUDE.md" "$env:USERPROFILE\.claude\C
 - vibe-coding-core
 - vibe-coding-firebase
 - vibe-coding-workflow
+- vibe-coding-multifile
+- cloudflare-workers-deploy
 - domain-modeling
 - grilling
 - grill-with-docs
