@@ -62,9 +62,7 @@
 - Workflow: Plan Mode (Opus วางแผน) → Accept Edits (Sonnet ลงมือทำ)
 - ใช้ `HANDOFF.md` สำหรับส่งต่อ session ข้ามเครื่อง
 - Auto-load เฉพาะ: `CLAUDE.md`, `.claude/agents/*.md`, `.claude/skills/*` (ไฟล์ .md อื่นต้อง `@`-mention เอง)
-- Custom Subagents:
-  - Project-scoped: `pta-explore`, `pta-code-reviewer`, `pta-debugger`
-  - User-scoped (ใช้ข้ามโปรเจกต์): `sa-explore`, `sa-code-reviewer`, `sa-debugger`
+- Custom Subagents (user-scoped, ใช้ข้ามโปรเจกต์ทั้งหมด — ไม่มีชุด project-scoped แยก): `sa-explore`, `sa-code-reviewer`, `sa-debugger`, `sa-architect`, `sa-handoff`, `sa-git-manager`
 - **กติกา:** งานเขียนโค้ด → ใช้ Claude Code CLI ใน VS Code | งานที่ไม่ใช่โค้ด → ใช้ claude.ai
 
 ---
