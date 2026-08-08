@@ -21,7 +21,7 @@ description: >
 | **Updated** | 2026-07 |
 | **Brand** | A-Class WebCraft · Code • Share • Inspire · by Supasit.A |
 | **Sections in this file** | §1–2, §8, §16–17 |
-| **Related skills** | `vibe-coding-workflow` (§18–19, §23–24) · `vibe-coding-firebase` (§20) · `vi-analysis` (§22) |
+| **Related skills** | `vibe-coding-workflow` (§18–19, §23–24) · `vibe-coding-firebase` (§20) · `vibe-coding-multifile` (§21) · `vi-analysis` (§22) |
 
 Deep-reference material (design tokens, tech stack, AI patterns, accessibility, etc.) lives in
 `references/` — see the **Reference Library** table at the end of this file for what to load and when.
