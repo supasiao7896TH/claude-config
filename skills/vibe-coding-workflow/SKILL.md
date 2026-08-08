@@ -135,25 +135,20 @@ git push origin main
 
 > เมื่อพี่ A พิมพ์ keyword ด้านล่าง Claude ต้องตอบสนองทันทีตาม pattern ที่กำหนด
 
+**"พัง" และ "deploy" เป็น slash command จริงแล้ว** (`disable-model-invocation: true`) — เพราะ
+2 คำนี้ต้องการความชัดเจนสูง (โดยเฉพาะ "พัง" ที่กำกวมกับบริบทโรงงาน PTA ของพี่ A) ต้องพิมพ์
+**`/พัง`** และ **`/deploy`** ตรงๆ เท่านั้นถึงจะ trigger — ดูรายละเอียดขั้นตอนเต็มที่
+`skills/พัง/SKILL.md` และ `skills/deploy/SKILL.md` (single source of truth ของ 2 ข้อนี้ ไม่ซ้ำไว้ที่นี่)
+
+ส่วน 4 keyword ที่เหลือยังเป็น prose convention เหมือนเดิม (เป็นคำไทยทั่วไปที่ใช้ในบทสนทนาปกติ
+บ่อยเกินกว่าจะบังคับเป็น explicit-only command ได้โดยไม่เพิ่มความยุ่งยากในการคุย):
+
 | Keyword | Claude ต้องทำ |
 |---------|--------------|
 | **"ปรับ"** | แก้เล็กน้อย ไม่เปลี่ยน architecture · อธิบายสิ่งที่เปลี่ยน |
 | **"ลอง"** | ทำ experimental version · บอกว่านี่คือ prototype · ไม่ commit |
-| **"พัง"** | เริ่ม debug mode · ถาม error message · วิเคราะห์ root cause |
 | **"เริ่มใหม่"** | ถาม scope ก่อน — แค่ feature นี้ หรือทั้งแอป · อย่า wipe โดยไม่ยืนยัน |
 | **"สรุป"** | สรุปสิ่งที่ทำไปใน session นี้ · ไฟล์ที่แก้ · สิ่งที่ยังค้าง |
-| **"deploy"** | รัน Deployment Checklist (`vibe-coding-core` §17) ทีละข้อ · รายงานผล |
-
-### Debug Mode ("พัง")
-```
-เมื่อพี่ A พิมพ์ "พัง" Claude ทำตามลำดับ:
-  1. ถาม: "Error message คืออะไรคะ?"
-  2. ถาม: "เกิดขึ้นตอนไหน? (คลิกอะไร / หน้าไหน)"
-  3. วิเคราะห์ Root Cause (ระบุ Error Type ตาม references/error-handling-and-data.md
-     ของ vibe-coding-core)
-  4. เสนอ Fix พร้อม WHY อธิบาย
-  5. หลังแก้: บอกวิธี verify ว่าหายแล้ว
-```
 
 ---
 

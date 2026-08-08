@@ -108,7 +108,7 @@ Copy-Item "$env:USERPROFILE\claude-config\settings.json" "$env:USERPROFILE\.clau
 - **`hooks.Stop` / `UserPromptSubmit` / `Notification`** — เสียงแจ้งเตือน Start/Stop/ขออนุมัติ permission ผ่าน Windows TTS
 - **`enabledPlugins` / `extraKnownMarketplaces`** — plugin ที่ติดตั้งไว้ (⚠️ ตัว plugin เองไม่ sync ผ่าน git ต้องรัน `/plugin install` ซ้ำที่เครื่องใหม่ — ดูหัวข้อด้านล่าง ไฟล์นี้แค่บันทึกว่าเปิดใช้ตัวไหนอยู่)
 
-## รายการ Skills (18 ตัว)
+## รายการ Skills (20 ตัว)
 
 - pta-exapilot-logic
 - pta-industry-insight
@@ -128,6 +128,22 @@ Copy-Item "$env:USERPROFILE\claude-config\settings.json" "$env:USERPROFILE\.clau
 - domain-modeling
 - grilling
 - grill-with-docs
+- พัง
+- deploy
+
+### Slash Commands จริง: /พัง, /deploy
+
+เพิ่มเข้ามา 2026-08-08 — แปลงมาจาก keyword ใน `vibe-coding-workflow` §19 ที่เดิมพึ่งให้ Claude
+"จับสัญญาณ" คำในประโยคเอง (ไม่การันตี trigger จริง) ทั้งคู่ตั้ง `disable-model-invocation: true`
+เหมือน `grill-with-docs` — ต้องพิมพ์ `/พัง` หรือ `/deploy` ตรงๆ เท่านั้นถึงจะทำงาน:
+
+| Skill | ทำหน้าที่อะไร | ทำไมต้องเป็น explicit command |
+|---|---|---|
+| `พัง` | เข้า Debug Mode 5 ขั้นตอน (ถาม error → ถามบริบท → root cause → fix พร้อม WHY → วิธี verify) | คำว่า "พัง" กำกวมกับบริบทโรงงาน PTA ของพี่ A (เช่น "เครื่อง Boiler พัง" ไม่เกี่ยวกับโค้ดเลย) |
+| `deploy` | รัน Deployment Checklist ของ `vibe-coding-core` §17 (หรือ checklist เฉพาะ stack ถ้าเป็น multi-file/Cloudflare Workers) ทีละข้อ | ป้องกัน auto-trigger กลางบทสนทนาที่แค่ถามเรื่อง deploy แต่ยังไม่พร้อมลงมือจริง |
+
+ส่วน 4 keyword ที่เหลือ (ปรับ/ลอง/เริ่มใหม่/สรุป) ยังปล่อยเป็น prose convention ต่อไป — เป็นคำไทย
+ที่ใช้ในบทสนทนาทั่วไปบ่อยเกินกว่าจะบังคับเป็น explicit-only command ได้โดยไม่เพิ่มความยุ่งยาก
 
 ### Engineering Skills เพิ่มเติม: domain-modeling / grilling / grill-with-docs
 
