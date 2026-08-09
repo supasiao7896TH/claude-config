@@ -886,6 +886,16 @@ const YEARMARK = "2025";
 const UNIT_WORD = wordmarkWidth(WORDMARK, 1);
 const UNIT_YEAR = wordmarkWidth(YEARMARK, 1);
 
+/* Indices of the "(i)" span inside WORDMARK, so the AI pun reads in
+   colour as well as punctuation. Derived from the brackets rather than
+   hardcoded, so it keeps working if WORDMARK is ever edited. Empty when
+   there is no bracket pair — accenting then silently no-ops. */
+const ACCENT_IDX = (() => {
+  const open = WORDMARK.indexOf("("), close = WORDMARK.indexOf(")");
+  if (open < 0 || close < open) return [];
+  return Array.from({ length: close - open + 1 }, (_, k) => open + k);
+})();
+
 function lockupGeometry(W, H) {
   const px   = Math.max(2, Math.floor((W * 0.58) / UNIT_WORD));
   const yrPx = Math.max(1, Math.round(px / 2));
@@ -922,7 +932,7 @@ function pawCluster(H, trail, lead) {
 function wordmarkTubes(text, opts = {}) {
   const {
     px = 12, tracking = 2, x = 0, y = 0, filterId = null, seed = 0,
-    layers = [{ fill: "#000" }]
+    layers = [{ fill: "#000" }], accent = [], accentFill = null
   } = opts;
   /* Case matters — the lowercase i is its own 1-unit glyph — and the
      advance is per glyph, so this walks a cursor rather than multiplying
@@ -934,8 +944,13 @@ function wordmarkTubes(text, opts = {}) {
     cursor += glyphWidth(ch) + tracking;
     if (!glyphOf(ch)) return "";
     /* Every layer of a glyph — core plus any ghost — goes inside the same
-       tube, so a dropout takes the whole letter with it. */
-    const art = layers.map(l => wordmark(ch, {
+       tube, so a dropout takes the whole letter with it. Accenting only
+       ever swaps the core (last) layer — a ghost, where one exists, stays
+       on its own hue so the misconvergence read doesn't change. */
+    const useLayers = (accentFill && accent.includes(i))
+      ? layers.map((l, li) => li === layers.length - 1 ? { ...l, fill: accentFill } : l)
+      : layers;
+    const art = useLayers.map(l => wordmark(ch, {
       px, tracking, fill: l.fill, x: xo + (l.dx || 0), y, attrs: l.attrs || ""
     })).join("");
     return tube(seed + i, art, filterId);
@@ -1052,7 +1067,7 @@ function lockupInner(mode, groundKind, W, H, standalone = false) {
     <defs>${gr.defs}${bloomDef(bloom, ...bl(m.bloom))}${bloomDef(pawB, ...bl(m.pawBloom))}</defs>
     ${gr.back}
     <g opacity="${m.pawOpacity}">${tube(20, trail, pawB)}${tube(21, lead, pawB)}</g>
-    ${wordmarkTubes(WORDMARK, { px: g.px, x: g.wmX, y: g.wmY, filterId: bloom, seed: 0, layers })}
+    ${wordmarkTubes(WORDMARK, { px: g.px, x: g.wmX, y: g.wmY, filterId: bloom, seed: 0, layers, accent: ACCENT_IDX, accentFill: m.year })}
     ${wordmarkTubes(YEARMARK, { px: g.yrPx, x: g.yrX, y: g.yrY, filterId: bloom, seed: 30, layers: [{ fill: m.year }] })}
     <g class="tube-b" style="${tubeVars(40)}">${bar({ x: g.yrX, y: g.barY, w: g.yrW, h: g.barH, white: m.barWhite })}</g>
     ${gr.front}

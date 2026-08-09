@@ -164,6 +164,14 @@ Brand colours are fixed — they never respond to the viewer's light/dark settin
 Tricolour bar segment ratios, left to right: **0.365 / 0.25 / 0.385**, on a full
 round cap (`rx = height / 2`).
 
+**`(i)` is accented in the year colour** (`--sc-pink` on D1, `--sc-pink-hot` on
+D2) instead of the wordmark violet, so the *AI* reading lands in colour, not
+just punctuation. `ACCENT_IDX` reads the span off `WORDMARK`'s own bracket
+positions — `indexOf("(")` to `indexOf(")")` inclusive — so it keeps working
+if the name changes, and costs nothing to disable (a `WORDMARK` with no
+brackets no-ops it). Only the core layer swaps colour; D2's ghost stays on its
+own hue so the misconvergence read doesn't change.
+
 ---
 
 ## The wordmark is drawn, not typed
