@@ -92,6 +92,32 @@ Copy-Item "$env:USERPROFILE\claude-config\CLAUDE.md" "$env:USERPROFILE\.claude\C
 
 ไฟล์นี้เก็บ preference ที่ apply กับทุก project เช่น communication style (ตอนนี้คือ 30% Thai / 70% English) — Claude Code จะ load ไฟล์นี้อัตโนมัติทุก session ไม่ว่าจะเปิด project ไหนก็ตาม
 
+### วิธีติดตั้ง USER.md (โปรไฟล์ผู้ใช้งาน — ต่างจาก CLAUDE.md ตรงที่ไม่มีเนื้อหาเฉพาะเครื่อง จึง sync แบบ symlink ได้เต็มที่)
+
+**วิธี A: Symbolic Link (แนะนำ — แก้ที่ repo แล้ว `git pull` ครั้งเดียวอัปเดตทุกที่ ไม่ต้อง copy ซ้ำ)**
+
+ต้องใช้สิทธิ์ Administrator หรือเปิด **Developer Mode** ไว้ก่อน (Settings → Privacy & security → For developers → Developer Mode) — เครื่องที่ทำงานอาจไม่มีสิทธิ์ตั้งค่านี้ ถ้าใช้ไม่ได้ให้ข้ามไปวิธี B:
+
+```powershell
+git clone https://github.com/supasiao7896TH/claude-config.git "$env:USERPROFILE\claude-config"
+Remove-Item "$env:USERPROFILE\.claude\USER.md" -Force -ErrorAction SilentlyContinue
+New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.claude\USER.md" -Target "$env:USERPROFILE\claude-config\USER.md"
+```
+
+ตรวจว่าเป็น symlink จริง (ต้องเห็น `LinkType : SymbolicLink`):
+
+```powershell
+Get-Item "$env:USERPROFILE\.claude\USER.md" | Select-Object LinkType, Target
+```
+
+**วิธี B: Copy (ถ้าเครื่องที่ทำงานไม่มีสิทธิ์สร้าง Symbolic Link) — ไม่ auto-sync ต้อง copy ใหม่ทุกครั้งที่ `USER.md` เปลี่ยน:**
+
+```powershell
+Copy-Item "$env:USERPROFILE\claude-config\USER.md" "$env:USERPROFILE\.claude\USER.md" -Force
+```
+
+ทั้งสองวิธีใช้ได้เพราะ `CLAUDE.md` มีบรรทัด `@USER.md` อยู่แล้ว (ดู "วิธีติดตั้ง CLAUDE.md" ด้านบน) — Claude Code จะโหลด `USER.md` อัตโนมัติทุก session ทุกโปรเจกต์บนเครื่องนั้น
+
 ### วิธีติดตั้ง settings.json (Hooks + Permissions + Plugins)
 
 `settings.json` เป็น**ไฟล์เดี่ยว**เหมือน `statusline.ps1`/`CLAUDE.md` — ใช้วิธี **copy** เช่นกัน (ไม่ auto-sync ผ่าน Junction ได้ ต้อง copy ใหม่ + commit ทั้งสองที่ทุกครั้งที่แก้):
