@@ -46,6 +46,13 @@ Commit `af0a4e0` — push ขึ้น https://github.com/supasiao7896TH/claude-
 
 ทั้งหมด commit + push แล้ว — commits ล่าสุด: `e4ae0f6`, `38208f0`, `aafcfc7`, `b635733`, `58d1f8c` (Tactile Plant UI applied)
 
+### 4. Repo ใหม่ — Leraning_for_vibe_coder (workspace หลัก)
+- Path: `D:\supasit\Leraning_for_vibe_coder` (root ของทั้ง workspace — เพิ่ง `git init` วันนี้ ก่อนหน้านี้ยังไม่เคยเป็น git repo เลย)
+- Repo: https://github.com/supasiao7896TH/Leraning_for_vibe_coder (**private**)
+- เก็บ: `CLAUDE.md` (คำแนะนำสำหรับ Claude Code เวลาเปิดโฟลเดอร์นี้) + `learning/dev-skills-roadmap.md` (log ความรู้สะสม)
+- **`condo-rental-app/` ถูก `.gitignore` ไว้โดยตั้งใจ** — มี repo ของตัวเองแยกต่างหาก (ข้อ 1 ด้านบน) ไม่ต้อง track ซ้อนกันสองที่
+- git status: clean, push ครบแล้ว — commit ล่าสุด `fbc2f2d`, branch `main`
+
 ---
 
 ## 🚧 ค้างอยู่ / ยังไม่ได้ทำ
@@ -57,9 +64,10 @@ Commit `af0a4e0` — push ขึ้น https://github.com/supasiao7896TH/claude-
 
 ## 🔧 คำสั่งที่ต้องรันก่อนทำงานต่อ (ที่เครื่อง Office)
 1. `git pull` ในโฟลเดอร์ `claude-config` (หา path ก่อน — ดูหัวข้อด้านบน)
-2. ถ้ายังไม่เคย clone `condo-rental-app` ที่เครื่อง Office: `git clone https://github.com/supasiao7896TH/Model-Vibe-Coding-Rental-Loan-Management-`
+2. ถ้ายังไม่เคย clone `Leraning_for_vibe_coder` ที่เครื่อง Office: `git clone https://github.com/supasiao7896TH/Leraning_for_vibe_coder` (repo private — ต้อง login gh/git ด้วย account ที่มีสิทธิ์เข้าถึง)
+3. ถ้ายังไม่เคย clone `condo-rental-app` ที่เครื่อง Office: `git clone https://github.com/supasiao7896TH/Model-Vibe-Coding-Rental-Loan-Management-` (แนะนำให้ clone ไว้ *ข้างใน* โฟลเดอร์ `Leraning_for_vibe_coder` ให้ path ตรงกับเครื่องบ้าน)
    ถ้า clone ไว้แล้ว: `git pull` ในโฟลเดอร์นั้น
-3. `npm install` ใน `condo-rental-app` (เป็น Vite project ต้อง install dependencies ก่อนรันได้)
+4. `npm install` ใน `condo-rental-app` (เป็น Vite project ต้อง install dependencies ก่อนรันได้)
 
 ## ⚠️ ข้อควรระวัง / สิ่งที่ต้องไม่ลืม
 - ห้ามลืม pull `claude-config` ก่อนเริ่มงาน UI — ไม่งั้นเครื่อง Office จะยังใช้ design system เก่า/ผิด
