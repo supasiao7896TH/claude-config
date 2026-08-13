@@ -21,9 +21,11 @@
 ### 1. โปรเจกต์ใหม่ — Condo Rental & Loan Management App
 - Path: `D:\supasit\Leraning_for_vibe_coder\condo-rental-app`
 - Repo: https://github.com/supasiao7896TH/Model-Vibe-Coding-Rental-Loan-Management-
+- **URL ใช้งานจริง (deployed):** https://condo-rental-app.supasiao.workers.dev — Cloudflare Workers, auto-deploy ผ่าน GitHub Actions ทุกครั้งที่ push เข้า `main` (ตั้ง `CLOUDFLARE_API_TOKEN` secret ไว้ที่ repo นี้แล้ว)
+  - ⚠️ ข้อมูลที่กรอกใน localhost:5174 (เครื่องบ้าน) กับข้อมูลใน URL จริงนี้ **คนละฐานข้อมูลกัน** (IndexedDB แยกตาม origin) — พิมพ์ข้อมูลจริงที่ URL production เท่านั้น อย่าสับสนว่าทำไมข้อมูลไม่ตรงกัน
 - แอปติดตามค่าเช่า/ยอดผ่อนธนาคาร คอนโด 4 ห้อง
 - **ข้อยกเว้นมาตรฐาน:** เขียนแบบ multi-file (Vite + ES Modules + Vitest) ไม่ใช่ single-HTML-file ตามมาตรฐานเดิม — ตัดสินใจใหม่เพื่อการเรียนรู้ ไม่ได้เปลี่ยนมาตรฐานภาพรวม
-- git status: clean, push ครบแล้ว (`origin/main` up to date) — commit ล่าสุด `e4ae0f6`
+- git status: clean, push ครบแล้ว (`origin/main` up to date) — commit ล่าสุด `32f16f4`
 
 ### 2. Design System ใหม่ถาวร — "Tactile Plant UI"
 วันนี้ลองผิดลองถูกหลายรอบ: Neo-Glassmorphism เดิม → "Control Room" (ถูกปฏิเสธ) → กลับไป Neo-Glassmorphism (ถูกปฏิเสธอีก) → พี่ A เอาแอปจริงที่เคยทำเอง 2 ตัวมาให้ดู (`Monitor-log-sheet-boardman`, `Log-EQ-history`) → เจอ pattern ที่พี่ A เลือกซ้ำเองโดยไม่ตั้งใจ (teal/cyan, neumorphism สัมผัสได้, gradient-text) → สังเคราะห์เป็น **"Tactile Plant UI"** — พี่ A ยืนยันแล้วว่าใช่ ("ok แนวนี้ที่ใช่เลย")
