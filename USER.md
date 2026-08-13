@@ -30,7 +30,7 @@
   - บ้าน: Claude Code CLI + VS Code + Git/GitHub ครบ
   - ที่ทำงาน: มี VS Code + Claude Code CLI แล้ว (`C:\Users\26007294\.claude\`)
   - **GitHub คือสะพานซิงค์ระหว่าง 2 เครื่อง**
-- **GitHub:** username `supasiao7896TH` | repo หลัก `supasit-a-apps` (branch: master)
+- **GitHub:** username `supasiao7896TH`
 
 ---
 
@@ -40,9 +40,9 @@
 - **9 Modules (IIFE):** `APP_CONFIG`, `STATE_STORE`, `STORAGE_ENGINE`, `CLOUD_SYNC_MANAGER`, `AUTH_PROVIDER`, `GEMINI_AI_BRIDGE`, `UI_RENDERER`, `DEBUG_MODULE`, `APP_CORE`
 - **State:** Reactive (Pub/Sub) + Optimistic UI พร้อม Rollback
 
-**Tech Stack:** Tailwind CSS CDN · Lucide Icons SVG · Noto Sans Thai + Fraunces · IndexedDB (Promise-based) · Firestore v11+ (Delta Sync) · Firebase Auth (Anonymous/Custom Token) · Web Crypto AES-GCM 256-bit · Chart.js · Gemini 2.5 Flash (Backoff/Rate limit/24h Cache)
+**Tech Stack:** Tailwind CSS CDN · Lucide Icons (vendored local) · Noto Sans Thai · IndexedDB (Promise-based) · Firestore v11+ (Delta Sync) · Firebase Auth (Anonymous/Custom Token) · Web Crypto AES-GCM 256-bit · Chart.js (vendored local) · Gemini 2.5 Flash (Backoff/Rate limit/24h Cache)
 
-**Brand "Supasit.A":** Neo-Glassmorphism (backdrop-blur 20px, saturate 180%, noise texture, rounded-2xl) · Status Glow (เขียว=Online, เหลือง=Offline, น้ำเงิน=Syncing) · Dark/Light mode · Micro-interactions
+**Brand "Supasit.A" — "Tactile Plant UI"** (ยืนยันแล้ว 2569-08-13 จาก pattern ที่ใช้ซ้ำเองใน 2 แอปจริง — ดู `vibe-coding-core` skill สำหรับ token เต็ม): Teal/Cyan (ไม่ใช่ indigo/purple) · Neumorphic tactile surfaces (`.tactile`/`.tactile-btn`) คู่กับเส้นขอบสีตามความหมายเสมอ · Gradient-text hero (teal→cyan) ใช้ครั้งเดียวต่อหน้า · A(i)CODER badge (จาก `claude-config/branding/`) แทน "by Supasit.A" text badge · Dark/Light mode · Micro-interactions เฉพาะจุดที่มีความหมายจริง (ไม่ตกแต่งพร่ำเพรื่อ)
 
 **Security:** XSS ป้องกันด้วย `textContent` · เข้ารหัส API Key ด้วย AES-GCM · Input/Schema validation · Audit log · Rate limit · Firestore Rules (Strict Path, Auth First) · CSP · ไม่ hardcode secret · BYOK Gemini key
 

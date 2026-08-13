@@ -4,7 +4,7 @@ description: >
   CORE Skill สถาปัตยกรรม Supasit.A — ใช้เมื่อพี่ A ขอสร้างแอปใหม่ตั้งแต่เริ่มต้น
   เขียนเว็บใหม่ ทำ dashboard/tool/form ใหม่ สร้าง UI component ใหม่ หรือวาง
   Blueprint โปรเจกต์ Vibe Coding ครอบคลุม JS Architecture (9 Modules IIFE) ·
-  PWA · Design System (Neo-Glassmorphism) · Security · QA · Deployment
+  PWA · Design System (Tactile Plant UI) · Security · QA · Deployment
   ไม่ใช้กับการแก้บัก/ปรับปรุงแอปที่มีอยู่แล้ว (ให้ใช้ vibe-coding-workflow แทน)
 ---
 
@@ -17,8 +17,8 @@ description: >
 
 | | |
 |---|---|
-| **Version** | 6.0 |
-| **Updated** | 2026-07 |
+| **Version** | 7.0 |
+| **Updated** | 2026-08 |
 | **Brand** | A-Class WebCraft · Code • Share • Inspire · by Supasit.A |
 | **Sections in this file** | §1–2, §8, §16–17 |
 | **Related skills** | `vibe-coding-workflow` (§18–19, §23–24) · `vibe-coding-firebase` (§20) · `vibe-coding-multifile` (§21) · `vi-analysis` (§22) |
@@ -299,10 +299,10 @@ ACCESSIBILITY
   → รายละเอียดเต็ม: references/performance-and-accessibility.md
 
 BRAND
-  [ ] Glass Badge "by Supasit.A" มีครบ
-  [ ] Status glow indicator ทำงาน
-  [ ] Font Sarabun + Fraunces โหลดแล้ว
-  [ ] Header executive style ถูกต้อง
+  [ ] A(i)CODER badge มีครบ (แถบพื้นหลังสว่างคงที่ ไม่ตามธีมแอป — ดู claude-config/branding/README.md)
+  [ ] จุดสถานะ/pulse-dot ผูกกับ state จริงเท่านั้น (ไม่ใช่ของตกแต่ง)
+  [ ] Font Noto Sans Thai โหลดแล้ว (ไม่ใช่ Sarabun/Fraunces)
+  [ ] .tactile card คู่กับ border-t-4 สีตามความหมายเสมอ (กัน contrast ต่ำของ neumorphism)
   → รายละเอียดเต็ม: references/layout-and-brand.md
 ```
 
@@ -338,7 +338,7 @@ Post-deploy:
 | ไฟล์ | เนื้อหา | โหลดเมื่อ |
 |---|---|---|
 | `references/tech-stack.md` | Omni-Platform/PWA structure · Tech Stack table · CDN pinning · Cloudflare CORS proxy | ตั้งค่าโปรเจกต์ใหม่ / เพิ่ม dependency |
-| `references/design-system.md` | Spacing · Typography · Radius · Color · Neo-Glassmorphism · Status Glow · Dark/Light | เขียน CSS / ออกแบบ UI |
+| `references/design-system.md` | Spacing · Typography · Radius · Color · Tactile Plant UI (neumorphism + semantic border) · Dark/Light | เขียน CSS / ออกแบบ UI |
 | `references/thai-localization.md` | วันที่ พ.ศ. · ตัวเลขไทย · สกุลเงินบาท | แอปมี format วันที่/เงินภาษาไทย |
 | `references/ai-integration.md` | Gemini config · JSON contract · Streaming · BYOK threat model · Worker-proxy pattern | แอปมี AI feature |
 | `references/error-handling-and-data.md` | Error Taxonomy 8 types · IndexedDB Migration policy | ทำ error handling / เปลี่ยน schema |
@@ -348,7 +348,7 @@ Post-deploy:
 
 ---
 
-*SKILL: vibe-coding-core v6.0 | Sections: §1–2, §8, §16–17 (+ references/)*
+*SKILL: vibe-coding-core v7.0 | Sections: §1–2, §8, §16–17 (+ references/)*
 *Supasit.A × A-Class WebCraft | Code • Share • Inspire*
 *Related: vibe-coding-workflow · vibe-coding-firebase · vi-analysis*
-*Updated: July 2026 (พ.ศ. 2569)*
+*Updated: August 2026 (พ.ศ. 2569)*

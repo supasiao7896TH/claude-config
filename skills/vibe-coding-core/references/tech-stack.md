@@ -68,9 +68,9 @@ const haptic = (pattern = 50) => {
 | หมวด | เทคโนโลยี | CDN / Version |
 |---|---|---|
 | CSS Framework | Tailwind CSS v3 (Play CDN) | `cdn.tailwindcss.com` — **prototype เท่านั้น ดูคำเตือนด้านล่าง** |
-| Icons | Lucide Icons | `unpkg.com/lucide@0.460.0` |
-| Font Body (Thai) | **Sarabun** wght 300–600 | Google Fonts · preload |
-| Font Display | Fraunces opsz,wght | Google Fonts · hero/metric เท่านั้น |
+| Icons | Lucide Icons | vendor ไว้ในเครื่อง `public/vendor/lucide.js` (ไม่ใช้ CDN — CSP-friendly + offline-first) |
+| Font Body (Thai) | **Noto Sans Thai** wght 400–700 | Google Fonts · preload |
+| Font Display | Noto Sans Thai + `.gradient-text` (teal→cyan) | ใช้ครั้งเดียวต่อหน้า (hero/ชื่อแอป) — ดู design-system.md DS-6 |
 | Storage | IndexedDB | Native Promise-based wrapper |
 | Encryption | Web Crypto API | Native AES-GCM 256-bit |
 
@@ -84,7 +84,7 @@ const haptic = (pattern = 50) => {
 
 | หมวด | เทคโนโลยี | เมื่อไหร่ใช้ |
 |---|---|---|
-| Charts | Chart.js v4.4.4 | มี data visualization |
+| Charts | Chart.js (vendor `public/vendor/chart.js` เหมือน Lucide — ไม่ใช้ CDN) | มี data visualization / แนวโน้มย้อนหลัง |
 | Cloud DB | Firestore v11 Modular | ต้องการ sync หลาย device |
 | Auth | Firebase Auth 11 | มี login/user system |
 | AI | Gemini 2.5 Flash (ตรวจรุ่นล่าสุดก่อนใช้จริงทุกครั้ง) | มี AI feature · BYOK |
