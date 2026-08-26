@@ -62,8 +62,15 @@
 - Workflow: Plan Mode (Opus วางแผน) → Accept Edits (Sonnet ลงมือทำ)
 - ใช้ `HANDOFF.md` สำหรับส่งต่อ session ข้ามเครื่อง
 - Auto-load เฉพาะ: `CLAUDE.md`, `.claude/agents/*.md`, `.claude/skills/*` (ไฟล์ .md อื่นต้อง `@`-mention เอง)
-- Custom Subagents (user-scoped, ใช้ข้ามโปรเจกต์ทั้งหมด — ไม่มีชุด project-scoped แยก): `sa-explore`, `sa-code-reviewer`, `sa-debugger`, `sa-architect`, `sa-handoff`, `sa-git-manager`
+- Custom Subagents (user-scoped, ใช้ข้ามโปรเจกต์ทั้งหมด — ไม่มีชุด project-scoped แยก): `sa-explore`, `sa-code-reviewer`, `sa-debugger`, `sa-architect`, `sa-handoff`, `sa-git-manager`, `sa-summarizer`
 - **กติกา:** งานเขียนโค้ด → ใช้ Claude Code CLI ใน VS Code | งานที่ไม่ใช่โค้ด → ใช้ claude.ai
+
+### Multi-agent orchestration (fan-out)
+
+- ค่าเริ่มต้น: เรียก subagent ทีละตัวแบบเรียงลำดับผ่าน session หลัก — session หลักทำหน้าที่ orchestrator อยู่แล้วโดยธรรมชาติ ไม่ต้องมี agent แยกสำหรับ role นี้
+- รันขนาน (fan-out) ได้เฉพาะโปรเจกต์ multi-file (ดู skill `vibe-coding-multifile`) และต้องระบุจำนวน/ขอบเขตชัดเจนก่อนเรียกเสมอ เช่น "ใช้ sa-explore 3 ตัว คนละโมดูล A/B/C" — ห้ามปล่อยให้ Claude ตัดสินใจแบ่งงานเอง
+- หลังรัน subagent ประเภทเดียวกันขนานกันตั้งแต่ 2 ชุดขึ้นไป ให้เรียก `sa-summarizer` รวมผลเป็นรายงานเดียวก่อนส่งให้พี่ A
+- จำนวน subagent ที่รันพร้อมกันต่อรอบ: ไม่เกิน 3-5 ตัว ถ้างานใหญ่กว่านั้นให้แบ่งเป็นชุด (batch) แทนการยิงพร้อมกันหมด
 
 ---
 

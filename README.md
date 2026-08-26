@@ -238,14 +238,16 @@ VS Code extension เป็น UI wrapper ของ engine เดียวกั
 | sa-debugger | ไล่บั๊กด้วย Five Whys + แก้ไขจริง | Edit |
 | sa-handoff | สรุปสถานะงานข้ามเครื่องผ่าน HANDOFF.md | Write (เฉพาะ HANDOFF.md) |
 | sa-git-manager | Commit message, merge conflict, branch, PR ตาม Git Safety Protocol เข้มงวด | Edit + Bash (git) |
+| sa-summarizer | รวบรวมผลจาก subagent ประเภทเดียวกันที่รันขนานกัน (fan-out) ให้เป็นรายงานเดียว | Read-only |
 
 ## Workflow แนะนำ
 
-1. sa-explore → สำรวจโค้ดที่เกี่ยวข้องก่อน
-2. sa-architect → ร่าง Blueprint แล้วรอ "อนุมัติ"
-3. Plan Mode (Opus) → วางแผนละเอียด
-4. Accept Edits (Sonnet) → ลงมือเขียนโค้ด
-5. sa-code-reviewer → รีวิวก่อน commit
-6. sa-debugger → ถ้าเจอ Critical issue
-7. sa-git-manager → commit/push/PR อย่างปลอดภัย
-8. sa-handoff → ก่อนปิดเครื่อง/สลับเครื่อง
+1. sa-explore → สำรวจโค้ดที่เกี่ยวข้องก่อน (โปรเจกต์ multi-file ที่ระบุขอบเขตชัดเจน รันขนานได้หลายตัว)
+2. sa-summarizer → ถ้ารัน sa-explore ขนานกันตั้งแต่ 2 ชุดขึ้นไป ใช้รวมผลเป็นรายงานเดียวก่อนไปขั้นต่อไป
+3. sa-architect → ร่าง Blueprint แล้วรอ "อนุมัติ"
+4. Plan Mode (Opus) → วางแผนละเอียด
+5. Accept Edits (Sonnet) → ลงมือเขียนโค้ด
+6. sa-code-reviewer → รีวิวก่อน commit
+7. sa-debugger → ถ้าเจอ Critical issue
+8. sa-git-manager → commit/push/PR อย่างปลอดภัย
+9. sa-handoff → ก่อนปิดเครื่อง/สลับเครื่อง
