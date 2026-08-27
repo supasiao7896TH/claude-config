@@ -230,15 +230,23 @@ VS Code extension เป็น UI wrapper ของ engine เดียวกั
 
 ## รายการ Subagents
 
-| Subagent | บทบาท | สิทธิ์ |
+| Subagent | บทบาท | Tools (`tools:` จริง) |
 |---|---|---|
-| sa-explore | ค้นหา/สรุปโครงสร้างโค้ด ประหยัด context | Read-only |
-| sa-architect | ร่าง Architecture Blueprint ก่อนเขียนโค้ด (รออนุมัติก่อนเสมอ) | Read-only |
-| sa-code-reviewer | รีวิวโค้ดตาม Security Checklist ก่อน commit | Read-only |
-| sa-debugger | ไล่บั๊กด้วย Five Whys + แก้ไขจริง | Edit |
-| sa-handoff | สรุปสถานะงานข้ามเครื่องผ่าน HANDOFF.md | Write (เฉพาะ HANDOFF.md) |
-| sa-git-manager | Commit message, merge conflict, branch, PR ตาม Git Safety Protocol เข้มงวด | Edit + Bash (git) |
-| sa-summarizer | รวบรวมผลจาก subagent ประเภทเดียวกันที่รันขนานกัน (fan-out) ให้เป็นรายงานเดียว | Read-only |
+| sa-explore | ค้นหา/สรุปโครงสร้างโค้ด ประหยัด context | Read, Grep, Glob, Bash |
+| sa-architect | ร่าง Architecture Blueprint ก่อนเขียนโค้ด (รออนุมัติก่อนเสมอ) | Read, Grep, Glob |
+| sa-code-reviewer | รีวิวโค้ดตาม Security Checklist ก่อน commit | Read, Grep, Glob, Bash |
+| sa-debugger | ไล่บั๊กด้วย Five Whys + แก้ไขจริง | Read, Edit, Bash, Grep, Glob |
+| sa-handoff | สรุปสถานะงานข้ามเครื่องผ่าน HANDOFF.md | Read, Write, Bash, Grep, Glob |
+| sa-git-manager | Commit message, merge conflict, branch, PR ตาม Git Safety Protocol เข้มงวด | Read, Edit, Bash, Grep, Glob |
+| sa-summarizer | รวบรวมผลจาก subagent ประเภทเดียวกันที่รันขนานกัน (fan-out) ให้เป็นรายงานเดียว | Read |
+
+> ⚠️ **ข้อจำกัดที่ต้องรู้ (ยืนยันจากเอกสารทางการแล้ว 2569-08-27):** field `tools:` ของ subagent
+> จำกัดได้แค่ระดับ "อนุญาตทั้ง tool หรือไม่" เท่านั้น **ไม่รองรับการ scope เฉพาะไฟล์แบบ
+> `Write(./HANDOFF.md)`** (syntax แบบนั้นใช้ได้เฉพาะใน `permissions.allow/deny` ของ settings.json)
+> ดังนั้น `sa-explore`/`sa-code-reviewer` ที่มี Bash และ `sa-handoff` ที่มี Write แบบไม่ scope
+> จึงพึ่งพา **คำสั่งในตัว prompt + permission prompt ที่ต้องกดอนุมัติก่อนรันจริง** เป็นเกราะป้องกัน
+> ไม่ใช่การบังคับที่ tool level — อย่ารัน agent เหล่านี้ในโหมด auto-accept/bypass-permissions
+> ถ้าต้องการให้ขอบเขตนี้เข้มงวดจริง
 
 ## Workflow แนะนำ
 
