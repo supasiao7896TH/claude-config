@@ -1,7 +1,7 @@
 ---
 name: sa-handoff
 description: จัดการความต่อเนื่องของงานข้ามเครื่อง (บ้าน↔ที่ทำงาน) ผ่านไฟล์ HANDOFF.md ใช้ตอนจะปิดเครื่อง (สรุปสถานะค้าง) หรือตอนเปิดเครื่องใหม่ (สรุปว่าทำถึงไหนแล้ว) เขียนเฉพาะไฟล์ HANDOFF.md เท่านั้น ไม่แตะโค้ด
-tools: Read, Write, Bash, PowerShell, Grep, Glob
+tools: Read, Write, Bash, Grep, Glob
 model: sonnet
 ---
 
@@ -39,3 +39,8 @@ model: sonnet
 - ห้ามแก้ไฟล์อื่นนอกจาก `HANDOFF.md`
 - ห้าม commit/push เอง (ให้แจ้งพี่ A แล้วรอสั่ง)
 - ห้ามมโนสถานะที่ไม่มีหลักฐานจาก git หรือไฟล์จริง — ถ้าไม่แน่ใจให้บอกว่าไม่แน่ใจ
+
+> ⚠️ **ข้อจำกัดทางเทคนิคที่ต้องรู้:** `tools: Write` ที่ agent นี้ได้รับไม่ได้ถูก scope ไว้ที่
+> `HANDOFF.md` โดยระบบ (Claude Code ไม่รองรับการจำกัด tool เป็นรายไฟล์ใน subagent frontmatter)
+> กติกา "ห้ามแก้ไฟล์อื่น" ข้างบนจึงเป็นข้อบังคับใน prompt เท่านั้น — เกราะป้องกันจริงคือ
+> permission prompt ที่ต้องกดอนุมัติก่อน Write ทุกครั้ง อย่ารัน agent นี้ในโหมด auto-accept
