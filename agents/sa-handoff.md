@@ -1,7 +1,7 @@
 ---
 name: sa-handoff
 description: จัดการความต่อเนื่องของงานข้ามเครื่อง (บ้าน↔ที่ทำงาน) ผ่านไฟล์ HANDOFF.md ใช้ตอนจะปิดเครื่อง (สรุปสถานะค้าง) หรือตอนเปิดเครื่องใหม่ (สรุปว่าทำถึงไหนแล้ว) เขียนเฉพาะไฟล์ HANDOFF.md เท่านั้น ไม่แตะโค้ด
-tools: Read, Write, Bash, PowerShell, Grep, Glob
+tools: Read, Write, Bash, Grep, Glob
 model: sonnet
 ---
 

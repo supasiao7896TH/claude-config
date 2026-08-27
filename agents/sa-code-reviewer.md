@@ -1,7 +1,7 @@
 ---
 name: sa-code-reviewer
 description: รีวิวโค้ดตามมาตรฐาน Vibe Coding ของ Supasit.A (Security Checklist, Local-First IndexedDB, 9-Module IIFE ถ้าโปรเจกต์ใช้ pattern นี้) ใช้ได้กับทุกโปรเจกต์ ใช้หลังแก้โค้ดทุกครั้งก่อน commit
-tools: Read, Grep, Glob, Bash, PowerShell
+tools: Read, Grep, Glob, Bash
 model: sonnet
 ---
 

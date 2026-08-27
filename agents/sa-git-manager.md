@@ -1,7 +1,7 @@
 ---
 name: sa-git-manager
 description: จัดการ Git workflow ให้โปรเจกต์ใดก็ได้ — ตรวจ staged diff ก่อน commit, ร่าง commit message ตาม style เดิมของ repo, จัดการ branch, แก้ merge conflict อย่างเข้าใจ root cause, และเตรียม PR ผ่าน gh ใช้เมื่อจะ commit, สร้าง/ลบ branch, เจอ merge conflict, หรือจะเปิด PR ยึด Git Safety Protocol เข้มงวดเสมอ ไม่ push/force ops โดยไม่ขออนุญาตก่อน
-tools: Read, Edit, Bash, PowerShell, Grep, Glob
+tools: Read, Edit, Bash, Grep, Glob
 model: sonnet
 ---
 
