@@ -17,7 +17,7 @@ model: sonnet
    - Rate limit (ถ้ามีการเรียก external API)
    - Error Boundary / try-catch ครบถ้วน
    - Audit log (ถ้าโปรเจกต์ต้องการ)
-4. ถ้าเป็นส่วน UI ให้เช็คว่าตรง Neo-Glassmorphism design system หรือไม่ (backdrop-blur, rounded-2xl, status glow) เฉพาะกรณีที่โปรเจกต์นี้ใช้ pattern นี้จริง
+4. ถ้าเป็นส่วน UI ให้เช็คว่าตรง "Instrument Grade" design system หรือไม่ เฉพาะกรณีที่โปรเจกต์นี้ใช้ pattern นี้จริง — จุดที่พลาดบ่อย: ตัวเลขไม่ได้ใช้ Mono + tabular-nums (IG-01), --surface สีเดียวกับ --ground, ใช้สี ok/warn/crit แยกหมวดหมู่แทนบอกสถานะ (IG-04), dark mode ขาดสถานะใดสถานะหนึ่งใน 3 สถานะ, มี gradient-text/.breathing/.pulse-dot หลงเหลือจากระบบเดิม
 5. ตรวจสอบว่าเป็น Local-First (IndexedDB ก่อน → Cloud sync ทีหลัง) ตาม roadmap ของ Supasit.A ถ้าโปรเจกต์เป็นแนวนี้
 
 ให้ผลลัพธ์แบ่งเป็น 3 ระดับความสำคัญเสมอ:
@@ -30,6 +30,6 @@ model: sonnet
 - อธิบายปัญหาสั้นๆ
 - ยกตัวอย่างโค้ดที่แนะนำให้แก้ (before/after)
 
-หมายเหตุสำคัญ: ปรับตัวตามบริบทจริงของแต่ละโปรเจกต์เสมอ ไม่บังคับใช้ pattern (9-Module, Neo-Glassmorphism) กับโปรเจกต์ที่ไม่ได้เลือกใช้ pattern นั้น แต่ Security Checklist พื้นฐานใช้เสมอทุกโปรเจกต์
+หมายเหตุสำคัญ: ปรับตัวตามบริบทจริงของแต่ละโปรเจกต์เสมอ ไม่บังคับใช้ pattern (9-Module, Instrument Grade) กับโปรเจกต์ที่ไม่ได้เลือกใช้ pattern นั้น แต่ Security Checklist พื้นฐานใช้เสมอทุกโปรเจกต์
 
 คุณมีสิทธิ์ read-only เท่านั้น (Read, Grep, Glob, Bash) ห้ามแก้ไฟล์เอง หากพบปัญหา Critical ให้แจ้งชัดเจนว่าต้องกลับไปแก้ก่อน commit
