@@ -61,12 +61,13 @@ Store: [store_name]
 
 ---
 
-## 🎨 Brand & Design Rules
-- **Glass Badge** "by Supasit.A" → position: fixed bottom-right (บังคับ)
-- **Status Glow:** Green=Online · Amber=Offline · Blue=Syncing
-- **Font:** Sarabun (body) · Fraunces (hero/metric เท่านั้น)
-- **Dark/Light Mode:** CSS variables บังคับ — ห้าม hardcode hex
-- **Spacing:** 8pt grid เท่านั้น (4/8/12/16/20/24/32/40/48/64px)
+## 🎨 Brand & Design Rules ("Instrument Grade" — ดู vibe-coding-core/references/design-system.md)
+- **A(i)CODER badge** → position: fixed bottom-right (บังคับ, asset จาก `claude-config/branding/`)
+- **สถานะ:** ใช้ ok/warn/crit เท่านั้น (IG-04 — สีบอก "สถานะ" ไม่ใช่ "หมวดหมู่")
+- **Font:** IBM Plex Sans Thai (UI/body) · IBM Plex Mono (ตัวเลข/data — `tabular-nums` บังคับ, IG-01)
+- **Dark/Light Mode:** CSS variables บังคับ — ห้าม hardcode hex · 3 สถานะ (`:root`/`prefers-color-scheme`/`[data-theme]`)
+- **Spacing:** 4pt grid เท่านั้น (4/6/8/10/12/14/16/20/24/32/44/64px)
+- **Surface:** `--surface` ต้องต่างจาก `--ground` เสมอ · ขอบเส้นคม 1px แทนเงานูน (IG-03)
 
 ---
 
@@ -155,8 +156,8 @@ project/
 ❌ ห้าม hardcode API key ในโค้ด
 ❌ ห้ามเปลี่ยน DB_VERSION โดยไม่ทำ migration
 ❌ ห้ามแก้ไฟล์ sw.js โดยไม่แจ้งพี่ A ก่อน
-❌ ห้ามลบ Glass Badge "by Supasit.A"
-❌ ห้ามใช้ font-weight 700 (ใช้ 500 แทน)
+❌ ห้ามลบ A(i)CODER badge
+❌ ห้ามใช้ font-weight 800/900 (หนักสุดคือ 600 สำหรับ heading — IG-2)
 ❌ ห้ามแก้หลาย feature พร้อมกันใน 1 session
 ❌ ห้ามใช้ innerHTML กับ user input
 ❌ ห้ามสร้างไฟล์ใหม่นอก scope โดยไม่ถามก่อน
@@ -165,13 +166,14 @@ project/
 
 ---
 
-## 🎨 Brand Identity (บังคับทุกแอป)
+## 🎨 Brand Identity (บังคับทุกแอป — "Instrument Grade")
 ```
-Glass Badge  : position fixed · bottom-right · "by Supasit.A"
-Status Glow  : Green=Online · Amber=Offline · Blue=Syncing pulse
-Header       : sticky glass · executive style · brand name
-Dark/Light   : toggle บน header · CSS variables
-Micro-FX     : fade-in slide-up · hover scale(1.02) · press scale(0.97)
+Badge        : A(i)CODER badge · position fixed · bottom-right (asset จาก claude-config/branding/)
+สถานะ         : ok/warn/crit เท่านั้น (IG-04) — ห้ามใช้สีแยกหมวดหมู่ข้อมูล
+Header       : sticky · ขอบเส้นคม 1px (ไม่ใช้ glass/blur) · brand name
+Dark/Light   : toggle บน header · [data-theme] attribute (ไม่ใช่ .dark class) · CSS variables
+Micro-FX     : fade-in .3s / slide-up .3s เท่านั้น + press effect ปุ่ม (translateY(1px) + inset shadow)
+               ห้าม: scale()/.breathing/.pulse-dot/gradient-text (ตัดออกถาวร)
 ```
 
 ---
@@ -195,7 +197,9 @@ CORS Proxy: [worker URL] (allowlist โดเมนปลายทางเส�
 [ ] Dark/Light mode สลับได้ ไม่มี hardcode color
 [ ] ทุก button มี aria-label
 [ ] ไม่มี console.error ใน production
-[ ] Glass Badge "by Supasit.A" มีครบ
+[ ] A(i)CODER badge มีครบ
+[ ] ตัวเลขใช้ --font-data + tabular-nums ครบ (IG-01)
+[ ] --surface ต่างจาก --ground เสมอ
 [ ] IndexedDB CRUD ทำงานถูกต้อง
 [ ] ไม่มี API key ใน source code
 [ ] Responsive ที่ 375/768/1024px

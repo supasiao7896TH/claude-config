@@ -5,7 +5,9 @@ Master repo สำหรับ Skills และ Subagents ส่วนตัว�
 
 Single source of truth สำหรับ Claude Code Skills และ Subagents ของ Supasit.A — รวมจาก CLAUDE-Docc-For-Code เมื่อ 2026-07-31
 
-> **Last sync:** 2026-08-04 — pull ที่เครื่องที่ทำงาน (agents 6 ไฟล์ / skills 16 โฟลเดอร์)
+> **Sync status:** skills/agents sync อัตโนมัติผ่าน Junction ทันทีที่ `git pull` — ส่วน
+> `CLAUDE.md`/`settings.json`/`statusline.ps1` ต้อง copy มือ (ดูขั้นตอนด้านล่าง) เช็ควันที่/การ
+> เปลี่ยนแปลงล่าสุดจริงด้วย `git log -1` แทนการพึ่งบรรทัดนี้ (เคยตกยุคมาแล้วเพราะต้องจำอัปเดตมือ)
 
 ## โครงสร้าง
 
@@ -90,7 +92,7 @@ Copy-Item "$env:USERPROFILE\claude-config\statusline.ps1" "$env:USERPROFILE\.cla
 Copy-Item "$env:USERPROFILE\claude-config\CLAUDE.md" "$env:USERPROFILE\.claude\CLAUDE.md" -Force
 ```
 
-ไฟล์นี้เก็บ preference ที่ apply กับทุก project เช่น communication style (ตอนนี้คือ 30% Thai / 70% English) — Claude Code จะ load ไฟล์นี้อัตโนมัติทุก session ไม่ว่าจะเปิด project ไหนก็ตาม
+ไฟล์นี้เก็บ preference ที่ apply กับทุก project เช่น communication style (ตอนนี้คือ 70% Thai / 30% English) — Claude Code จะ load ไฟล์นี้อัตโนมัติทุก session ไม่ว่าจะเปิด project ไหนก็ตาม
 
 ### วิธีติดตั้ง USER.md (โปรไฟล์ผู้ใช้งาน — ต่างจาก CLAUDE.md ตรงที่ไม่มีเนื้อหาเฉพาะเครื่อง จึง sync แบบ symlink ได้เต็มที่)
 
