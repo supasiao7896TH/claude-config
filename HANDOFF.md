@@ -19,6 +19,12 @@
    Copy-Item "$env:USERPROFILE\claude-config\settings.json" "$env:USERPROFILE\.claude\settings.json" -Force
    ```
    รอบนี้มี deny-list secret ใหม่เพิ่ม (credentials.json, serviceAccount*.json, id_rsa/id_ed25519, .aws/**, *.p12/*.pfx ฯลฯ) — ถ้าไม่ copy จะไม่มีผล
+
+   ⚠️ **ทันทีหลัง copy ทุกครั้ง ต้องแก้ placeholder ของ statusline ด้วย** — repo เก็บ `statusLine.command`
+   เป็น `C:/Users/<ชื่อ user บนเครื่องนี้>/.claude/statusline.ps1` ไว้ตั้งใจ (portable ข้ามเครื่อง
+   บ้าน/office ที่ username ต่างกัน) แปลว่า copy ทับแล้ว statusline จะหายทุกครั้งจนกว่าจะแก้
+   `<ชื่อ user บนเครื่องนี้>` ให้เป็น username จริงของเครื่องนั้น (เครื่องบ้าน = `PC 4000D`, เครื่อง
+   Office = `26007294`) — เพิ่งเจอ bug นี้จริงที่เครื่องบ้าน 2026-08-27 แก้แล้ว อย่าลืมซ้ำที่ Office
 6. **เช็คไฟล์ `agents/*.md`** — ที่เครื่องบ้าน ไฟล์ใน `claude-config/agents/` กับ `~/.claude/agents/`
    เป็น**ไฟล์เดียวกัน** (hardlink) เลย sync อัตโนมัติ แต่**เครื่อง Office ยังไม่ยืนยันว่าเป็นแบบเดียวกัน**
    ต้องเช็คก่อน ถ้าไม่ใช่ hardlink/symlink ต้อง copy ทับเองด้วย:
