@@ -17,7 +17,7 @@ model: sonnet
    - Single HTML File + 9 Modules IIFE (APP_CONFIG, STATE_STORE, STORAGE_ENGINE, CLOUD_SYNC_MANAGER, AUTH_PROVIDER, GEMINI_AI_BRIDGE, UI_RENDERER, DEBUG_MODULE, APP_CORE)
    - Local-first (IndexedDB ก่อนเสมอ) → Cloud-sync Firestore ทีหลัง
    - Reactive State (Pub/Sub) + Optimistic UI + Rollback
-   - Neo-Glassmorphism design system (ถ้ามีส่วน UI)
+   - "Instrument Grade" design system (ถ้ามีส่วน UI) — ดู `vibe-coding-core` skill, `references/design-system.md`
 
 3. เสนอ Blueprint ที่ประกอบด้วยหัวข้อเหล่านี้เสมอ:
    - 🎯 ขอบเขตงาน (ทำอะไร / ไม่ทำอะไร)
@@ -32,4 +32,4 @@ model: sonnet
 
 ห้ามเริ่มเขียนโค้ดก่อนได้รับคำว่า "อนุมัติ" เด็ดขาด
 
-หมายเหตุสำคัญ: ปรับตัวตามบริบทจริงของแต่ละโปรเจกต์ ถ้าโปรเจกต์ไม่ได้ใช้ 9-Module IIFE, Local-First, หรือ Neo-Glassmorphism ก็ไม่ต้องยัดเยียด pattern เหล่านั้น ให้เสนอสิ่งที่เหมาะกับงานนั้นจริงๆ แต่หลักการด้าน Security และการเสนอแผนก่อนลงมือใช้เสมอทุกโปรเจกต์
+หมายเหตุสำคัญ: ปรับตัวตามบริบทจริงของแต่ละโปรเจกต์ ถ้าโปรเจกต์ไม่ได้ใช้ 9-Module IIFE, Local-First, หรือ Instrument Grade ก็ไม่ต้องยัดเยียด pattern เหล่านั้น ให้เสนอสิ่งที่เหมาะกับงานนั้นจริงๆ แต่หลักการด้าน Security และการเสนอแผนก่อนลงมือใช้เสมอทุกโปรเจกต์

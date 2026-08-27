@@ -2,17 +2,45 @@
 
 > ใช้ไฟล์นี้ส่งต่องานข้ามเครื่อง (บ้าน ↔ ที่ทำงาน) — อ่านไฟล์นี้ก่อนเริ่ม session ถัดไป
 
-**อัปเดตล่าสุด:** 2026-08-13 (เครื่องบ้าน)
+**อัปเดตล่าสุด:** 2026-08-27 (Claude Code on the web)
 
 ---
 
-## ⚠️ สิ่งแรกที่ต้องทำที่เครื่อง Office (สำคัญที่สุด)
+## ⚠️ สิ่งแรกที่ต้องทำที่ทุกเครื่อง (สำคัญที่สุด)
 
-`claude-config` เพิ่ง push commit ใหม่จากเครื่องบ้าน (`af0a4e0`) แต่เครื่อง Office ยังไม่มีการเปลี่ยนแปลงนี้เลย
-
-1. หาโฟลเดอร์ที่ clone `claude-config` ไว้ที่เครื่อง Office — **ยังไม่ทราบ path แน่ชัด** (รู้แค่ `.claude` อยู่ที่ `C:\Users\26007294\.claude\`) ต้องหา/ยืนยันเอง
+1. หาโฟลเดอร์ที่ clone `claude-config` ไว้ที่เครื่องนั้น
+   (เครื่อง Office **ยังไม่ทราบ path แน่ชัด** รู้แค่ `.claude` อยู่ที่ `C:\Users\26007294\.claude\` ต้องหา/ยืนยันเอง)
 2. รัน `git pull` ในโฟลเดอร์นั้น
-3. หลัง pull เสร็จ ระบบจะใช้ **"Tactile Plant UI"** (design system ใหม่ถาวร) อัตโนมัติทันที เพราะเก็บอยู่ใน skill ระดับ user (`~/.claude/skills/vibe-coding-core/`) — ไม่ต้องตั้งค่าเพิ่มต่อโปรเจกต์
+3. หลัง pull เสร็จ ระบบจะใช้ **"Instrument Grade"** (design system ใหม่ถาวร — แทนที่ Tactile Plant UI)
+   อัตโนมัติทันที เพราะเก็บอยู่ใน skill ระดับ user (`~/.claude/skills/vibe-coding-core/`) ไม่ต้องตั้งค่าเพิ่มต่อโปรเจกต์
+4. **`USER.md` เปลี่ยนด้วย** — ถ้าเครื่องนั้นใช้วิธี copy (ไม่ใช่ symlink) ต้อง copy ทับใหม่ (ดูวิธีใน README.md)
+
+---
+
+## 🆕 สรุปงานล่าสุด (2026-08-27)
+
+### 1. Design System ใหม่ถาวร — "Instrument Grade" (แทนที่ Tactile Plant UI)
+พี่ A review ระบบเดิมแล้วพบปัญหา 4 ข้อ: ดูซ้ำกันทุกแอป · อ่านยาก contrast ต่ำ · มือถือยังไม่ดีพอ ·
+**ยังไม่มีเอกลักษณ์ที่บ่งบอกตัวตน** → ตัดสินใจ**รื้อทำใหม่ทั้งหมด**
+
+แนวคิดใหม่ *"อ่านค่าได้แม่นเหมือนเครื่องมือวัด"* — ดึงจากตัวตนวิศวกรกระบวนการ บุคลิกเรียบหรูมืออาชีพ
+- **IG-01 ตัวเลขทุกตัวเป็น IBM Plex Mono + tabular-nums** ← ลายเซ็นของแบรนด์ แก้ปัญหา "ดูซ้ำ" ที่ต้นเหตุ
+- IG-02 การ์ดมีแถบ tag บอกที่มาข้อมูล (ทางเลือก) · IG-03 ขอบคม 1px แทนเงานูน แต่ปุ่มยังกดแล้วยุบ
+- IG-04 สีบอกสถานะ ไม่ใช่หมวดหมู่
+- Font เปลี่ยนจาก Noto Sans Thai → **IBM Plex Sans Thai + IBM Plex Mono**
+- Dark mode รองรับครบ 3 สถานะ (`:root` · `prefers-color-scheme` · `[data-theme]`) แทน `.dark` class เดิม
+- ตัดถาวร: neumorphism · gradient-text · `.breathing` · `.pulse-dot`
+
+ไฟล์ที่แก้: `USER.md` · `skills/vibe-coding-core/SKILL.md` · `references/design-system.md` ·
+`references/layout-and-brand.md` · `agents/sa-architect.md` · `agents/sa-code-reviewer.md`
+(สอง agent ยังค้าง "Neo-Glassmorphism" ซึ่งเก่ากว่า Tactile Plant UI อีกรุ่น — แก้พร้อมกันแล้ว)
+
+> **แอปเดิมไม่ต้องรีบย้าย** — ตาราง Migration อยู่ท้าย `references/design-system.md`
+> ย้ายเมื่อแอปนั้นถูกแก้ครั้งใหญ่อยู่แล้ว แต่**แอปใหม่ทุกตัวต้องใช้ Instrument Grade**
+
+### 2. Subagent ใหม่ — `sa-summarizer`
+รวมผลจาก subagent ประเภทเดียวกันที่รันขนาน (fan-out) ให้เป็นรายงานเดียว
+พร้อมกติกา orchestration ใน `USER.md` (รันขนานได้เฉพาะ multi-file · ไม่เกิน 3-5 ตัวต่อรอบ · ต้องระบุขอบเขตก่อนเรียกเสมอ)
 
 ---
 

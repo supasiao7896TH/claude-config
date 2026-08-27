@@ -40,9 +40,17 @@
 - **9 Modules (IIFE):** `APP_CONFIG`, `STATE_STORE`, `STORAGE_ENGINE`, `CLOUD_SYNC_MANAGER`, `AUTH_PROVIDER`, `GEMINI_AI_BRIDGE`, `UI_RENDERER`, `DEBUG_MODULE`, `APP_CORE`
 - **State:** Reactive (Pub/Sub) + Optimistic UI พร้อม Rollback
 
-**Tech Stack:** Tailwind CSS CDN · Lucide Icons (vendored local) · Noto Sans Thai · IndexedDB (Promise-based) · Firestore v11+ (Delta Sync) · Firebase Auth (Anonymous/Custom Token) · Web Crypto AES-GCM 256-bit · Chart.js (vendored local) · Gemini 2.5 Flash (Backoff/Rate limit/24h Cache)
+**Tech Stack:** Tailwind CSS CDN · Lucide Icons (vendored local) · IBM Plex Sans Thai + IBM Plex Mono · IndexedDB (Promise-based) · Firestore v11+ (Delta Sync) · Firebase Auth (Anonymous/Custom Token) · Web Crypto AES-GCM 256-bit · Chart.js (vendored local) · Gemini 2.5 Flash (Backoff/Rate limit/24h Cache)
 
-**Brand "Supasit.A" — "Tactile Plant UI"** (ยืนยันแล้ว 2569-08-13 จาก pattern ที่ใช้ซ้ำเองใน 2 แอปจริง — ดู `vibe-coding-core` skill สำหรับ token เต็ม): Teal/Cyan (ไม่ใช่ indigo/purple) · Neumorphic tactile surfaces (`.tactile`/`.tactile-btn`) คู่กับเส้นขอบสีตามความหมายเสมอ · Gradient-text hero (teal→cyan) ใช้ครั้งเดียวต่อหน้า · A(i)CODER badge (จาก `claude-config/branding/`) แทน "by Supasit.A" text badge · Dark/Light mode · Micro-interactions เฉพาะจุดที่มีความหมายจริง (ไม่ตกแต่งพร่ำเพรื่อ)
+**Brand "Supasit.A" — "Instrument Grade"** (อนุมัติ 2569-08-27 — รื้อจาก "Tactile Plant UI" เดิมทั้งหมด เพราะดูซ้ำทุกแอป/contrast ต่ำ/มือถือไม่ดีพอ/ไม่มีเอกลักษณ์ · ดู `vibe-coding-core` skill `references/design-system.md` สำหรับ token เต็ม)
+
+แนวคิด: *"อ่านค่าได้แม่นเหมือนเครื่องมือวัด"* — มาจากตัวตนวิศวกรกระบวนการที่ตัดสินใจจากตัวเลข บุคลิก **เรียบหรู มืออาชีพ**
+
+4 กติกาเอกลักษณ์: **IG-01** ตัวเลขทุกตัวเป็น IBM Plex Mono + `tabular-nums` (ลายเซ็นแบรนด์) · **IG-02** การ์ดมีแถบ tag บอกที่มาข้อมูล (ทางเลือก ใช้เมื่อข้อมูลมีรหัสจริง) · **IG-03** ขอบเส้นคม 1px แทนเงานูน แต่ปุ่มยังกดแล้วยุบจริง · **IG-04** สีบอก "สถานะ" ไม่ใช่ "หมวดหมู่"
+
+Token หลัก: Deep Teal `#0B4F4A` · Signal Teal `#12857C` · Brass `#8A6D28` · Ground `#F7F8F7` · Surface `#FFFFFF` (ต้องต่างจาก Ground เสมอ) · ok/warn/crit สำหรับสถานะ · Font: IBM Plex Sans Thai + IBM Plex Mono (ไม่ใช่ Noto) · Radius 4/6/10px · Light-first + Dark ออกแบบแยกครบ 3 สถานะ (`:root` · `prefers-color-scheme` · `[data-theme]`) · A(i)CODER badge (จาก `claude-config/branding/`)
+
+❌ ตัดออกถาวร: neumorphism · gradient-text · `.breathing` · `.pulse-dot` · indigo/purple · สีแยกหมวดหมู่
 
 **Security:** XSS ป้องกันด้วย `textContent` · เข้ารหัส API Key ด้วย AES-GCM · Input/Schema validation · Audit log · Rate limit · Firestore Rules (Strict Path, Auth First) · CSP · ไม่ hardcode secret · BYOK Gemini key
 
@@ -62,8 +70,15 @@
 - Workflow: Plan Mode (Opus วางแผน) → Accept Edits (Sonnet ลงมือทำ)
 - ใช้ `HANDOFF.md` สำหรับส่งต่อ session ข้ามเครื่อง
 - Auto-load เฉพาะ: `CLAUDE.md`, `.claude/agents/*.md`, `.claude/skills/*` (ไฟล์ .md อื่นต้อง `@`-mention เอง)
-- Custom Subagents (user-scoped, ใช้ข้ามโปรเจกต์ทั้งหมด — ไม่มีชุด project-scoped แยก): `sa-explore`, `sa-code-reviewer`, `sa-debugger`, `sa-architect`, `sa-handoff`, `sa-git-manager`
+- Custom Subagents (user-scoped, ใช้ข้ามโปรเจกต์ทั้งหมด — ไม่มีชุด project-scoped แยก): `sa-explore`, `sa-code-reviewer`, `sa-debugger`, `sa-architect`, `sa-handoff`, `sa-git-manager`, `sa-summarizer`
 - **กติกา:** งานเขียนโค้ด → ใช้ Claude Code CLI ใน VS Code | งานที่ไม่ใช่โค้ด → ใช้ claude.ai
+
+### Multi-agent orchestration (fan-out)
+
+- ค่าเริ่มต้น: เรียก subagent ทีละตัวแบบเรียงลำดับผ่าน session หลัก — session หลักทำหน้าที่ orchestrator อยู่แล้วโดยธรรมชาติ ไม่ต้องมี agent แยกสำหรับ role นี้
+- รันขนาน (fan-out) ได้เฉพาะโปรเจกต์ multi-file (ดู skill `vibe-coding-multifile`) และต้องระบุจำนวน/ขอบเขตชัดเจนก่อนเรียกเสมอ เช่น "ใช้ sa-explore 3 ตัว คนละโมดูล A/B/C" — ห้ามปล่อยให้ Claude ตัดสินใจแบ่งงานเอง
+- หลังรัน subagent ประเภทเดียวกันขนานกันตั้งแต่ 2 ชุดขึ้นไป ให้เรียก `sa-summarizer` รวมผลเป็นรายงานเดียวก่อนส่งให้พี่ A
+- จำนวน subagent ที่รันพร้อมกันต่อรอบ: ไม่เกิน 3-5 ตัว ถ้างานใหญ่กว่านั้นให้แบ่งเป็นชุด (batch) แทนการยิงพร้อมกันหมด
 
 ---
 

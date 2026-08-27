@@ -4,7 +4,7 @@ description: >
   CORE Skill สถาปัตยกรรม Supasit.A — ใช้เมื่อพี่ A ขอสร้างแอปใหม่ตั้งแต่เริ่มต้น
   เขียนเว็บใหม่ ทำ dashboard/tool/form ใหม่ สร้าง UI component ใหม่ หรือวาง
   Blueprint โปรเจกต์ Vibe Coding ครอบคลุม JS Architecture (9 Modules IIFE) ·
-  PWA · Design System (Tactile Plant UI) · Security · QA · Deployment
+  PWA · Design System (Instrument Grade) · Security · QA · Deployment
   ไม่ใช้กับการแก้บัก/ปรับปรุงแอปที่มีอยู่แล้ว (ให้ใช้ vibe-coding-workflow แทน)
 ---
 
@@ -50,18 +50,22 @@ Step 6 → Auto-generate Context Files + Push GitHub
 นำเสนอ Mockup แบบ text-based ที่ปรับให้เหมาะกับ Target Device:
 
 ```
-Mobile (vertical layout + bottom-nav):        PC/Desktop (wide dashboard + sidebar):
+Mobile (vertical + bottom-nav):               PC/Desktop (sidebar + content):
 ┌─────────────────────┐                       ┌──────┬────────────────────────────┐
-│  🅰 AppName    ⚙ 🌙 │                       │      │  Header (sticky glass)     │
-├─────────────────────┤                       │ Side │──────────────────────────  │
-│                     │                       │ bar  │  Content Area / Bento      │
-│   [Hero / KPI]      │                       │      │                            │
-│                     │                       │      │  Cards / Table / Charts    │
-│   [Card 1][Card 2]  │                       │      │                            │
-│   [Card 3][Card 4]  │                       └──────┴────────────────────────────┘
-│                     │
-├─────────────────────┤
-│ 🏠  📊  ➕  📋  👤  │  ← Bottom Nav
+│ ● APPNAME       [◐] │                       │ ●APP │ Topbar (sticky, 1px line)  │
+├─────────────────────┤                       │──────┼────────────────────────────┤
+│ ┌─────────────────┐ │                       │ ▸ นำ │ ┌────────┬────────┬──────┐ │
+│ │ FI-2104    Feed │ │  ← .tag-strip         │ ▸ ราย│ │1,284.60│ 196.85 │98.42%│ │
+│ │ 1,284.60    t/d │ │  ← Mono tabular       │ ▸ ตั้ง│ └────────┴────────┴──────┘ │
+│ │ ▲ 2.4%          │ │  ← สถานะ ok/warn/crit │      │ ┌────────────────────────┐ │
+│ └─────────────────┘ │                       │      │ │ ตาราง (ตัวเลขชิดขวา)   │ │
+│ ┌─────────────────┐ │                       │      │ └────────────────────────┘ │
+│ │ ...             │ │                       └──────┴────────────────────────────┘
+│ └─────────────────┘ │
+├─────────────────────┤                       การ์ด: พื้น --surface ≠ --ground
+│  ▪   ▪   ▪   ▪   ▪  │  ← Bottom Nav         ขอบ 1px --line · radius 10px
+├─────────────────────┤    (Lucide icon only)
+│   A(i)CODER badge   │
 └─────────────────────┘
 ```
 
@@ -298,11 +302,14 @@ ACCESSIBILITY
   [ ] Color contrast ผ่าน WCAG AA
   → รายละเอียดเต็ม: references/performance-and-accessibility.md
 
-BRAND
+BRAND (Instrument Grade)
   [ ] A(i)CODER badge มีครบ (แถบพื้นหลังสว่างคงที่ ไม่ตามธีมแอป — ดู claude-config/branding/README.md)
-  [ ] จุดสถานะ/pulse-dot ผูกกับ state จริงเท่านั้น (ไม่ใช่ของตกแต่ง)
-  [ ] Font Noto Sans Thai โหลดแล้ว (ไม่ใช่ Sarabun/Fraunces)
-  [ ] .tactile card คู่กับ border-t-4 สีตามความหมายเสมอ (กัน contrast ต่ำของ neumorphism)
+  [ ] ตัวเลขทุกตัวใช้ IBM Plex Mono + font-variant-numeric: tabular-nums (IG-01 — ลายเซ็นแบรนด์)
+  [ ] Font IBM Plex Sans Thai + IBM Plex Mono โหลดแล้ว (ไม่ใช่ Noto/Sarabun/Inter)
+  [ ] --surface ต่างจาก --ground จริง (ไม่ใช่สีเดียวกันแบบ neumorphism เดิม)
+  [ ] สี ok/warn/crit ใช้บอกสถานะเท่านั้น ไม่ได้ใช้แยกหมวดหมู่ข้อมูล (IG-04)
+  [ ] Dark mode ครบทั้ง 3 สถานะ (:root · prefers-color-scheme · [data-theme]) และ body มี background จาก token
+  [ ] ไม่มี gradient-text / .breathing / .pulse-dot หลงเหลือ (ตัดออกจากระบบแล้ว)
   → รายละเอียดเต็ม: references/layout-and-brand.md
 ```
 
@@ -338,7 +345,7 @@ Post-deploy:
 | ไฟล์ | เนื้อหา | โหลดเมื่อ |
 |---|---|---|
 | `references/tech-stack.md` | Omni-Platform/PWA structure · Tech Stack table · CDN pinning · Cloudflare CORS proxy | ตั้งค่าโปรเจกต์ใหม่ / เพิ่ม dependency |
-| `references/design-system.md` | Spacing · Typography · Radius · Color · Tactile Plant UI (neumorphism + semantic border) · Dark/Light | เขียน CSS / ออกแบบ UI |
+| `references/design-system.md` | Spacing · Typography (IBM Plex) · Radius · Color · Instrument Grade (การ์ดขอบคม + tabular-nums + สีบอกสถานะ) · Dark/Light 3 สถานะ | เขียน CSS / ออกแบบ UI |
 | `references/thai-localization.md` | วันที่ พ.ศ. · ตัวเลขไทย · สกุลเงินบาท | แอปมี format วันที่/เงินภาษาไทย |
 | `references/ai-integration.md` | Gemini config · JSON contract · Streaming · BYOK threat model · Worker-proxy pattern | แอปมี AI feature |
 | `references/error-handling-and-data.md` | Error Taxonomy 8 types · IndexedDB Migration policy | ทำ error handling / เปลี่ยน schema |
