@@ -2,7 +2,7 @@
 
 > ใช้ไฟล์นี้ส่งต่องานข้ามเครื่อง (บ้าน ↔ ที่ทำงาน) — อ่านไฟล์นี้ก่อนเริ่ม session ถัดไป
 
-**อัปเดตล่าสุด:** 2026-08-27 (Claude Code on the web)
+**อัปเดตล่าสุด:** 2026-08-27 (เครื่องบ้าน — pull ถึง commit `137ce77`)
 
 ---
 
@@ -14,6 +14,17 @@
 3. หลัง pull เสร็จ ระบบจะใช้ **"Instrument Grade"** (design system ใหม่ถาวร — แทนที่ Tactile Plant UI)
    อัตโนมัติทันที เพราะเก็บอยู่ใน skill ระดับ user (`~/.claude/skills/vibe-coding-core/`) ไม่ต้องตั้งค่าเพิ่มต่อโปรเจกต์
 4. **`USER.md` เปลี่ยนด้วย** — ถ้าเครื่องนั้นใช้วิธี copy (ไม่ใช่ symlink) ต้อง copy ทับใหม่ (ดูวิธีใน README.md)
+5. **`settings.json` ต้อง copy ทับด้วยมือเสมอ** (ไม่ auto-sync แบบ skill) — คำสั่ง:
+   ```powershell
+   Copy-Item "$env:USERPROFILE\claude-config\settings.json" "$env:USERPROFILE\.claude\settings.json" -Force
+   ```
+   รอบนี้มี deny-list secret ใหม่เพิ่ม (credentials.json, serviceAccount*.json, id_rsa/id_ed25519, .aws/**, *.p12/*.pfx ฯลฯ) — ถ้าไม่ copy จะไม่มีผล
+6. **เช็คไฟล์ `agents/*.md`** — ที่เครื่องบ้าน ไฟล์ใน `claude-config/agents/` กับ `~/.claude/agents/`
+   เป็น**ไฟล์เดียวกัน** (hardlink) เลย sync อัตโนมัติ แต่**เครื่อง Office ยังไม่ยืนยันว่าเป็นแบบเดียวกัน**
+   ต้องเช็คก่อน ถ้าไม่ใช่ hardlink/symlink ต้อง copy ทับเองด้วย:
+   ```powershell
+   Copy-Item "$env:USERPROFILE\claude-config\agents\*.md" "$env:USERPROFILE\.claude\agents\" -Force
+   ```
 
 ---
 
@@ -41,6 +52,20 @@
 ### 2. Subagent ใหม่ — `sa-summarizer`
 รวมผลจาก subagent ประเภทเดียวกันที่รันขนาน (fan-out) ให้เป็นรายงานเดียว
 พร้อมกติกา orchestration ใน `USER.md` (รันขนานได้เฉพาะ multi-file · ไม่เกิน 3-5 ตัวต่อรอบ · ต้องระบุขอบเขตก่อนเรียกเสมอ)
+
+### 3. แก้ "PowerShell bug" ใน subagent frontmatter + เพิ่ม deny-list secret
+พี่ A เจอว่า `tools:` field ของ subagent ใส่ชื่อ tool `PowerShell` ไปด้วย แต่ **Claude Code ไม่รู้จักชื่อ
+tool นี้** (บน Windows ก็เรียกผ่านชื่อ `Bash` เหมือนกัน) — commit `2b78c29` เลยลบ `PowerShell` ออกจาก
+`tools:` ของ 5 agents: `sa-code-reviewer` · `sa-debugger` · `sa-explore` · `sa-git-manager` · `sa-handoff`
+
+พร้อมกันนั้น commit `8cadfc4` เพิ่ม deny-list ป้องกันไฟล์ secret ใน `settings.json` เพิ่มอีก 8 pattern
+(`credentials.json` · `*serviceAccount*.json` · `*firebase-adminsdk*.json` · `.npmrc` · `id_rsa`/`id_ed25519`
+· `.aws/**` · `*.p12`/`*.pfx`) และแก้ README ให้ตรงความจริงว่า `tools:`/`Write` ของ subagent **scope ราย
+ไฟล์ไม่ได้** (เช่น `sa-handoff` ที่ห้ามแก้ไฟล์อื่นนอกจาก `HANDOFF.md` — กติกานั้นบังคับด้วย prompt +
+permission prompt เท่านั้น ไม่ใช่ tool-level) — merge เป็น `137ce77`
+
+**ที่เครื่องบ้านทำครบแล้ว:** pull + copy `settings.json` ทับ `~/.claude/settings.json` แล้ว (`diff` ยืนยันตรงกัน)
+agent files sync อัตโนมัติเพราะเป็น hardlink
 
 ---
 
@@ -90,7 +115,13 @@ Commit `af0a4e0` — push ขึ้น https://github.com/supasiao7896TH/claude-
 ## 🎯 ขั้นตอนถัดไป
 - ยังไม่ได้ตกลงกับพี่ A ว่าจะต่อยอดอะไรต่อ — เริ่มจาก pull `claude-config` ให้เรียบร้อยก่อน แล้วค่อยถามพี่ A
 
-## 🔧 คำสั่งที่ต้องรันก่อนทำงานต่อ (ที่เครื่อง Office)
+## 🔧 คำสั่งที่ต้องรันก่อนทำงานต่อ (ที่เครื่อง Office — user `26007294`)
+0. **รอบนี้เพิ่ม:** หลัง `git pull` แล้วต้อง copy `settings.json` ทับ `C:\Users\26007294\.claude\settings.json`
+   ด้วยมือทุกครั้ง (คำสั่งอยู่ในหัวข้อ "สิ่งแรกที่ต้องทำที่ทุกเครื่อง" ข้อ 5 ด้านบน) แล้วเช็คว่า
+   `agents/*.md` ที่เครื่องนี้เป็น hardlink/symlink กับ `~/.claude/agents/` เหมือนเครื่องบ้านหรือไม่
+   (`diff` เทียบไฟล์ดูได้) — ถ้าไม่ใช่ ต้อง copy ทับด้วยคำสั่งในข้อ 6 ด้วย ไม่งั้น 5 agents
+   (`sa-code-reviewer`/`sa-debugger`/`sa-explore`/`sa-git-manager`/`sa-handoff`) จะยังมี bug
+   `tools: ..., PowerShell` (ชื่อ tool ที่ไม่มีจริง) ค้างอยู่
 1. `git pull` ในโฟลเดอร์ `claude-config` (หา path ก่อน — ดูหัวข้อด้านบน)
 2. ถ้ายังไม่เคย clone `Leraning_for_vibe_coder` ที่เครื่อง Office: `git clone https://github.com/supasiao7896TH/Leraning_for_vibe_coder` (repo private — ต้อง login gh/git ด้วย account ที่มีสิทธิ์เข้าถึง)
 3. ถ้ายังไม่เคย clone `condo-rental-app` ที่เครื่อง Office: `git clone https://github.com/supasiao7896TH/Model-Vibe-Coding-Rental-Loan-Management-` (แนะนำให้ clone ไว้ *ข้างใน* โฟลเดอร์ `Leraning_for_vibe_coder` ให้ path ตรงกับเครื่องบ้าน)
