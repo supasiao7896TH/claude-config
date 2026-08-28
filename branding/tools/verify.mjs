@@ -7,7 +7,7 @@
  * can gate a commit.
  */
 
-import { readFileSync, readdirSync, writeFileSync, mkdtempSync } from "node:fs";
+import { readFileSync, existsSync, writeFileSync, mkdtempSync } from "node:fs";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { dirname, resolve, join } from "node:path";
 import { execSync } from "node:child_process";
@@ -38,10 +38,17 @@ const browser = await chromium.launch();
 
 /* ── Exported SVGs ─────────────────────────────────────────────────── */
 
-const svgFiles = readdirSync(EXPORTS).filter(f => f.endsWith(".svg"));
-check("six standalone SVGs exported", svgFiles.length === 6, `${svgFiles.length} found`);
+/* Only the animated exports build.mjs itself produces — matches
+   __exportSVGs() in the template exactly. The static Studio marks
+   (studio-badge-*.svg, studio-icon.svg) live in the same exports/ folder
+   but come from a separate process and are never expected to flicker, so
+   they don't belong in this loop. */
+const EXPECTED_SVGS = ["d1-neon-arcade", "d2-crt-night"]
+  .flatMap(dir => ["bare", "glow", "plate"].map(g => `${dir}-${g}.svg`));
+const missing = EXPECTED_SVGS.filter(f => !existsSync(resolve(EXPORTS, f)));
+check("six standalone SVGs exported", missing.length === 0, missing.join(", "));
 
-for (const f of svgFiles) {
+for (const f of EXPECTED_SVGS) {
   const body = readFileSync(resolve(EXPORTS, f), "utf8");
   /* A standalone file has no :root to read a brand token from, so a
      surviving var(--sc-*) would render as black. The per-tube phase

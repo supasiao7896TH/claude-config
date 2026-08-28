@@ -15,11 +15,12 @@
 
 | ไฟล์ | เนื้อหา |
 |---|---|
-| `index.html` | token Supasit.A Studio ครบ (สว่าง + มืด 3 สถานะ) · component พื้นฐาน · โครง 9 โมดูล IIFE · ปุ่มสลับธีม · badge · CSP · helper กัน XSS |
+| `index.html` | token Supasit.A Studio ครบ (สว่าง + มืด 3 สถานะ) · component พื้นฐาน · โครง 9 โมดูล IIFE · ปุ่มสลับธีม · badge · boot splash นีออนกระพริบ (D1/D2) · CSP · helper กัน XSS |
 | `chart-theme.js` | ธีม Chart.js ที่อ่านสีจาก CSS variable — สลับธีมแล้วกราฟตามเอง |
 | `sw.js` | Service Worker cache-first |
 | `manifest.webmanifest` | PWA manifest |
 | `assets/icon.svg` | ไอคอนแอป (A(i)CODER ชุด Studio) |
+| `assets/d1-neon-arcade-bare.svg` · `assets/d2-crt-night-bare.svg` | นีออนกระพริบสำหรับ boot splash เท่านั้น (ดู `branding/README.md`) — ไม่มีพื้นหลังของตัวเอง ต้องวางบน `var(--bg)` เสมอ ห้ามเอาไปแทน `.logo`/`.aicoder-badge` เพราะเล็กกว่าขนาดต่ำสุดของมันมาก |
 
 ## กติกาที่ห้ามพลาด
 

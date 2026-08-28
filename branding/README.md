@@ -43,6 +43,25 @@ UI face; the icon does not, which is why the icon — never the wordmark — is 
 into a favicon. D1–D3 are unchanged and stay valid for apps still on the old system
 and for merch, where the neon is the point.
 
+**D1/D2 are also allowed back inside a Studio app — but only where they fit at their
+own size.** Decided 2026-08-28: the neon flicker is worth keeping, and `-bare` has no
+painted ground (checked in the exported SVGs — no `<rect>` at all), so it sits directly
+on `var(--bg)` and reads as part of the page rather than a sticker, as long as the
+surface is actually light-enough/dark-enough per the ground rule below. The catch is
+size — D1/D2 need ≥240/280px wide to stay legible, which rules out the compact spots
+(`.logo`, `.aicoder-badge`) a Studio app shell already uses; those stay mint. The fit
+that works is a **boot splash**: full-width real estate, and the `.tube` warm-up (a
+2.6s irregular strike-in, see Flicker below) already reads as "the app is starting up"
+without any redesign. `design-lab/starter/index.html`'s `#bootSplash` is the reference
+implementation. Outside boot/splash/hero/about-sized surfaces, use the Studio marks.
+
+The two paw prints now trail **after** the wordmark (between "CODER" and the year
+mark) instead of leading into it from the left — `pawCluster`/`lockupGeometry` in
+`src/mockups.template.html` reserve the paw cluster's width the same way the year
+mark's width was already reserved, so the plate-never-overflows guarantee below still
+holds. If you're picturing the old left-side paws from an earlier session, that's why
+it looks different now.
+
 D1/D2 share one horizontal lockup and differ only in treatment, so choosing
 between them is choosing a ground, not a logo. D3 is stacked because its job —
 fitting a square and surviving 16 px — makes the horizontal lockup impossible.
@@ -316,6 +335,15 @@ own keyframes and reduced-motion rule, **the SVGs actually animating inside an
 `<img>`**, no external requests, all three faces loaded, no horizontal scroll at
 1280 px or 390 px, both themes resolving, and reduced motion leaving every tube
 lit.
+
+---
+
+## Review checklist
+
+Before shipping any change here — new placement, new build, new direction — run
+through [`REVIEW-CHECKLIST.md`](./REVIEW-CHECKLIST.md). It's the automated
+`verify.mjs` coverage plus the by-eye checks (ground contrast, minimum width,
+neon-vs-Studio system fit) that this round's boot-splash work actually needed.
 
 ---
 

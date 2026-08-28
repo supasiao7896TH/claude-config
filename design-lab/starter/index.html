@@ -71,6 +71,22 @@ body { margin:0; background: var(--bg); color: var(--text);
   -webkit-text-size-adjust:100%; }
 h1,h2,h3,p,ul { margin:0; } ul { list-style:none; padding:0; }
 
+/* Boot splash — the neon flicker mark (D1/D2, branding/README.md) lives here only.
+   It needs ≥240–280px to stay legible, which is why it isn't squeezed into .logo
+   or .aicoder-badge below; -bare has no painted ground so it sits directly on
+   var(--bg) and reads as part of the page, not a plate dropped on top of it. */
+#bootSplash { position:fixed; inset:0; z-index:9999; display:flex; align-items:center;
+  justify-content:center; background:var(--bg); transition:opacity .4s var(--ease); }
+#bootSplash.hide { opacity:0; pointer-events:none; }
+#bootSplash img { width:clamp(280px, 78vw, 420px); height:auto; display:block; }
+#bootSplash .splash-dark { display:none; }
+@media (prefers-color-scheme:dark) {
+  :root:not([data-theme="light"]) #bootSplash .splash-light { display:none; }
+  :root:not([data-theme="light"]) #bootSplash .splash-dark { display:block; }
+}
+:root[data-theme="dark"] #bootSplash .splash-light { display:none; }
+:root[data-theme="dark"] #bootSplash .splash-dark { display:block; }
+
 .topbar { position:sticky; top:0; z-index:20; background:var(--topbar-bg); backdrop-filter:blur(8px);
   border-bottom:1px solid var(--border); padding:12px 20px; display:flex; align-items:center; gap:12px; }
 .logo { width:30px; height:30px; border-radius:var(--r-sm); background:var(--accent); color:var(--on-accent);
@@ -153,6 +169,11 @@ td.num, th.num { text-align:right; font-variant-numeric:tabular-nums; }
 </style>
 </head>
 <body>
+
+<div id="bootSplash" aria-hidden="true">
+  <img class="splash-light" src="assets/d1-neon-arcade-bare.svg" alt="">
+  <img class="splash-dark" src="assets/d2-crt-night-bare.svg" alt="">
+</div>
 
 <header class="topbar">
   <div class="logo">A</div>
@@ -305,8 +326,27 @@ var APP_CORE = (function () {
     if (saved) root.setAttribute("data-theme", saved);   /* ไม่ stamp อะไรเลย = ตามระบบ */
   }
 
+  /* Boot splash holds for the neon warm-up (2.6s, see branding/README.md's
+     Flicker section) so the strike animation actually plays once, then fades.
+     Reduced motion gets a short hold instead of the full performance — the
+     SVG's own reduced-motion rule already leaves every tube lit, so there is
+     nothing left to wait for. */
+  function bootSplashOut() {
+    var el = document.getElementById("bootSplash");
+    if (!el) return;
+    var reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    /* Reduced motion also strips the CSS opacity transition (the app-wide
+       `* { transition:none }` rule below), so "hidden" is set on a fixed
+       timeout rather than transitionend, which would otherwise never fire. */
+    setTimeout(function () {
+      el.classList.add("hide");
+      setTimeout(function () { el.hidden = true; }, reduced ? 0 : 400);
+    }, reduced ? 300 : 2600);
+  }
+
   function init() {
     initTheme();
+    bootSplashOut();
     document.getElementById("themeBtn").addEventListener("click", function () {
       applyTheme(currentTheme() === "dark" ? "light" : "dark");
     });

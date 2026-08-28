@@ -896,6 +896,24 @@ const ACCENT_IDX = (() => {
   return Array.from({ length: close - open + 1 }, (_, k) => open + k);
 })();
 
+/* Two paws walking up-right, trailing off after the wordmark. Sized off
+   the plate height, independent of the glyph pixel unit. metrics() is
+   split out so lockupGeometry can reserve their width the same way it
+   already reserves the year mark's, before any drawing happens. */
+function pawClusterMetrics(H) {
+  const sTrail = H * 0.28, sLead = H * 0.34;
+  const leadX = Math.round(sTrail * 0.74);
+  return { sTrail, sLead, leadX, width: leadX + sLead };
+}
+function pawCluster(pawX, H, trail, lead) {
+  const { sTrail, sLead, leadX } = pawClusterMetrics(H);
+  const y1 = Math.round(H * 0.50);
+  return [
+    paw({ x: pawX, y: y1, size: sTrail, fill: trail }),
+    paw({ x: pawX + leadX, y: Math.round(H * 0.245), size: sLead, fill: lead })
+  ];
+}
+
 function lockupGeometry(W, H) {
   const px   = Math.max(2, Math.floor((W * 0.58) / UNIT_WORD));
   const yrPx = Math.max(1, Math.round(px / 2));
@@ -903,27 +921,17 @@ function lockupGeometry(W, H) {
   const pad  = Math.round(W * 0.045);
   const wmW  = UNIT_WORD * px;
   const yrW  = UNIT_YEAR * yrPx;
-  const wmX  = W - pad - yrW - gap - wmW;
+  const pawW = pawClusterMetrics(H).width;
+  const wmX  = W - pad - yrW - gap - pawW - gap - wmW;
   const wmY  = Math.round((H - GH * px) / 2);
-  const yrX  = wmX + wmW + gap;
+  const pawX = wmX + wmW + gap;
+  const yrX  = pawX + pawW + gap;
   const yrY  = wmY + GH * px - GH * yrPx;
   return {
-    px, yrPx, wmW, yrW, wmX, wmY, yrX, yrY,
+    px, yrPx, wmW, yrW, pawW, wmX, wmY, pawX, yrX, yrY,
     barY: yrY + GH * yrPx + Math.round(H * 0.07),
     barH: Math.max(4, Math.round(H * 0.055))
   };
-}
-
-/* Two paws walking up-right into the wordmark, sized off the plate
-   height and kept clear of wmX. Returned separately so each can be its
-   own tube. */
-function pawCluster(H, trail, lead) {
-  const sTrail = H * 0.28, sLead = H * 0.34;
-  const x1 = Math.round(H * 0.26), y1 = Math.round(H * 0.50);
-  return [
-    paw({ x: x1, y: y1, size: sTrail, fill: trail }),
-    paw({ x: x1 + Math.round(sTrail * 0.74), y: Math.round(H * 0.245), size: sLead, fill: lead })
-  ];
 }
 
 /* The wordmark as one tube per glyph, so letters strike independently.
@@ -1052,7 +1060,7 @@ function lockupInner(mode, groundKind, W, H, standalone = false) {
   const g = lockupGeometry(W, H);
   const gr = groundLayer(groundKind, W, H, mode);
   const bloom = uid("b"), pawB = uid("b");
-  const [trail, lead] = pawCluster(H, m.paws[0], m.paws[1]);
+  const [trail, lead] = pawCluster(g.pawX, H, m.paws[0], m.paws[1]);
   const k = H / 300;                       // bloom scales with the plate
   const bl = (v) => [v[0] * k, v[1] * k, v[2]];
 
@@ -1066,8 +1074,8 @@ function lockupInner(mode, groundKind, W, H, standalone = false) {
     ${standalone ? `<style>${NEON_CSS}</style>` : ""}
     <defs>${gr.defs}${bloomDef(bloom, ...bl(m.bloom))}${bloomDef(pawB, ...bl(m.pawBloom))}</defs>
     ${gr.back}
-    <g opacity="${m.pawOpacity}">${tube(20, trail, pawB)}${tube(21, lead, pawB)}</g>
     ${wordmarkTubes(WORDMARK, { px: g.px, x: g.wmX, y: g.wmY, filterId: bloom, seed: 0, layers, accent: ACCENT_IDX, accentFill: m.year })}
+    <g opacity="${m.pawOpacity}">${tube(20, trail, pawB)}${tube(21, lead, pawB)}</g>
     ${wordmarkTubes(YEARMARK, { px: g.yrPx, x: g.yrX, y: g.yrY, filterId: bloom, seed: 30, layers: [{ fill: m.year }] })}
     <g class="tube-b" style="${tubeVars(40)}">${bar({ x: g.yrX, y: g.barY, w: g.yrW, h: g.barH, white: m.barWhite })}</g>
     ${gr.front}
