@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="th" data-dir="d4" data-density="comfortable" data-font="noto">
+<html lang="th" data-dir="d4" data-tone="blue" data-density="comfortable" data-font="noto">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -267,6 +267,122 @@ html[data-dir="d4"][data-theme="dark"] {
   --shadow-1:0 1px 2px rgba(0,0,0,.5);
   --shadow-2:0 4px 18px rgba(0,0,0,.55);
   --topbar-bg:color-mix(in srgb, #0F1412 85%, transparent);
+}
+
+/* ============================================================
+   ตัวสลับโทนสีของ D4 — เปลี่ยนเฉพาะ "สี" ไม่แตะโครง/สัดส่วน/จังหวะ
+   ผูกกับ D4 เท่านั้น เพื่อให้ D1-D3 ยังเป็นตัวอ้างอิงเดิมได้
+   ทุกค่าคำนวณ contrast มาแล้วทั้งสว่างและมืด
+   ที่มา: สีแบรนด์ 3 ระบบที่ผ่านมาเป็น teal hue 173-175 ทั้งหมด (ห่างกัน 2 องศา)
+          และเขียวแบรนด์อยู่ห่างจากเขียว "ปกติ" แค่ 25 องศา — เหลือ 5 องศาในสายตาคนตาบอดสีเขียว-แดง
+   ============================================================ */
+
+/* --- น้ำเงินหมึก --- */
+html[data-dir="d4"][data-tone="blue"] {
+  --bg:#F7F9FC; --surface:#FFFFFF; --surface-2:#EDF1F9; --surface-3:#DFE6F3;
+  --border:#D6DEEE; --border-strong:#B2BFD8;
+  --text:#131829; --text-2:#414A60; --text-3:#5F6980;
+  --accent:#1D4ED8; --accent-hover:#173DA8; --on-accent:#FFFFFF;
+  --accent-soft:#DFE6FA; --accent-soft-text:#15389C;
+  --topbar-bg:color-mix(in srgb, #F7F9FC 85%, transparent);
+  --shadow-1:0 1px 2px rgba(15,25,50,.06); --shadow-2:0 4px 16px rgba(15,25,50,.11);
+}
+@media (prefers-color-scheme: dark) { html[data-dir="d4"][data-tone="blue"]:not([data-theme="light"]) {
+  --bg:#0E1219; --surface:#161C27; --surface-2:#1D2431; --surface-3:#262F40;
+  --border:#242C3A; --border-strong:#38455A;
+  --text:#E6EAF3; --text-2:#B0B9CB; --text-3:#868FA3;
+  --accent:#7FA8FF; --accent-hover:#A6C3FF; --on-accent:#141B29;
+  --accent-soft:#1C2538; --accent-soft-text:#DFE9FF;
+  --topbar-bg:color-mix(in srgb, #0E1219 85%, transparent);
+} }
+html[data-dir="d4"][data-tone="blue"][data-theme="dark"] {
+  --bg:#0E1219; --surface:#161C27; --surface-2:#1D2431; --surface-3:#262F40;
+  --border:#242C3A; --border-strong:#38455A;
+  --text:#E6EAF3; --text-2:#B0B9CB; --text-3:#868FA3;
+  --accent:#7FA8FF; --accent-hover:#A6C3FF; --on-accent:#141B29;
+  --accent-soft:#1C2538; --accent-soft-text:#DFE9FF;
+  --topbar-bg:color-mix(in srgb, #0E1219 85%, transparent);
+}
+
+/* --- กรมท่าอมเทา --- */
+html[data-dir="d4"][data-tone="navy"] {
+  --bg:#F8F9FB; --surface:#FFFFFF; --surface-2:#EDF0F3; --surface-3:#E0E5EB;
+  --border:#D8DEE5; --border-strong:#B4BEC9;
+  --text:#161D24; --text-2:#434C57; --text-3:#616B77;
+  --accent:#334E68; --accent-hover:#283D51; --on-accent:#FFFFFF;
+  --accent-soft:#E2E6EA; --accent-soft-text:#25384B;
+  --topbar-bg:color-mix(in srgb, #F8F9FB 85%, transparent);
+  --shadow-1:0 1px 2px rgba(20,28,38,.06); --shadow-2:0 4px 16px rgba(20,28,38,.11);
+}
+@media (prefers-color-scheme: dark) { html[data-dir="d4"][data-tone="navy"]:not([data-theme="light"]) {
+  --bg:#0F1216; --surface:#171B20; --surface-2:#1E232A; --surface-3:#272D35;
+  --border:#252B33; --border-strong:#3A434E;
+  --text:#E7EAEE; --text-2:#B2B9C2; --text-3:#88909A;
+  --accent:#9FC0DE; --accent-hover:#C0D8EE; --on-accent:#191F24;
+  --accent-soft:#232A31; --accent-soft-text:#E7EFF7;
+  --topbar-bg:color-mix(in srgb, #0F1216 85%, transparent);
+} }
+html[data-dir="d4"][data-tone="navy"][data-theme="dark"] {
+  --bg:#0F1216; --surface:#171B20; --surface-2:#1E232A; --surface-3:#272D35;
+  --border:#252B33; --border-strong:#3A434E;
+  --text:#E7EAEE; --text-2:#B2B9C2; --text-3:#88909A;
+  --accent:#9FC0DE; --accent-hover:#C0D8EE; --on-accent:#191F24;
+  --accent-soft:#232A31; --accent-soft-text:#E7EFF7;
+  --topbar-bg:color-mix(in srgb, #0F1216 85%, transparent);
+}
+
+/* --- ฟ้าเข้ม --- */
+html[data-dir="d4"][data-tone="sky"] {
+  --bg:#F5FAFC; --surface:#FFFFFF; --surface-2:#E9F2F7; --surface-3:#DAE8F0;
+  --border:#D2E1EA; --border-strong:#ADC3D2;
+  --text:#10202A; --text-2:#3E4E58; --text-3:#5C6C77;
+  --accent:#0369A1; --accent-hover:#02527E; --on-accent:#FFFFFF;
+  --accent-soft:#DCEAF2; --accent-soft-text:#024C74;
+  --topbar-bg:color-mix(in srgb, #F5FAFC 85%, transparent);
+  --shadow-1:0 1px 2px rgba(10,35,50,.06); --shadow-2:0 4px 16px rgba(10,35,50,.11);
+}
+@media (prefers-color-scheme: dark) { html[data-dir="d4"][data-tone="sky"]:not([data-theme="light"]) {
+  --bg:#0C1418; --surface:#141D22; --surface-2:#1A252C; --surface-3:#233038;
+  --border:#223038; --border-strong:#354851;
+  --text:#E4EDF2; --text-2:#AEBDC5; --text-3:#85949C;
+  --accent:#6FC5F0; --accent-hover:#9BDBF8; --on-accent:#122026;
+  --accent-soft:#182B35; --accent-soft-text:#DBF0FB;
+  --topbar-bg:color-mix(in srgb, #0C1418 85%, transparent);
+} }
+html[data-dir="d4"][data-tone="sky"][data-theme="dark"] {
+  --bg:#0C1418; --surface:#141D22; --surface-2:#1A252C; --surface-3:#233038;
+  --border:#223038; --border-strong:#354851;
+  --text:#E4EDF2; --text-2:#AEBDC5; --text-3:#85949C;
+  --accent:#6FC5F0; --accent-hover:#9BDBF8; --on-accent:#122026;
+  --accent-soft:#182B35; --accent-soft-text:#DBF0FB;
+  --topbar-bg:color-mix(in srgb, #0C1418 85%, transparent);
+}
+
+/* --- ม่วงพลัม --- */
+html[data-dir="d4"][data-tone="plum"] {
+  --bg:#FBF7FC; --surface:#FFFFFF; --surface-2:#F3ECF5; --surface-3:#E9DFEC;
+  --border:#E2D6E5; --border-strong:#C4B0C9;
+  --text:#1E1522; --text-2:#4C4152; --text-3:#6B5F71;
+  --accent:#7B2D8E; --accent-hover:#60236F; --on-accent:#FFFFFF;
+  --accent-soft:#EDE2EF; --accent-soft-text:#592066;
+  --topbar-bg:color-mix(in srgb, #FBF7FC 85%, transparent);
+  --shadow-1:0 1px 2px rgba(40,20,45,.06); --shadow-2:0 4px 16px rgba(40,20,45,.11);
+}
+@media (prefers-color-scheme: dark) { html[data-dir="d4"][data-tone="plum"]:not([data-theme="light"]) {
+  --bg:#141016; --surface:#1C1620; --surface-2:#241C29; --surface-3:#2E2434;
+  --border:#2B2231; --border-strong:#443749;
+  --text:#EFE8F2; --text-2:#BCB0C2; --text-3:#928798;
+  --accent:#E29BF0; --accent-hover:#EFC0F8; --on-accent:#241926;
+  --accent-soft:#322235; --accent-soft-text:#F8E6FB;
+  --topbar-bg:color-mix(in srgb, #141016 85%, transparent);
+} }
+html[data-dir="d4"][data-tone="plum"][data-theme="dark"] {
+  --bg:#141016; --surface:#1C1620; --surface-2:#241C29; --surface-3:#2E2434;
+  --border:#2B2231; --border-strong:#443749;
+  --text:#EFE8F2; --text-2:#BCB0C2; --text-3:#928798;
+  --accent:#E29BF0; --accent-hover:#EFC0F8; --on-accent:#241926;
+  --accent-soft:#322235; --accent-soft-text:#F8E6FB;
+  --topbar-bg:color-mix(in srgb, #141016 85%, transparent);
 }
 </style>
 <style>
@@ -640,6 +756,16 @@ a.card-link:focus-visible { outline: none; border-radius: var(--r-lg); box-shado
     </div>
   </div>
 
+  <div class="lab-group"><span>โทนสี</span>
+    <div class="seg" id="seg-tone">
+      <button data-v="blue" aria-pressed="true">น้ำเงินหมึก</button>
+      <button data-v="navy" aria-pressed="false">กรมท่า</button>
+      <button data-v="sky" aria-pressed="false">ฟ้าเข้ม</button>
+      <button data-v="plum" aria-pressed="false">ม่วงพลัม</button>
+      <button data-v="mint" aria-pressed="false">มิ้นท์ (เดิม)</button>
+    </div>
+  </div>
+
   <div class="lab-group"><span>ธีม</span>
     <div class="seg" id="seg-theme">
       <button data-v="light" aria-pressed="false">สว่าง</button>
@@ -669,6 +795,7 @@ a.card-link:focus-visible { outline: none; border-radius: var(--r-lg); box-shado
 <main class="lab-main">
   <div>
     <p class="lab-note" id="dir-note"></p>
+    <p class="lab-note" id="tone-note" style="margin-top:-6px"></p>
     <div class="screen-host" id="host-desktop"></div>
   </div>
   <div class="phone-col">
@@ -1078,20 +1205,26 @@ a.card-link:focus-visible { outline: none; border-radius: var(--r-lg); box-shado
     d3: "D3 · Studio — อ้างอิงเว็บทูลสมัยใหม่ (Linear · Notion · Vercel): neutral โทนอุ่น · มุม 9-16px · เงาบางชั้นเดียว + เส้น hairline · ตัวอักษรแน่นอ่านง่าย · การเคลื่อนไหวเร็วสั้น"
   };
   var note = document.getElementById("dir-note");
+  var toneNote = document.getElementById("tone-note");
 
   // 2) เก็บค่าที่เลือกไว้ — localStorage ต้องอยู่ใน try/catch เสมอ
   //    (โหมดส่วนตัวของเบราว์เซอร์โยน error ได้ ถ้าไม่ดักไว้หน้าจะพังทั้งหน้า)
-  function save(k, v) { try { localStorage.setItem("dpk2:" + k, v); } catch (e) {} }
-  function load(k) { try { return localStorage.getItem("dpk2:" + k); } catch (e) { return null; } }
+  function save(k, v) { try { localStorage.setItem("dpk3:" + k, v); } catch (e) {} }
+  function load(k) { try { return localStorage.getItem("dpk3:" + k); } catch (e) { return null; } }
 
   function apply(group, value) {
     if (group === "theme") {
       // "system" = ไม่ stamp attribute เลย ปล่อยให้ prefers-color-scheme ตัดสิน
       if (value === "system") root.removeAttribute("data-theme");
       else root.setAttribute("data-theme", value);
+    } else if (group === "tone") {
+      /* mint = ค่าฐานของ D4 อยู่แล้ว จึงถอด attribute ออกแทนการเขียนทับ */
+      if (value === "mint") root.removeAttribute("data-tone");
+      else root.setAttribute("data-tone", value);
+      toneNote.textContent = TONE_NOTES[value];
     } else {
       root.setAttribute("data-" + group, value);
-      if (group === "dir") note.textContent = NOTES[value];
+      if (group === "dir") { note.textContent = NOTES[value]; syncToneAvailability(); }
     }
     var seg = document.getElementById("seg-" + group);
     Array.prototype.forEach.call(seg.querySelectorAll("button"), function (b) {
@@ -1100,7 +1233,24 @@ a.card-link:focus-visible { outline: none; border-radius: var(--r-lg); box-shado
     save(group, value);
   }
 
-  ["dir", "theme", "font", "density"].forEach(function (group) {
+  var TONE_NOTES = {
+    blue: "โทนน้ำเงินหมึก #1D4ED8 — ห่างจากเขียว \"ปกติ\" 76 องศา จึงไม่มีทางสับสนกับสีสถานะ",
+    navy: "โทนกรมท่าอมเทา #334E68 — สุขุม กลืนกับพื้น neutral ที่สุด contrast สูง 8.64",
+    sky: "โทนฟ้าเข้ม #0369A1 — อยู่กึ่งกลางระหว่างเขียวเดิมกับน้ำเงิน เปลี่ยนแบบไม่หักดิบ",
+    plum: "โทนม่วงพลัม #7B2D8E — ห่างจากสีสถานะทุกสีมากที่สุด จำง่ายที่สุด",
+    mint: "โทนมิ้นท์เดิม #007F70 — เก็บไว้เทียบ: ห่างจากเขียว \"ปกติ\" แค่ 25 องศา และเหลือ 5 องศาในสายตาคนตาบอดสีเขียว-แดง"
+  };
+
+  /* โทนสีผูกกับ D4 เท่านั้น — D1-D3 ต้องคงสีเดิมไว้เพื่อเป็นตัวอ้างอิง */
+  function syncToneAvailability() {
+    var isD4 = root.getAttribute("data-dir") === "d4";
+    var seg = document.getElementById("seg-tone");
+    seg.style.opacity = isD4 ? "1" : ".4";
+    seg.title = isD4 ? "" : "ตัวเลือกโทนสีใช้ได้กับ D4 เท่านั้น";
+    Array.prototype.forEach.call(seg.querySelectorAll("button"), function (b) { b.disabled = !isD4; });
+  }
+
+  ["dir", "tone", "theme", "font", "density"].forEach(function (group) {
     var seg = document.getElementById("seg-" + group);
     seg.addEventListener("click", function (ev) {
       var btn = ev.target.closest("button");
