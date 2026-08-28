@@ -4,7 +4,7 @@ description: >
   CORE Skill สถาปัตยกรรม Supasit.A — ใช้เมื่อพี่ A ขอสร้างแอปใหม่ตั้งแต่เริ่มต้น
   เขียนเว็บใหม่ ทำ dashboard/tool/form ใหม่ สร้าง UI component ใหม่ หรือวาง
   Blueprint โปรเจกต์ Vibe Coding ครอบคลุม JS Architecture (9 Modules IIFE) ·
-  PWA · Design System (Instrument Grade) · Security · QA · Deployment
+  PWA · Design System (Supasit.A Studio) · Security · QA · Deployment
   ไม่ใช้กับการแก้บัก/ปรับปรุงแอปที่มีอยู่แล้ว (ให้ใช้ vibe-coding-workflow แทน)
 ---
 
@@ -55,7 +55,7 @@ Mobile (vertical + bottom-nav):               PC/Desktop (sidebar + content):
 │ ● APPNAME       [◐] │                       │ ●APP │ Topbar (sticky, 1px line)  │
 ├─────────────────────┤                       │──────┼────────────────────────────┤
 │ ┌─────────────────┐ │                       │ ▸ นำ │ ┌────────┬────────┬──────┐ │
-│ │ FI-2104    Feed │ │  ← .tag-strip         │ ▸ ราย│ │1,284.60│ 196.85 │98.42%│ │
+│ │ FI-2104    Feed │ │  ← .c-ref chip         │ ▸ ราย│ │1,284.60│ 196.85 │98.42%│ │
 │ │ 1,284.60    t/d │ │  ← Mono tabular       │ ▸ ตั้ง│ └────────┴────────┴──────┘ │
 │ │ ▲ 2.4%          │ │  ← สถานะ ok/warn/crit │      │ ┌────────────────────────┐ │
 │ └─────────────────┘ │                       │      │ │ ตาราง (ตัวเลขชิดขวา)   │ │
@@ -199,7 +199,8 @@ const [users, settings] = await Promise.all([
 ```
 
 > รายละเอียด Tech Stack / CDN pinning / PWA structure → `references/tech-stack.md`
-> รายละเอียด Design tokens (spacing, typography, สี, glass) → `references/design-system.md`
+> รายละเอียด Design tokens (spacing, typography, สี, a11y) → `references/design-system.md`
+> **แอปใหม่ทุกตัวเริ่มจาก `claude-config/design-lab/starter/` — ไม่ต้องสร้าง token ขึ้นใหม่**
 
 ---
 
@@ -302,15 +303,19 @@ ACCESSIBILITY
   [ ] Color contrast ผ่าน WCAG AA
   → รายละเอียดเต็ม: references/performance-and-accessibility.md
 
-BRAND (Instrument Grade)
-  [ ] A(i)CODER badge มีครบ (แถบพื้นหลังสว่างคงที่ ไม่ตามธีมแอป — ดู claude-config/branding/README.md)
-  [ ] ตัวเลขทุกตัวใช้ IBM Plex Mono + font-variant-numeric: tabular-nums (IG-01 — ลายเซ็นแบรนด์)
-  [ ] Font IBM Plex Sans Thai + IBM Plex Mono โหลดแล้ว (ไม่ใช่ Noto/Sarabun/Inter)
-  [ ] --surface ต่างจาก --ground จริง (ไม่ใช่สีเดียวกันแบบ neumorphism เดิม)
-  [ ] สี ok/warn/crit ใช้บอกสถานะเท่านั้น ไม่ได้ใช้แยกหมวดหมู่ข้อมูล (IG-04)
-  [ ] Dark mode ครบทั้ง 3 สถานะ (:root · prefers-color-scheme · [data-theme]) และ body มี background จาก token
-  [ ] ไม่มี gradient-text / .breathing / .pulse-dot หลงเหลือ (ตัดออกจากระบบแล้ว)
-  → รายละเอียดเต็ม: references/layout-and-brand.md
+BRAND (Supasit.A Studio)
+  [ ] เริ่มจาก design-lab/starter/ ไม่ได้สร้าง token ขึ้นใหม่เอง
+  [ ] A(i)CODER badge ชุด Studio (studio-badge-*.svg) พื้นคงที่ ไม่ตามธีมแอป
+  [ ] Font Noto Sans Thai โหลดแล้ว · ตัวเลขในตาราง/KPI ใส่ tabular-nums
+  [ ] --surface ต่างจาก --bg จริง
+  [ ] accent ห่างจากสีสถานะ ≥ 50° บนวงล้อสี (ST-01) — เช็คก่อนเปลี่ยนสีทุกครั้ง
+  [ ] สี ok/warn/crit ใช้บอกสถานะเท่านั้น · accent-2 (อำพัน) ใช้กับข้อมูลอ้างอิงเท่านั้น
+  [ ] มี --on-crit ทั้งสองธีม (ขาวบน crit ในธีมมืดได้แค่ 2.27:1)
+  [ ] Dark mode ครบ 3 สถานะ (:root · prefers-color-scheme · [data-theme]) และ body มี background จาก token
+  [ ] เป้าแตะบนมือถือ ≥44px · ปุ่มไอคอนมี aria-label · :focus-visible ครบทุกชิ้นที่โฟกัสได้
+  [ ] วัด contrast ทุกคู่สีด้วยเครื่อง ≥4.5:1 ทั้งสว่างและมืด (ST-04)
+  [ ] ไม่มี gradient-text / .breathing / .pulse-dot / neumorphism หลงเหลือ
+  → รายละเอียดเต็ม: references/layout-and-brand.md · ของจริง: design-lab/preview-kit.html
 ```
 
 ---
@@ -345,7 +350,7 @@ Post-deploy:
 | ไฟล์ | เนื้อหา | โหลดเมื่อ |
 |---|---|---|
 | `references/tech-stack.md` | Omni-Platform/PWA structure · Tech Stack table · CDN pinning · Cloudflare CORS proxy | ตั้งค่าโปรเจกต์ใหม่ / เพิ่ม dependency |
-| `references/design-system.md` | Spacing · Typography (IBM Plex) · Radius · Color · Instrument Grade (การ์ดขอบคม + tabular-nums + สีบอกสถานะ) · Dark/Light 3 สถานะ | เขียน CSS / ออกแบบ UI |
+| `references/design-system.md` | Supasit.A Studio: Spacing · Typography (Noto Sans Thai) · Radius · Color (น้ำเงินหมึก) · Accessibility · คลังส่วนประกอบ · Dark/Light 3 สถานะ | เขียน CSS / ออกแบบ UI |
 | `references/thai-localization.md` | วันที่ พ.ศ. · ตัวเลขไทย · สกุลเงินบาท | แอปมี format วันที่/เงินภาษาไทย |
 | `references/ai-integration.md` | Gemini config · JSON contract · Streaming · BYOK threat model · Worker-proxy pattern | แอปมี AI feature |
 | `references/error-handling-and-data.md` | Error Taxonomy 8 types · IndexedDB Migration policy | ทำ error handling / เปลี่ยน schema |

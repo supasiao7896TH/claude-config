@@ -8,8 +8,8 @@
 
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
-<meta name="theme-color" content="#F6FAF8" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0F1412" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F7F9FC" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E1219" media="(prefers-color-scheme: dark)">
 <meta name="apple-mobile-web-app-capable" content="yes">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,47 +22,47 @@
    light ชุดเต็มอยู่บน :root เปล่า · dark ต้องมีครบทั้ง 3 สถานะ
    ============================================================ */
 :root {
-  --bg:#F6FAF8; --surface:#FFFFFF; --surface-2:#EAF3F0; --surface-3:#DCEBE6;
-  --border:#CFE0DA; --border-strong:#A9C7BE;
-  --text:#0E1F1B; --text-2:#41544F; --text-3:#5E7973;
-  --accent:#007F70; --accent-hover:#00695F; --on-accent:#FFFFFF;
-  --accent-soft:#CDF3EA; --accent-soft-text:#00544A;
+  --bg:#F7F9FC; --surface:#FFFFFF; --surface-2:#EDF1F9; --surface-3:#DFE6F3;
+  --border:#D6DEEE; --border-strong:#B2BFD8;
+  --text:#131829; --text-2:#414A60; --text-3:#5F6980;
+  --accent:#1D4ED8; --accent-hover:#173DA8; --on-accent:#FFFFFF;
+  --accent-soft:#DFE6FA; --accent-soft-text:#15389C;
   --accent-2:#8A6410; --accent-2-soft:#FBEFCF; --accent-2-text:#6B4E08;
   --ok:#1A7444; --ok-soft:#D6F0E1; --warn:#8A5A08; --warn-soft:#FBEBCF;
   --crit:#B3261E; --crit-soft:#FBDEDB; --on-crit:#FFFFFF;
   --r-sm:6px; --r-md:9px; --r-lg:13px; --r-xl:16px; --r-pill:999px; --r-btn:999px;
-  --shadow-1:0 1px 2px rgba(10,40,34,.05);
-  --shadow-2:0 4px 16px rgba(10,40,34,.10);
-  --topbar-bg:color-mix(in srgb, #F6FAF8 85%, transparent);
+  --shadow-1:0 1px 2px rgba(15,25,50,.06);
+  --shadow-2:0 4px 16px rgba(15,25,50,.11);
+  --topbar-bg:color-mix(in srgb, #F7F9FC 85%, transparent);
   --ease:cubic-bezier(.4,0,.2,1); --dur:.16s;
   --font-ui:"Noto Sans Thai", system-ui, -apple-system, sans-serif;
   --focus-ring:0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg:#0F1412; --surface:#161F1C; --surface-2:#1D2825; --surface-3:#26332F;
-    --border:#25332E; --border-strong:#3A4C46;
-    --text:#E7F0EC; --text-2:#B0C0BB; --text-3:#87968F;
-    --accent:#5FE0CB; --accent-hover:#8DF0E0; --on-accent:#04302A;
-    --accent-soft:#0D3B35; --accent-soft-text:#9DEDDF;
+    --bg:#0E1219; --surface:#161C27; --surface-2:#1D2431; --surface-3:#262F40;
+    --border:#242C3A; --border-strong:#38455A;
+    --text:#E6EAF3; --text-2:#B0B9CB; --text-3:#868FA3;
+    --accent:#7FA8FF; --accent-hover:#A6C3FF; --on-accent:#141B29;
+    --accent-soft:#1C2538; --accent-soft-text:#DFE9FF;
     --accent-2:#E0B85C; --accent-2-soft:#332708; --accent-2-text:#F0D69A;
     --ok:#5FD08D; --ok-soft:#0F2E1D; --warn:#E0AE52; --warn-soft:#32250A;
     --crit:#F0938A; --crit-soft:#3A1512; --on-crit:#3A0F0A;
     --shadow-1:0 1px 2px rgba(0,0,0,.5); --shadow-2:0 4px 18px rgba(0,0,0,.55);
-    --topbar-bg:color-mix(in srgb, #0F1412 85%, transparent);
+    --topbar-bg:color-mix(in srgb, #0E1219 85%, transparent);
   }
 }
 :root[data-theme="dark"] {
-  --bg:#0F1412; --surface:#161F1C; --surface-2:#1D2825; --surface-3:#26332F;
-  --border:#25332E; --border-strong:#3A4C46;
-  --text:#E7F0EC; --text-2:#B0C0BB; --text-3:#87968F;
-  --accent:#5FE0CB; --accent-hover:#8DF0E0; --on-accent:#04302A;
-  --accent-soft:#0D3B35; --accent-soft-text:#9DEDDF;
+  --bg:#0E1219; --surface:#161C27; --surface-2:#1D2431; --surface-3:#262F40;
+  --border:#242C3A; --border-strong:#38455A;
+  --text:#E6EAF3; --text-2:#B0B9CB; --text-3:#868FA3;
+  --accent:#7FA8FF; --accent-hover:#A6C3FF; --on-accent:#141B29;
+  --accent-soft:#1C2538; --accent-soft-text:#DFE9FF;
   --accent-2:#E0B85C; --accent-2-soft:#332708; --accent-2-text:#F0D69A;
   --ok:#5FD08D; --ok-soft:#0F2E1D; --warn:#E0AE52; --warn-soft:#32250A;
   --crit:#F0938A; --crit-soft:#3A1512; --on-crit:#3A0F0A;
   --shadow-1:0 1px 2px rgba(0,0,0,.5); --shadow-2:0 4px 18px rgba(0,0,0,.55);
-  --topbar-bg:color-mix(in srgb, #0F1412 85%, transparent);
+  --topbar-bg:color-mix(in srgb, #0E1219 85%, transparent);
 }
 
 *,*::before,*::after { box-sizing: border-box; }
@@ -140,13 +140,13 @@ td.num, th.num { text-align:right; font-variant-numeric:tabular-nums; }
 /* A(i)CODER badge — พื้นของตัวเองคงที่ ไม่ยืมสีธีมแอป (ดู branding/README.md) */
 .aicoder-badge { position:fixed; right:14px; bottom:calc(14px + env(safe-area-inset-bottom)); z-index:30;
   display:inline-flex; align-items:center; gap:8px; padding:7px 12px 7px 8px;
-  background:#FFFFFF; border:1px solid #CFE0DA; border-radius:var(--r-pill);
-  box-shadow:0 2px 10px rgba(10,40,34,.12); text-decoration:none; }
-.aicoder-badge .mark { width:22px; height:22px; border-radius:6px; background:#007F70; position:relative;
+  background:#FFFFFF; border:1px solid #D6DEEE; border-radius:var(--r-pill);
+  box-shadow:0 2px 10px rgba(15,25,50,.14); text-decoration:none; }
+.aicoder-badge .mark { width:22px; height:22px; border-radius:6px; background:#1D4ED8; position:relative;
   display:grid; place-items:center; color:#fff; font-weight:700; font-size:12px; line-height:1; }
 .aicoder-badge .mark::after { content:""; position:absolute; top:2px; right:2px; width:5px; height:5px;
   border-radius:999px; background:#F2B705; }
-.aicoder-badge .txt { font-size:11.5px; font-weight:700; color:#0E1F1B; letter-spacing:.02em; }
+.aicoder-badge .txt { font-size:11.5px; font-weight:700; color:#131829; letter-spacing:.02em; }
 .aicoder-badge .txt i { font-style:normal; color:#8A6410; }
 
 @media (prefers-reduced-motion: reduce) { * { transition:none !important; animation:none !important; } }

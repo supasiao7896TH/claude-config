@@ -61,13 +61,16 @@ Store: [store_name]
 
 ---
 
-## 🎨 Brand & Design Rules ("Instrument Grade" — ดู vibe-coding-core/references/design-system.md)
-- **A(i)CODER badge** → position: fixed bottom-right (บังคับ, asset จาก `claude-config/branding/`)
-- **สถานะ:** ใช้ ok/warn/crit เท่านั้น (IG-04 — สีบอก "สถานะ" ไม่ใช่ "หมวดหมู่")
-- **Font:** IBM Plex Sans Thai (UI/body) · IBM Plex Mono (ตัวเลข/data — `tabular-nums` บังคับ, IG-01)
-- **Dark/Light Mode:** CSS variables บังคับ — ห้าม hardcode hex · 3 สถานะ (`:root`/`prefers-color-scheme`/`[data-theme]`)
-- **Spacing:** 4pt grid เท่านั้น (4/6/8/10/12/14/16/20/24/32/44/64px)
-- **Surface:** `--surface` ต้องต่างจาก `--ground` เสมอ · ขอบเส้นคม 1px แทนเงานูน (IG-03)
+## 🎨 Brand & Design Rules ("Supasit.A Studio" — ดู vibe-coding-core/references/design-system.md)
+- **เริ่มจาก** `claude-config/design-lab/starter/` เสมอ — ไม่สร้าง token ขึ้นใหม่เอง
+- **A(i)CODER badge** → fixed bottom-right (บังคับ, ชุด Studio: `branding/exports/studio-badge-*.svg`)
+- **สี:** accent น้ำเงินหมึก `#1D4ED8` = สิ่งที่กดได้ · อำพัน `#8A6410` = ข้อมูลอ้างอิง · ok/warn/crit = สถานะ (ST-04)
+- **ST-01:** accent ต้องห่างจากสีสถานะ ≥ 50° บนวงล้อสี — เช็คก่อนเปลี่ยนสีทุกครั้ง
+- **Font:** Noto Sans Thai อย่างเดียว · ตัวเลขในตาราง/KPI ใส่ `tabular-nums` (ไม่ต้องใช้ mono)
+- **Dark/Light Mode:** CSS variables บังคับ — ห้าม hardcode hex · 3 สถานะ (`:root`/`prefers-color-scheme`/`[data-theme]`) · ต้องมี `--on-crit`
+- **Spacing:** 4pt grid เท่านั้น (4/6/8/10/12/14/16/18/20/24/32/44/64px)
+- **Surface:** `--surface` ต้องต่างจาก `--bg` เสมอ · เส้น 1px + เงาบางชั้นเดียว (ST-02)
+- **รูปทรง:** ปุ่มแคปซูล 999px · การ์ด 13px · input 9px (ST-03)
 
 ---
 
@@ -166,14 +169,15 @@ project/
 
 ---
 
-## 🎨 Brand Identity (บังคับทุกแอป — "Instrument Grade")
+## 🎨 Brand Identity (บังคับทุกแอป — "Supasit.A Studio")
 ```
-Badge        : A(i)CODER badge · position fixed · bottom-right (asset จาก claude-config/branding/)
-สถานะ         : ok/warn/crit เท่านั้น (IG-04) — ห้ามใช้สีแยกหมวดหมู่ข้อมูล
-Header       : sticky · ขอบเส้นคม 1px (ไม่ใช้ glass/blur) · brand name
-Dark/Light   : toggle บน header · [data-theme] attribute (ไม่ใช่ .dark class) · CSS variables
-Micro-FX     : fade-in .3s / slide-up .3s เท่านั้น + press effect ปุ่ม (translateY(1px) + inset shadow)
-               ห้าม: scale()/.breathing/.pulse-dot/gradient-text (ตัดออกถาวร)
+เริ่มจาก      : design-lab/starter/ (token + component + PWA + badge ครบแล้ว)
+Badge        : A(i)CODER ชุด Studio · fixed bottom-right · พื้นคงที่ ไม่ตามธีมแอป
+สี            : accent #1D4ED8 (กดได้) · อำพัน #8A6410 (อ้างอิง) · ok/warn/crit (สถานะเท่านั้น)
+Header       : sticky · พื้น --bg blur 8px · เส้นล่าง hairline
+Dark/Light   : toggle บน header · [data-theme] attribute · CSS variables · ครบ 3 สถานะ
+Micro-FX     : fade-in .3s / slide-up .3s + ปุ่มกด scale(.97)
+               ห้าม: .breathing/.pulse-dot/gradient-text/neumorphism (ตัดออกถาวร)
 ```
 
 ---
@@ -197,9 +201,11 @@ CORS Proxy: [worker URL] (allowlist โดเมนปลายทางเส�
 [ ] Dark/Light mode สลับได้ ไม่มี hardcode color
 [ ] ทุก button มี aria-label
 [ ] ไม่มี console.error ใน production
-[ ] A(i)CODER badge มีครบ
-[ ] ตัวเลขใช้ --font-data + tabular-nums ครบ (IG-01)
-[ ] --surface ต่างจาก --ground เสมอ
+[ ] A(i)CODER badge ชุด Studio มีครบ
+[ ] ตัวเลขในตาราง/KPI ใส่ tabular-nums ครบ
+[ ] --surface ต่างจาก --bg เสมอ · มี --on-crit ทั้งสองธีม
+[ ] เป้าแตะบนมือถือ ≥44px · :focus-visible ครบทุกชิ้นที่โฟกัสได้
+[ ] วัด contrast ทุกคู่สี ≥4.5:1 ทั้งสว่างและมืด
 [ ] IndexedDB CRUD ทำงานถูกต้อง
 [ ] ไม่มี API key ใน source code
 [ ] Responsive ที่ 375/768/1024px

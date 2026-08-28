@@ -40,17 +40,21 @@
 - **9 Modules (IIFE):** `APP_CONFIG`, `STATE_STORE`, `STORAGE_ENGINE`, `CLOUD_SYNC_MANAGER`, `AUTH_PROVIDER`, `GEMINI_AI_BRIDGE`, `UI_RENDERER`, `DEBUG_MODULE`, `APP_CORE`
 - **State:** Reactive (Pub/Sub) + Optimistic UI พร้อม Rollback
 
-**Tech Stack:** Tailwind CSS CDN · Lucide Icons (vendored local) · IBM Plex Sans Thai + IBM Plex Mono · IndexedDB (Promise-based) · Firestore v11+ (Delta Sync) · Firebase Auth (Anonymous/Custom Token) · Web Crypto AES-GCM 256-bit · Chart.js (vendored local) · Gemini 2.5 Flash (Backoff/Rate limit/24h Cache)
+**Tech Stack:** Tailwind CSS CDN · Lucide Icons (vendored local) · Noto Sans Thai · IndexedDB (Promise-based) · Firestore v11+ (Delta Sync) · Firebase Auth (Anonymous/Custom Token) · Web Crypto AES-GCM 256-bit · Chart.js (vendored local) · Gemini 2.5 Flash (Backoff/Rate limit/24h Cache)
 
-**Brand "Supasit.A" — "Instrument Grade"** (อนุมัติ 2569-08-27 — รื้อจาก "Tactile Plant UI" เดิมทั้งหมด เพราะดูซ้ำทุกแอป/contrast ต่ำ/มือถือไม่ดีพอ/ไม่มีเอกลักษณ์ · ดู `vibe-coding-core` skill `references/design-system.md` สำหรับ token เต็ม)
+**Brand "Supasit.A" — "Supasit.A Studio"** (อนุมัติ 2569-08-28 — รื้อจาก "Instrument Grade" เพราะสีทึม/แบนไม่มีมิติ/ฟอนต์ไม่ถูกใจ/แข็งเกินไป · ดู `vibe-coding-core` skill `references/design-system.md` สำหรับ token เต็ม)
 
-แนวคิด: *"อ่านค่าได้แม่นเหมือนเครื่องมือวัด"* — มาจากตัวตนวิศวกรกระบวนการที่ตัดสินใจจากตัวเลข บุคลิก **เรียบหรู มืออาชีพ**
+**รอบนี้ต่างจาก 3 รอบก่อนตรงที่เลือกจากหน้าจอจริง ไม่ใช่จากเอกสาร** — เทียบ 3 ทิศทางบน markup ชุดเดียวกัน (Material 3 Expressive · Apple HIG/Liquid Glass · เว็บทูลสมัยใหม่) แล้วเลือกเป็นสูตรผสม: โครง/จังหวะจากเว็บทูลสมัยใหม่ (Linear/Notion/Vercel) · ปุ่มแคปซูลจาก Apple · โทนน้ำเงินหมึก
 
-4 กติกาเอกลักษณ์: **IG-01** ตัวเลขทุกตัวเป็น IBM Plex Mono + `tabular-nums` (ลายเซ็นแบรนด์) · **IG-02** การ์ดมีแถบ tag บอกที่มาข้อมูล (ทางเลือก ใช้เมื่อข้อมูลมีรหัสจริง) · **IG-03** ขอบเส้นคม 1px แทนเงานูน แต่ปุ่มยังกดแล้วยุบจริง · **IG-04** สีบอก "สถานะ" ไม่ใช่ "หมวดหมู่"
+**ของจริงอยู่ที่ `claude-config/design-lab/preview-kit.html` (กดเล่นได้) · แอปใหม่เริ่มจาก `design-lab/starter/`**
 
-Token หลัก: Deep Teal `#0B4F4A` · Signal Teal `#12857C` · Brass `#8A6D28` · Ground `#F7F8F7` · Surface `#FFFFFF` (ต้องต่างจาก Ground เสมอ) · ok/warn/crit สำหรับสถานะ · Font: IBM Plex Sans Thai + IBM Plex Mono (ไม่ใช่ Noto) · Radius 4/6/10px · Light-first + Dark ออกแบบแยกครบ 3 สถานะ (`:root` · `prefers-color-scheme` · `[data-theme]`) · A(i)CODER badge (จาก `claude-config/branding/`)
+4 กติกาเอกลักษณ์: **ST-01** สีแบรนด์ต้องห่างจากสีสถานะ ≥50° บนวงล้อสี · **ST-02** ความลึกมาจากเส้น 1px + เงาบางชั้นเดียว · **ST-03** ปุ่มแคปซูล 999px แต่การ์ดมุม 13px (แยก "กดได้" ออกจาก "อ่าน") · **ST-04** ทุกคู่สีต้องวัด contrast ด้วยเครื่อง ไม่ใช่กะด้วยตา
 
-❌ ตัดออกถาวร: neumorphism · gradient-text · `.breathing` · `.pulse-dot` · indigo/purple · สีแยกหมวดหมู่
+Token หลัก: Ink Blue `#1D4ED8` (สิ่งที่กดได้) · Amber `#8A6410` (ข้อมูลอ้างอิง) · bg `#F7F9FC` · Surface `#FFFFFF` (ต้องต่างจาก bg เสมอ) · ok/warn/crit + `--on-crit` สำหรับสถานะ · Font: **Noto Sans Thai** อย่างเดียว (ตัวเลขไม่ต้องใช้ mono — วัดแล้วตัวเลขกว้างเท่ากันอยู่แล้ว) · Radius 6/9/13/16px + ปุ่ม 999px · Light-first + Dark ออกแบบแยกครบ 3 สถานะ (`:root` · `prefers-color-scheme` · `[data-theme]`) · A(i)CODER badge ชุด Studio (`branding/exports/studio-*.svg`)
+
+❌ ตัดออกถาวร: neumorphism · gradient-text · `.breathing` · `.pulse-dot` · สีแยกหมวดหมู่ · การบังคับ monospace กับตัวเลข · โทน teal (ใช้มา 3 ระบบติดกันจนแอปดูซ้ำ)
+
+**Accessibility (บังคับ วัดด้วยเครื่องได้):** contrast ≥4.5:1 ทุกคู่สีทั้ง 2 ธีม · เป้าแตะมือถือ ≥44px · ปุ่มไอคอนมี `aria-label` · `:focus-visible` ครบทุกชิ้นที่โฟกัสได้ · ไม่มีการเลื่อนแนวนอน
 
 **Security:** XSS ป้องกันด้วย `textContent` · เข้ารหัส API Key ด้วย AES-GCM · Input/Schema validation · Audit log · Rate limit · Firestore Rules (Strict Path, Auth First) · CSP · ไม่ hardcode secret · BYOK Gemini key
 

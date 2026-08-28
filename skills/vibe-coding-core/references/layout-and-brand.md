@@ -1,7 +1,8 @@
-# Layout & Brand Identity Reference — "Instrument Grade"
+# Layout & Brand Identity Reference — "Supasit.A Studio"
 
 > ส่วนหนึ่งของ `vibe-coding-core` — โหลดไฟล์นี้เมื่อออกแบบ layout หรือตรวจ brand compliance
-> อัปเดต 2569-08-27: คู่กับ `design-system.md` (Instrument Grade) — **แทนที่ Tactile Plant UI เดิม**
+> อัปเดต 2569-08-28: คู่กับ `design-system.md` (Supasit.A Studio) — **แทนที่ Instrument Grade เดิม**
+> ของจริงที่กดเล่นได้: `claude-config/design-lab/preview-kit.html` · ไฟล์ตั้งต้น: `design-lab/starter/`
 
 ---
 
@@ -12,75 +13,75 @@
 
 ```
 Topbar (บังคับทุกขนาดจอ):
-  sticky top-0 · พื้น = --ground ที่ blur (color-mix 88% + backdrop-filter: blur(10px))
-  border-bottom: 1px solid var(--line)
-  ซ้าย: ชื่อแอปเป็น Mono UPPERCASE letter-spacing .14em สี --teal-deep
-        นำหน้าด้วยจุดสถานะ 9px (box-shadow: 0 0 0 3px var(--teal-wash))
-  ขวา: ปุ่มสลับธีม (.theme-btn — Mono 11px UPPERCASE)
-  ❌ ห้ามใช้ gradient-text ที่ชื่อแอปอีก (ตัดออกจากระบบแล้ว)
+  sticky top-0 · พื้น = --bg ที่ blur (color-mix 85% + backdrop-filter: blur(8px))
+  border-bottom: 1px solid var(--border)
+  ซ้าย: กล่องโลโก้ 30px (พื้น --accent, มุม --r-sm) + ชื่อแอป 600 letter-spacing -.018em
+  ขวา: ปุ่มสลับธีม (.btn .btn-ghost — ต้องมี aria-label)
+  ❌ ห้าม gradient-text · ห้ามจุดสถานะกะพริบ
 
-Sidebar (PC/Desktop ≥768px):
-  พื้น = --ground เดียวกับหน้า · border-right: 1px solid var(--line)
-  เมนู: Lucide icon 20px + label · สถานะ active = สี --teal-deep + พื้น --teal-wash
-  hover = --line-strong
+Sidebar (PC/Desktop ≥720px):
+  พื้น = --bg เดียวกับหน้า · border-right: 1px solid var(--border)
+  เมนู: Lucide icon 18-20px + label · active = --accent-soft-text บนพื้น --accent-soft
+  hover = พื้น --surface-2 · ต้องมี :focus-visible ring (ST-13)
 
-Bottom Nav (Mobile ≤768px):
-  position: fixed · พื้น --surface · border-top: 1px solid var(--line)
-  icon-only 20px · active = --teal-signal
-  ต้องเผื่อ safe-area: padding-bottom: env(safe-area-inset-bottom)
-  วางเหนือแถบ A(i)CODER badge เสมอ ไม่ทับกัน
+Bottom Nav (Mobile ≤720px):
+  position: sticky bottom-0 · พื้น --bg ที่ blur · border-top: 1px solid var(--border)
+  icon 18px + label 11px · active = --accent-soft-text บนพื้น --accent-soft
+  แต่ละปุ่มสูง ≥ 48px · เผื่อ safe-area: padding-bottom: env(safe-area-inset-bottom)
+  ต้องมี :focus-visible ring · วางไม่ทับ A(i)CODER badge
 
 KPI Tile:
-  .card + .tag-strip (ถ้าข้อมูลมีรหัสกำกับจริง) + .val แบบ Mono tabular
-  + .delta (chip เล็กบอกการเปลี่ยนแปลง ใช้สี ok/warn/crit)
-  ❌ ไม่ใช้ border-t-4 สีตามหมวดหมู่อีกแล้ว (ระบบเดิม) — สีสงวนไว้ให้สถานะ
+  .card + .k-label + .k-val (tabular-nums) + .k-unit + chip สถานะ
+  รหัสอุปกรณ์/ที่มาของข้อมูลใช้ .c-ref chip (สีอำพัน) หรือ .eyebrow เหนือหัวเรื่อง
+  ❌ ไม่ใช้แถบสีตามหมวดหมู่ — สีสงวนไว้ให้สถานะ (ST-04)
 
 Grid:
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px
-  การ์ดเนื้อหาทั่วไปใช้ minmax(280px, 1fr)
+  KPI: repeat(auto-fit, minmax(165px, 1fr)) · จอ ≥760px บังคับ repeat(4, minmax(0,1fr))
+  มือถือ ≤720px: repeat(2, minmax(0,1fr)) gap 10px
+  ⚠️ ทุก grid item ต้องมี min-width: 0 ไม่งั้นตารางกว้างจะดันหน้าเลื่อนแนวนอน
 
 Section:
-  padding: 48px 0 (mobile) → 64px 0 (desktop)
-  คั่นด้วย border-bottom: 1px solid var(--line) — ไม่ใช้พื้นสีสลับ
+  gap ระหว่าง section: 22px (mobile) → 28px (desktop)
+  คั่นด้วยระยะห่างและการ์ด ไม่ใช้พื้นสีสลับ
 
 Content width:
-  max-width: 1080px · padding: 0 24px
+  max-width: 1080px · padding: 16px (mobile) → 20-24px (desktop)
   ข้อความยาว max-width: 62ch
 ```
 
 ---
 
-## Brand Identity (Supasit.A × Instrument Grade)
+## Brand Identity (Supasit.A × Studio)
 
 ```
 Eyebrow (ป้ายกำกับเหนือหัวเรื่อง):
-  --font-data · 11px · 500 · letter-spacing .18em · UPPERCASE · สี --brass
-  ใช้บอกประเภทของหน้า/ส่วน เช่น "DESIGN SYSTEM · ฉบับเสนอเพื่อพิจารณา"
+  .eyebrow — body×.78 · 600 · letter-spacing .1em · UPPERCASE · สี --accent-2 (อำพัน)
+  ใช้บอกที่มา/หมวดของหน้า เช่น "UNIT 100 · กะเช้า"
 
-Section tag (เลขลำดับหัวข้อ):
-  --font-data · 11px · letter-spacing .16em · UPPERCASE · สี --teal-deep
-  ใช้เลขลำดับ (01 · 02 · 03) เฉพาะเมื่อเนื้อหาเป็นลำดับจริงเท่านั้น
-  ถ้าไม่ใช่ลำดับ ให้ใช้ชื่อหมวดแทนตัวเลข
+ป้ายรหัสอ้างอิงในตาราง/การ์ด:
+  .chip.c-ref — พื้น --accent-2-soft ตัวอักษร --accent-2-text
+  ใช้กับรหัสจริงเท่านั้น (tag อุปกรณ์ · เลขเอกสาร) ห้ามสร้างรหัสปลอมมาใส่
 
 Header ของแอป:
-  โปร่งใส กลมกลืนกับ --ground (คงหลักการเดิม)
-  Status indicator: จุดสีนิ่งๆ — ห้ามกะพริบ (.pulse-dot ตัดออกจากระบบแล้ว)
-  ปุ่ม Dark/Light toggle ใช้ .theme-btn (ขอบ 1px + Mono label)
+  พื้น --bg ที่ blur 8px + เส้นล่าง hairline
+  ปุ่มสลับธีมใช้ .btn .btn-ghost พร้อม aria-label
 
-A(i)CODER Badge (บังคับทุกแอป — คงเดิม):
-  ที่มา: claude-config/branding/ (README.md มีกติกาเต็ม)
-  ใช้ D1 "bare" (exports/d1-neon-arcade-bare.svg) วางบนพื้นสว่างคงที่ #F7F5FB เสมอ
-  (ไม่ตามธีมแอป — D1 ต้องไม่อยู่บนพื้นมืดเด็ดขาด)
-  ตำแหน่ง: มือถือ = แถบเต็มความกว้างล่างสุด (ใต้ bottom nav เหนือ safe area)
-           PC = กล่องลอยมุมขวาล่าง fixed bottom-5 right-4
-  ติดตั้ง: copy branding/exports/d1-neon-arcade-bare.svg → public/aicoder-badge.svg
+A(i)CODER Badge (บังคับทุกแอป):
+  ที่มา: claude-config/branding/ (README.md หัวข้อ "D4 — Studio")
+  ใช้ studio-badge-light.svg บนพื้นสว่าง · studio-badge-dark.svg บนพื้นมืด
+  พื้นของ badge คงที่เสมอ ไม่เปลี่ยนตามธีมแอป
+  ตำแหน่ง: fixed มุมขวาล่าง · เผื่อ env(safe-area-inset-bottom) · ไม่ทับ bottom nav
+  favicon/PWA icon: studio-icon.svg เท่านั้น (ตัว A เป็นเส้น อ่านออกที่ 16px)
+  ❌ ห้ามใช้ชุด neon เดิม (d1-neon-arcade / d2-crt-night / d3-street-sticker) กับแอป Studio
+  ของพร้อมใช้: design-lab/starter/index.html มี badge แบบ inline ให้แล้ว
 
-Icons: Lucide เท่านั้น stroke-width 1.75 — ห้าม emoji เป็นไอคอนของปุ่ม/nav
+Icons: Lucide เท่านั้น stroke-width 1.9 — ห้าม emoji เป็นไอคอนของปุ่ม/nav
+       ปุ่มไอคอนล้วนต้องมี aria-label และ svg ข้างในใส่ aria-hidden="true"
 
-Micro-interactions (ดู design-system.md IG-9):
+Micro-interactions (ดู design-system.md ST-9):
   - fade-in / slide-up เมื่อการ์ดโหลดครั้งแรก
-  - hover การ์ด: border เข้มขึ้น + เงาบางๆ (ไม่ใช้ scale)
-  - ปุ่มกด: translateY(1px) + inset shadow (นี่คือที่เดียวที่เก็บความรู้สึก tactile ไว้)
+  - hover การ์ด: เงาขึ้นชั้น --shadow-2 + ยก 2px
+  - ปุ่มกด: transform scale(.97) — จังหวะกดอยู่ตรงนี้ ไม่ใช้เงานูน
   - ❌ ห้าม: breathing, pulse, gradient, parallax, ambient animation
 ```
 
@@ -102,8 +103,11 @@ Micro-interactions (ดู design-system.md IG-9):
 
 ## Reference Implementation
 
-Artifact **"Instrument Grade"** (สร้าง 2569-08-27) — มี token ครบทั้ง light/dark
-พร้อม component จริงที่กดได้: KPI tile · ปุ่ม 4 แบบ · form · ตาราง · layout diagram
-และส่วนเทียบกับ Tactile Plant UI เดิม
+**`claude-config/design-lab/preview-kit.html`** — ของจริงที่กดเล่นได้ ไม่ใช่ภาพนิ่ง
+มีทุก component ของระบบ · สลับธีม 3 สถานะ · สลับโทนสีสำรอง · กรอบมือถือ 390px ในตัว
 
-ดู URL ล่าสุดได้จาก `/artifacts` ใน Claude Code CLI หรือ claude.ai/code/artifacts
+**`claude-config/design-lab/starter/`** — ไฟล์ตั้งต้นสำหรับเริ่มแอปใหม่
+token ครบ · 9 โมดูล IIFE · PWA · badge · ธีม Chart.js · CSP
+
+> **กติกาถาวรตั้งแต่รอบนี้:** จะแก้ design system ต้องแก้ที่ preview kit แล้วดูของจริงก่อน
+> ห้ามอนุมัติจากเอกสารเปล่า — 3 รอบก่อนหน้าล้มเพราะทำแบบนั้น

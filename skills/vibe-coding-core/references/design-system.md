@@ -1,378 +1,338 @@
-# Design System Reference — "Instrument Grade"
+# Design System Reference — "Supasit.A Studio"
 
 > ส่วนหนึ่งของ `vibe-coding-core` — โหลดไฟล์นี้เมื่อเขียน CSS หรือออกแบบ UI
-> อัปเดต 2569-08-27: มาตรฐานถาวรของ Supasit.A — **แทนที่ "Tactile Plant UI" เดิมทั้งหมด**
-> ที่มา: พี่ A review ระบบเดิมแล้วพบว่า (1) ดูซ้ำกันทุกแอป (2) อ่านยาก contrast ต่ำ
-> (3) บนมือถือยังไม่ดีพอ (4) ยังไม่มีเอกลักษณ์ที่บ่งบอกตัวตน — จึงรื้อใหม่ทั้งหมด
-> โดยยึดตัวตนจริง: **วิศวกรกระบวนการที่ตัดสินใจจากตัวเลข**
-> Reference implementation: artifact "Instrument Grade" (สร้าง 2569-08-27)
+> อัปเดต 2569-08-28: มาตรฐานถาวรของ Supasit.A — **แทนที่ "Instrument Grade" เดิมทั้งหมด**
+>
+> **ที่มา (ต่างจาก 3 รอบก่อนตรงนี้):** รอบนี้พี่ A เลือกจาก**หน้าจอจริง**ไม่ใช่จากเอกสาร
+> เทียบ 3 ทิศทางบน markup ชุดเดียวกัน (Material 3 Expressive · Apple HIG · เว็บทูลสมัยใหม่)
+> แล้วเลือกเป็นสูตรผสม: **โครงจากเว็บทูลสมัยใหม่ · ปุ่มแคปซูลจาก Apple · โทนน้ำเงินหมึก**
+>
+> **ของจริงที่กดเล่นได้อยู่ที่ `claude-config/design-lab/preview-kit.html`**
+> **ไฟล์ตั้งต้นสำหรับเริ่มแอปใหม่อยู่ที่ `claude-config/design-lab/starter/`**
+> แก้ token ต้องแก้ที่ preview kit แล้วดูของจริงก่อนเสมอ — ห้ามอนุมัติจากเอกสารเปล่าอีก
 
 ---
 
-## IG-0 · แนวคิด (อ่านก่อนใช้ token อื่น)
+## ST-0 · แนวคิด (อ่านก่อนใช้ token อื่น)
 
 ```
-"อ่านค่าได้แม่นเหมือนเครื่องมือวัด" — UI ที่หน้าที่หลักคือทำให้ตัวเลขและสถานะ
-อ่านถูกต้องในครั้งเดียว ไม่ใช่ทำให้หน้าจอสวย
+"เครื่องมือที่ใช้ทำงานจริง ไม่ใช่หน้าจอโชว์" — สะอาด อ่านง่าย ไม่แข็งทื่อ
+วางตัวเหมือนเว็บทูลระดับโลก (Linear · Notion · Vercel) ไม่ใช่แอปมือถือ ไม่ใช่หน้าจอโรงงาน
 
-4 กติกาที่เป็นเอกลักษณ์ (ทุกข้อแก้ปัญหาที่พี่ A ระบุเองตรงๆ):
-  IG-01  ตัวเลขทุกตัวเป็น tabular monospace       → ลายเซ็นของแบรนด์
-  IG-02  การ์ดมีแถบ tag บอกที่มาของข้อมูล          → ยืมจากป้ายอุปกรณ์หน้างานจริง
-  IG-03  ขอบเส้นคมแทนเงานูน แต่ปุ่มยังกดแล้วยุบ    → เก็บ tactile ไว้ที่จังหวะกด
-  IG-04  สีบอก "สถานะ" ไม่ใช่ "หมวดหมู่"           → เห็นสีแล้วรู้ว่าต้องทำอะไร
+4 กติกาที่เป็นเอกลักษณ์:
+  ST-01  สีแบรนด์ต้องห่างจากสีสถานะอย่างน้อย 50 องศาบนวงล้อสี
+  ST-02  ความลึกมาจากเส้น 1px + เงาบางชั้นเดียว ไม่ใช่เงาหนาหรือ neumorphism
+  ST-03  ปุ่มเป็นแคปซูล การ์ดมุม 13px — ความต่างนี้ทำให้ "สิ่งที่กดได้" แยกออกจาก "สิ่งที่อ่าน"
+  ST-04  ทุกคู่สีต้องวัด contrast ด้วยเครื่อง ไม่ใช่กะด้วยตา
+```
 
-⚠️ ห้ามใช้ indigo/purple + gradient-text — เป็นสูตรที่ Gemini/Google AI Studio ใช้บ่อยที่สุด
-   ทำให้แอปดูเหมือนคนอื่นทำ (บทเรียนจริงจาก Log-EQ-history)
+**ST-01 มาจากบทเรียนจริง** — ระบบ 3 รอบก่อนใช้สีแบรนด์ teal hue 173–175° เหมือนกันหมด (ห่างกัน 2°)
+ทั้งที่รื้อโครง/ฟอนต์/เงาไปหมดแล้ว ความรู้สึก "แอปดูซ้ำกัน" จึงไม่เคยหาย
+และ teal เดิมยังห่างจากเขียว `ok` แค่ 25° ซึ่งเหลือ **5°** ในสายตาคนตาบอดสีเขียว-แดง (~8% ของผู้ชาย)
+→ ปุ่ม "บันทึก" กับ chip "ปกติ" กลายเป็นสีเดียวกัน ขัดกับกติกา "สีบอกสถานะ" ที่ตั้งไว้เอง
 
-⚠️ ห้ามใช้ neumorphism (เงานูน-บุ๋มสองทิศ) อีก — เป็นต้นเหตุของ contrast ต่ำในระบบเดิม
-   ความรู้สึก "จับต้องได้" ย้ายไปอยู่ที่ press effect ของปุ่มแทน (ดู IG-6)
-
-⚠️ ห้ามใช้ gradient-text — ตัดออกจากระบบใหม่ทั้งหมด ความหรูมาจาก
-   ความลึกของสีและ typography ไม่ใช่จาก gradient
+```
+❌ ตัดออกถาวร: neumorphism · gradient-text · .breathing · .pulse-dot ·
+   สีแยกหมวดหมู่ · การบังคับ monospace กับตัวเลข (ดูเหตุผลใน ST-2)
 ```
 
 ---
 
-## IG-1 · Spacing — 4pt Grid
+## ST-1 · Spacing — 4pt Grid
 
 ```
-ค่าที่อนุญาต: 4 · 6 · 8 · 10 · 12 · 14 · 16 · 20 · 24 · 32 · 44 · 64px
-Page padding : 16px (mobile) · 24px (tablet) · 24-32px (desktop)
-Card padding : 16px (compact) · 20px (default) · 24px (spacious)
-Section gap  : 48px (mobile) · 64px (desktop)
-Grid gap     : 12px (mobile) · 14-16px (desktop)
+ค่าที่อนุญาต: 4 · 6 · 8 · 10 · 12 · 14 · 16 · 18 · 20 · 24 · 32 · 44 · 64px
+Page padding : 16px (มือถือ) · 20-24px (แท็บเล็ต/เดสก์ท็อป)
+Card padding : 18px (ค่ามาตรฐาน) · 14px (แน่น) · 22px (โปร่ง)
+Section gap  : 24px (มือถือ) · 28px (เดสก์ท็อป)
+Grid gap     : 10px (มือถือ) · 12px (เดสก์ท็อป)
 
-หมายเหตุ: ระบบเดิมใช้ 8pt grid แต่ Instrument Grade ต้องการค่ากลาง (6/10/14)
-เพราะขอบ 1px + padding เล็กทำให้การ์ดอยู่ชิดกันได้โดยไม่อึดอัด (แก้ปัญหามือถือ)
+โหมดความแน่น: คูณด้วยตัวแปร --d (0.82 = แน่น · 1 = สบายตา ← ค่ามาตรฐานที่พี่ A เลือก)
 ```
 
-## IG-2 · Typography — IBM Plex
+## ST-2 · Typography — Noto Sans Thai
 
 ```
-ตระกูลฟอนต์ (บังคับ — แทนที่ Noto Sans Thai เดิม):
-  UI/Body : "IBM Plex Sans Thai", "Noto Sans Thai", system-ui, sans-serif
-  Data    : "IBM Plex Mono", ui-monospace, Menlo, monospace
-
-เหตุผลที่เลือก IBM Plex (ไม่ใช่แค่ความชอบ):
-  - เป็นตระกูลเดียวที่มีทั้ง Thai และ Mono ที่วาดด้วยหลักการเดียวกัน ตัวเลขกับตัวหนังสือจึงเข้ากัน
-  - ออกแบบมาเพื่อ "man and machine" ตรงกับตัวตน A(i)CODER และงานวิศวกรรม
-  - ไม่ใช่ Noto Sans Thai ที่เว็บไทยเกือบทุกเว็บใช้ → แก้ปัญหา "ดูซ้ำๆ" ที่ต้นเหตุ
+ตระกูลฟอนต์ (บังคับ):
+  ทุกอย่าง : "Noto Sans Thai", system-ui, -apple-system, sans-serif
 
 โหลดผ่าน Google Fonts (CSP ต้อง allow fonts.googleapis.com + fonts.gstatic.com):
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap">
 
-Scale:
-  display : clamp(34px, 5.2vw, 56px) / 600 / letter-spacing -.02em / line-height 1.12
-  h2      : clamp(22px, 3vw, 30px)   / 600 / letter-spacing -.015em
-  h3      : 22px / 600
-  body    : 15.5-17px / 400 / line-height 1.65
-  lede    : 17px / 300 (น้ำหนักบางกว่า body — สร้างความหรูโดยไม่ต้องใช้สี)
-  caption : 13px / 400 / var(--ink-mid)
-  label   : 11px / 500 / Mono / letter-spacing .12-.18em / UPPERCASE
-  data    : Mono / 500 / font-variant-numeric: tabular-nums
+Scale (ฐาน --body = 15px × --d):
+  h1      : clamp(24px, 3.4vw, 32px) / 600 / letter-spacing -.018em / line-height 1.18
+  h2      : body × 1.18 / 600
+  body    : 15px / 400 / line-height 1.6
+  caption : body × .85 / 400 / var(--text-3)
+  label   : body × .85 / 500 / var(--text-2)
+  eyebrow : body × .78 / 600 / letter-spacing .1em / UPPERCASE / var(--accent-2)
 
-RULES (บังคับ):
-  ✓ ตัวเลข/เงิน/วันที่/รหัส/หน่วยวัด ต้องใช้ --font-data + tabular-nums เสมอ (IG-01)
-  ✓ heading ทุกตัวใส่ text-wrap: balance
-  ✓ ข้อความยาวจำกัดความกว้าง max-width: 62ch
-  ✗ ห้ามใช้ font-weight 800/900 (หนาเกินไป ขัดกับ "เรียบหรู")
+RULES:
+  ✓ heading ใส่ text-wrap: balance
+  ✓ ข้อความยาวจำกัด max-width: 62ch
+  ✓ ตัวเลขที่เรียงกันในแนวตั้ง (ตาราง/KPI) ใส่ font-variant-numeric: tabular-nums
+  ✗ ห้ามใช้ font-weight 800/900
+  ✗ ห้ามบังคับ monospace กับตัวเลข
 ```
 
-## IG-3 · Border Radius — คมกว่าเดิมมาก
+> **ทำไมเลิกบังคับ monospace (กฎ IG-01 เดิม):** วัดจริงบนเบราว์เซอร์แล้ว
+> **ตัวเลขของ Noto Sans Thai กว้างเท่ากันทุกตัวอยู่แล้ว** — `1111` กับ `8888` ได้ 92px เท่ากันเป๊ะ
+> ทั้งเปิดและปิด `tabular-nums` ทศนิยมจึงเรียงตรงคอลัมน์โดยไม่ต้องพึ่งฟอนต์ mono
+> กฎเดิมที่บังคับ IBM Plex Mono จึงแก้ปัญหาที่ฟอนต์นี้ไม่มี — ยังใส่ `tabular-nums` ไว้เพื่อความปลอดภัยเวลา fallback
+
+## ST-3 · Border Radius
 
 ```
---r-sm:  4px  (ปุ่มเล็ก · chip · badge)
---r-md:  6px  (ปุ่ม · input · การ์ดย่อย)
---r-lg: 10px  (การ์ดหลัก · modal · frame)
-pill  : 999px (เฉพาะ status pill เท่านั้น)
+--r-sm:  6px   (chip · badge · ไอคอนกล่องเล็ก)
+--r-md:  9px   (input · select · เมนู · การ์ดย่อย)
+--r-lg: 13px   (การ์ดหลัก · ตาราง)
+--r-xl: 16px   (modal · sheet)
+--r-btn: 999px (ปุ่มทุกตัว — แคปซูล)
+--r-pill:999px (chip สถานะ)
 
-เหตุผล: ระบบเดิมใช้ 10/12/20px ซึ่งมนเกินจนดูเป็น consumer app
-ค่าใหม่คมขึ้นเพื่อให้ดูเป็นเครื่องมือมืออาชีพ — ห้ามใช้ rounded-2xl/3xl
+ST-03: ปุ่มแคปซูล + การ์ดมุม 13px คือความต่างที่ตั้งใจ
+"สิ่งที่กดได้" มนสุด "สิ่งที่อ่าน" มนน้อยกว่า ตาจึงแยกออกโดยไม่ต้องพึ่งสี
 ```
 
-## IG-4 · Color System (ห้าม hardcode hex นอกเหนือจากนี้)
+## ST-4 · Color System — น้ำเงินหมึก (ห้าม hardcode hex นอกเหนือจากนี้)
 
-**Light (ค่าเริ่มต้น — พี่ A เลือก Light-first)**
+**Light (ค่าเริ่มต้น — พี่ A ใช้สว่างเป็นหลัก)**
 ```
---ground:       #F7F8F7   พื้นหน้า (neutral เอียงเขียวเล็กน้อย ไม่ใช่เทาเปล่า)
---surface:      #FFFFFF   พื้นการ์ด — ต้องต่างจาก --ground เสมอ (แก้ปัญหาหลักของระบบเดิม)
---surface-sunk: #EFF2F1   พื้นที่บุ๋ม (input · table head)
---line:         #D8DEDC   เส้นขอบปกติ
---line-strong:  #B6C0BD   เส้นขอบเน้น · hover
+--bg:            #F7F9FC   พื้นหน้า (neutral เอียงน้ำเงินเล็กน้อย)
+--surface:       #FFFFFF   พื้นการ์ด — ต้องต่างจาก --bg เสมอ
+--surface-2:     #EDF1F9   พื้นรอง (หัวตาราง · hover)
+--surface-3:     #DFE6F3   พื้นลึกสุด (track ของ meter · avatar)
+--border:        #D6DEEE   เส้น hairline ปกติ
+--border-strong: #B2BFD8   เส้นเน้น · ขอบ input · hover
 
---ink:          #16211F   ตัวหนังสือหลัก (near-black เอียง teal)
---ink-mid:      #4A5754   ตัวหนังสือรอง
---ink-soft:     #788481   caption · label
+--text:          #131829   ตัวหนังสือหลัก
+--text-2:        #414A60   ตัวหนังสือรอง · label
+--text-3:        #5F6980   caption
 
---teal-deep:    #0B4F4A   หัวเรื่อง · ปุ่มหลัก (เข้มกว่า #0d9488 เดิมมาก = หรูขึ้น)
---teal-signal:  #12857C   สถานะกดได้ · focus ring
---teal-wash:    #E6EFED   พื้นอ่อนของ teal
---brass:        #8A6D28   ข้อมูลอ้างอิง · eyebrow (ทองเหลืองเกจวัด — คู่ตัดของ teal)
---brass-wash:   #F3EEE0
+--accent:        #1D4ED8   สิ่งที่กดได้ · ปุ่มหลัก · ลิงก์ · เส้นกราฟหลัก
+--accent-hover:  #173DA8
+--on-accent:     #FFFFFF   ตัวหนังสือบนพื้น accent
+--accent-soft:   #DFE6FA   พื้นอ่อนของ accent (ปุ่มรอง · nav ที่เลือกอยู่)
+--accent-soft-text: #15389C
 
---ok:    #2F7D4F  --ok-wash:   #E7F1EB   อยู่ในเกณฑ์
---warn:  #9A6410  --warn-wash: #F6EEDF   ต้องเฝ้าระวัง
---crit:  #A93226  --crit-wash: #F7E9E7   ต้องแก้ทันที
+--accent-2:      #8A6410   ข้อมูลอ้างอิง · eyebrow · รหัสอุปกรณ์ (ไม่ใช่สิ่งที่กดได้)
+--accent-2-soft: #FBEFCF   --accent-2-text: #6B4E08
 
---press: rgba(11,79,74,.13)
---shadow: 0 1px 2px rgba(22,33,31,.05), 0 4px 14px rgba(22,33,31,.045)
-```
+--ok:   #1A7444  --ok-soft:   #D6F0E1   อยู่ในเกณฑ์
+--warn: #8A5A08  --warn-soft: #FBEBCF   ต้องเฝ้าระวัง
+--crit: #B3261E  --crit-soft: #FBDEDB   ต้องแก้ทันที
+--on-crit: #FFFFFF                      ตัวหนังสือบนพื้น crit ทึบ
 
-**Dark (ออกแบบแยก ไม่ใช่ invert — พี่ A บังคับว่าต้องสวยเท่ากัน)**
-```
---ground:       #0D1414
---surface:      #141D1C   สว่างกว่า ground (ตรงข้ามกับ light ที่ surface สว่างกว่าเช่นกัน)
---surface-sunk: #0A1010   มืดกว่า ground
---line:         #26332F
---line-strong:  #3A4A45
-
---ink:          #E4EAE8
---ink-mid:      #A3B0AC
---ink-soft:     #71807B
-
---teal-deep:    #4FC7BC   ← สว่างขึ้นเพื่อให้อ่านออกบนพื้นมืด (ไม่ใช่สีเดิม)
---teal-signal:  #35B3A7
---teal-wash:    #102624
---brass:        #D6B76A
---brass-wash:   #241E10
-
---ok:    #58BC82  --ok-wash:   #12241A
---warn:  #D9A441  --warn-wash: #241B0C
---crit:  #E2705F  --crit-wash: #2A1512
-
---press: rgba(79,199,188,.16)
---shadow: 0 1px 2px rgba(0,0,0,.4), 0 4px 16px rgba(0,0,0,.3)
+--shadow-1: 0 1px 2px rgba(15,25,50,.06)
+--shadow-2: 0 4px 16px rgba(15,25,50,.11)     ← ใช้เฉพาะ hover / modal
 ```
 
-**กติกาการใช้สี (IG-04):**
+**Dark (ออกแบบแยก ไม่ใช่ invert)**
 ```
-teal   = สิ่งที่กดได้ / สิ่งที่เป็น interactive
-brass  = ข้อมูลอ้างอิง / eyebrow / metadata (ไม่ใช่สิ่งที่กดได้)
-ok/warn/crit = สถานะเท่านั้น — ห้ามเอาไปใช้แยกหมวดหมู่ข้อมูล
-
-❌ ผิด: การ์ด "รายรับ"=ฟ้า "ค่าใช้จ่าย"=เหลือง "กำไร"=เขียว  (สีบอกหมวดหมู่ — ระบบเดิมทำแบบนี้)
-✅ ถูก: การ์ดทุกใบพื้นเดียวกัน แล้วใช้ ok/warn/crit บอกว่าค่านั้น "ปกติ/ต้องเฝ้า/ต้องแก้"
+--bg:#0E1219 · --surface:#161C27 · --surface-2:#1D2431 · --surface-3:#262F40
+--border:#242C3A · --border-strong:#38455A
+--text:#E6EAF3 · --text-2:#B0B9CB · --text-3:#868FA3
+--accent:#7FA8FF · --accent-hover:#A6C3FF · --on-accent:#141B29
+--accent-soft:#1C2538 · --accent-soft-text:#DFE9FF
+--accent-2:#E0B85C · --accent-2-soft:#332708 · --accent-2-text:#F0D69A
+--ok:#5FD08D  --ok-soft:#0F2E1D
+--warn:#E0AE52 --warn-soft:#32250A
+--crit:#F0938A --crit-soft:#3A1512 --on-crit:#3A0F0A   ← ไม่ใช่ขาว! ดูหมายเหตุ
+--shadow-1: 0 1px 2px rgba(0,0,0,.5) · --shadow-2: 0 4px 18px rgba(0,0,0,.55)
 ```
 
-## IG-5 · Surface — การ์ดขอบคม (แทน .tactile เดิมทั้งหมด)
+> **ทำไมต้องมี `--on-crit`:** ในธีมมืด `--crit` เป็นแซลมอนอ่อน ตัวเลขสีขาวบนพื้นนั้นได้ contrast แค่ **2.27:1**
+> (เจอตอนตรวจ badge นับจำนวน) แต่ละธีมจึงต้องเลือกสีตัวอักษรบนพื้น crit เอง → แก้แล้วได้ 7.38:1
+
+**กติกาการใช้สี:**
+```
+accent   = สิ่งที่กดได้ / interactive เท่านั้น
+accent-2 = ข้อมูลอ้างอิง · eyebrow · รหัส (ไม่ใช่สิ่งที่กดได้ ไม่ใช่สถานะ)
+ok/warn/crit = สถานะเท่านั้น — ห้ามเอาไปแยกหมวดหมู่ข้อมูล
+
+ST-01 · ก่อนเปลี่ยนสี accent ต้องเช็คระยะ hue จากสีสถานะก่อนเสมอ:
+  ปัจจุบัน accent(224°) ห่างจาก ok(148°) = 76°  ✅
+  เกณฑ์ขั้นต่ำ 50° — น้อยกว่านี้คนตาบอดสีจะแยกปุ่มกับสถานะไม่ออก
+
+โทนสำรองที่ตรวจแล้วผ่านทั้งหมด (อยู่ใน preview kit กดเทียบได้):
+  กรมท่าอมเทา #334E68 (61°) · ฟ้าเข้ม #0369A1 (53°) · ม่วงพลัม #7B2D8E (140°)
+```
+
+## ST-5 · Surface — การ์ดเส้นบาง
 
 ```css
 .card {
-  background: var(--surface);          /* ต่างจาก --ground เสมอ = อ่านออกโดยไม่ต้องพึ่งเส้นสี */
-  border: 1px solid var(--line);
+  background: var(--surface);           /* ต่างจาก --bg เสมอ */
+  border: 1px solid var(--border);      /* ST-02 ความลึกมาจากเส้น */
   border-radius: var(--r-lg);
-  padding: 20px;
-  transition: border-color .18s ease, box-shadow .18s ease;
+  box-shadow: var(--shadow-1);          /* เงาบางชั้นเดียว */
+  padding: 18px;
+  transition: box-shadow .16s cubic-bezier(.4,0,.2,1), border-color .16s;
 }
-.card:hover {
-  border-color: var(--line-strong);
-  box-shadow: var(--shadow);
-}
+.card.hoverable:hover { box-shadow: var(--shadow-2); transform: translateY(-2px); }
 
-/* IG-02 · แถบ tag บอกที่มาของข้อมูล — ยืมจากป้ายอุปกรณ์หน้างาน (FI-2104 / TI-3312) */
-.tag-strip {
-  display: flex; align-items: center; gap: 8px;
-  font-family: var(--font-data); font-size: 10.5px; font-weight: 500;
-  letter-spacing: .12em; text-transform: uppercase;
-  padding-bottom: 12px; margin-bottom: 14px;
-  border-bottom: 1px solid var(--line);
-  color: var(--ink-soft);
-}
-.tag-strip .dot { width: 6px; height: 6px; border-radius: 50%; flex: none; }
-.tag-strip .id { color: var(--ink-mid); }
-.tag-strip .right { margin-left: auto; }
+/* กัน grid item ขยายจนดันหน้าเลื่อนแนวนอน — min-width ของ grid item เป็น auto ไม่ใช่ 0 */
+.content, .content > section, .grid > *, .card, .tbl-wrap { min-width: 0; }
 ```
 
-> **`.tag-strip` เป็น "ทางเลือก" ไม่ใช่ "บังคับ"** — ใช้เมื่อข้อมูลในการ์ดมีแหล่งที่มาจริงที่ระบุได้
-> (tag อุปกรณ์, รหัสรายการ, ชื่อ sensor, เลขที่เอกสาร) สำหรับแอปที่ข้อมูลไม่มีรหัสกำกับ
-> เช่น แอปส่วนตัว/แอปการเงิน ให้ใช้แค่หัวข้อธรรมดาแทน — อย่ายัดเยียดรหัสปลอมเข้าไป
-
-## IG-6 · Tactile — ความรู้สึกจับต้องได้อยู่ที่ "จังหวะกด"
+## ST-6 · ปุ่มและช่องกรอก
 
 ```css
 .btn {
-  font-family: var(--font-ui); font-size: 14px; font-weight: 500;
-  padding: 10px 18px; border-radius: var(--r-md); cursor: pointer;
-  border: 1px solid transparent; transition: all .14s ease;
-  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 14px; font-weight: 600;
+  padding: 10px 20px; min-height: 44px;       /* ST-13 เป้าแตะ */
+  border-radius: var(--r-btn);                 /* แคปซูล */
+  border: 1px solid transparent; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  transition: background .16s cubic-bezier(.4,0,.2,1), transform .16s;
 }
-.btn:focus-visible { outline: 2px solid var(--teal-signal); outline-offset: 2px; }
+.btn:active { transform: scale(.97); }         /* จังหวะกด — ไม่ใช้เงานูน */
+.btn:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent); }
 
-.btn-primary { background: var(--teal-deep); color: var(--ground); border-color: var(--teal-deep); }
-.btn-primary:hover  { background: var(--teal-signal); border-color: var(--teal-signal); }
-.btn-primary:active { transform: translateY(1px); box-shadow: inset 0 2px 5px rgba(0,0,0,.22); }
+.btn-primary { background: var(--accent); color: var(--on-accent); }
+.btn-soft    { background: var(--accent-soft); color: var(--accent-soft-text); }
+.btn-outline { background: transparent; color: var(--text); border-color: var(--border-strong); }
+.btn-ghost   { background: transparent; color: var(--text-2); }
+.btn-danger  { background: var(--crit-soft); color: var(--crit); }
+.btn-sm      { min-height: 36px; padding: 7px 14px; }
+@media (max-width: 720px) { .btn-sm { min-height: 44px; padding: 11px 16px; } }
 
-.btn-ghost { background: var(--surface); color: var(--ink); border-color: var(--line-strong); }
-.btn-ghost:hover  { border-color: var(--teal-signal); color: var(--teal-deep); }
-.btn-ghost:active { transform: translateY(1px); background: var(--surface-sunk); box-shadow: inset 0 2px 5px var(--press); }
-
-.btn-brass { background: var(--brass-wash); color: var(--brass); border-color: color-mix(in srgb, var(--brass) 40%, transparent); }
-.btn-brass:hover  { border-color: var(--brass); }
-.btn-brass:active { transform: translateY(1px); box-shadow: inset 0 2px 5px rgba(0,0,0,.14); }
-
-.btn-danger { background: var(--crit-wash); color: var(--crit); border-color: color-mix(in srgb, var(--crit) 35%, transparent); }
-.btn-danger:hover  { border-color: var(--crit); }
-.btn-danger:active { transform: translateY(1px); box-shadow: inset 0 2px 5px rgba(0,0,0,.14); }
-
-/* input · บุ๋มลงในพื้นผิวจริง (นี่คือที่เดียวที่ยังใช้ inset shadow) */
-.field input, .field select {
-  width: 100%; font-family: var(--font-ui); font-size: 15px; color: var(--ink);
-  background: var(--surface-sunk);
-  border: 1px solid var(--line); border-radius: var(--r-md);
-  padding: 10px 12px;
-  box-shadow: inset 0 1px 3px var(--press);
-  transition: border-color .15s, box-shadow .15s;
+.field :is(input, select, textarea) {
+  font-size: 14.3px; width: 100%; min-height: 46px; padding: 12px 14px;
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border-strong); border-radius: var(--r-md);
 }
-.field input.num { font-family: var(--font-data); font-variant-numeric: tabular-nums; }  /* IG-01 */
-.field input:focus, .field select:focus {
-  outline: none; border-color: var(--teal-signal);
-  box-shadow: inset 0 1px 3px var(--press), 0 0 0 3px var(--teal-wash);
+.field :is(input,select,textarea):focus {
+  outline: none; border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);
 }
+.field.err :is(input,textarea) { border-color: var(--crit); }
 ```
 
-## IG-7 · Data Display — หัวใจของระบบ (IG-01)
+## ST-7 · Data Display
 
 ```css
-/* KPI tile */
-.kpi .val {
-  font-family: var(--font-data); font-variant-numeric: tabular-nums;
-  font-size: 32px; font-weight: 500; letter-spacing: -.02em; line-height: 1.15;
-}
-.kpi .unit  { font-size: 14px; color: var(--ink-soft); font-weight: 400; margin-left: 4px; }
-.kpi .label { font-size: 13px; color: var(--ink-mid); margin-top: 6px; }
+.kpi .k-val { font-size: 30px; font-weight: 700; letter-spacing: -.02em;
+  display: flex; align-items: baseline; flex-wrap: wrap; font-variant-numeric: tabular-nums; }
+.kpi .k-unit { font-size: 12px; color: var(--text-3); margin-left: 4px; white-space: nowrap; }
 
-/* ตาราง — ตัวเลขชิดขวา + tabular = จุดทศนิยมตรงกันทุกแถว */
-.tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--surface); }
-table { border-collapse: collapse; width: 100%; min-width: 560px; }
-thead th {
-  font-family: var(--font-data); font-size: 10.5px; font-weight: 500;
-  letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft);
-  text-align: left; padding: 12px 16px;
-  background: var(--surface-sunk); border-bottom: 1px solid var(--line); white-space: nowrap;
-}
-tbody td { padding: 12px 16px; font-size: 14px; border-bottom: 1px solid var(--line); }
-tbody tr:last-child td { border-bottom: 0; }
-tbody tr:hover td { background: var(--surface-sunk); }
-td.num {
-  font-family: var(--font-data); font-variant-numeric: tabular-nums;
-  text-align: right; font-size: 14px;
-}
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--r-lg); background: var(--surface); }
+thead th { font-size: 12px; font-weight: 600; color: var(--text-2); background: var(--surface-2);
+  padding: 12px 16px; border-bottom: 1px solid var(--border); white-space: nowrap; text-align: left; }
+tbody td { padding: 13px 16px; font-size: 13.8px; border-bottom: 1px solid var(--border); }
+tbody tr:hover td { background: var(--surface-2); }
+td.num { text-align: right; font-variant-numeric: tabular-nums; }
 
-/* status pill — ใช้ ok/warn/crit เท่านั้น (IG-04) */
-.pill {
-  font-family: var(--font-data); font-size: 10.5px; font-weight: 500;
-  letter-spacing: .08em; text-transform: uppercase;
-  padding: 3px 9px; border-radius: 999px; border: 1px solid; white-space: nowrap;
-}
-.p-ok   { color: var(--ok);   background: var(--ok-wash);   border-color: color-mix(in srgb, var(--ok) 30%, transparent); }
-.p-warn { color: var(--warn); background: var(--warn-wash); border-color: color-mix(in srgb, var(--warn) 30%, transparent); }
-.p-crit { color: var(--crit); background: var(--crit-wash); border-color: color-mix(in srgb, var(--crit) 30%, transparent); }
+.chip { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px;
+  border-radius: var(--r-pill); font-size: 11.7px; font-weight: 600; white-space: nowrap; }
+.c-ok{background:var(--ok-soft);color:var(--ok)}      .c-warn{background:var(--warn-soft);color:var(--warn)}
+.c-crit{background:var(--crit-soft);color:var(--crit)} .c-ref{background:var(--accent-2-soft);color:var(--accent-2-text)}
 ```
 
-> **บังคับ:** ทุกที่ที่มีตัวเลขเรียงกันในแนวตั้ง (ตาราง · รายการ · KPI ที่วางข้างกัน)
-> ต้องใส่ `font-variant-numeric: tabular-nums` เสมอ — นี่คือเอกลักษณ์ของแบรนด์
-
-## IG-8 · Dark / Light Mode — ต้องรองรับ 3 สถานะ
+## ST-8 · Dark / Light — ต้องครบ 3 สถานะ
 
 ```css
-/* 1) LIGHT ชุดเต็ม อยู่บน :root เปล่า (ครอบคลุมกรณีเครื่องไม่ stamp อะไรเลย) */
-:root { --ground: #F7F8F7; /* ...ชุดเต็มตาม IG-4 light... */ }
+:root { /* ...ชุด light เต็มตาม ST-4... */ }
 
-/* 2) DARK ตามระบบเครื่อง — guard ด้วย :not([data-theme="light"]) เพื่อให้ผู้ใช้ override ได้ */
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) { --ground: #0D1414; /* ...ชุดเต็มตาม IG-4 dark... */ }
+  :root:not([data-theme="light"]) { /* ...ชุด dark เต็ม... */ }
 }
-
-/* 3) DARK ที่ผู้ใช้เลือกเอง — ต้องชนะ prefers-color-scheme: light */
-:root[data-theme="dark"] { --ground: #0D1414; /* ...ชุดเต็มตาม IG-4 dark... */ }
+:root[data-theme="dark"] { /* ...ชุด dark เต็ม (ซ้ำ เพื่อให้ผู้ใช้ override ชนะ)... */ }
+```
+```
+⚠️ ไม่ทำ = แอปพังในบางเครื่อง:
+  ✓ body ต้องมี background: var(--bg) เสมอ
+  ✓ ทุกสีมาจาก token — ห้ามประกาศสีไว้ใน @media หรือ [data-theme] เท่านั้น
+  ✓ "ไม่ stamp data-theme เลย" = ตามระบบ — อย่าเผลอ stamp ค่าเริ่มต้นทับ
+  ✓ อ่าน/เขียน localStorage ต้องอยู่ใน try/catch เสมอ
 ```
 
-```
-⚠️ กติกาบังคับ (ไม่ทำ = แอปพังในบางเครื่อง):
-  ✓ body ต้องมี background: var(--ground) เสมอ — พื้นโปร่งใสจะยืมสีพื้นของ host
-  ✓ ทุกสีต้องมาจาก token — ห้ามประกาศสีไว้ใน @media หรือ [data-theme] เท่านั้น
-  ✓ เปลี่ยนจาก class strategy (.dark) เดิม → data-theme attribute
-    เพราะรองรับ 3 สถานะได้ (light / dark / ตามระบบ) ส่วน .dark รองรับได้แค่ 2
-
-JS toggle (เก็บค่าที่เลือกไว้):
-  var root = document.documentElement;
-  function current() {
-    var s = root.getAttribute('data-theme');
-    if (s) return s;
-    return matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  }
-  // สลับ: root.setAttribute('data-theme', current() === 'dark' ? 'light' : 'dark')
-  // อ่าน/เขียน localStorage ต้องอยู่ใน try/catch เสมอ (private window โยน error ได้)
-```
-
-## IG-9 · Motion — น้อยแต่มีเหตุผล
+## ST-9 · Motion
 
 ```css
-/* อนุญาตเฉพาะ 3 อย่างนี้ */
-@keyframes fadeIn  { from { opacity: 0; } to { opacity: 1; } }
-@keyframes slideUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-.animate-fade-in  { animation: fadeIn .3s ease-out forwards; }
-.animate-slide-up { animation: slideUp .3s ease-out forwards; }
-/* + press effect ของปุ่ม (IG-6) และ hover ของการ์ด (IG-5) */
-
-@media (prefers-reduced-motion: reduce) {
-  * { transition: none !important; animation: none !important; }
-}
+--dur: .16s;  --ease: cubic-bezier(.4,0,.2,1);   /* เร็ว สั้น ไม่เรียกร้องความสนใจ */
+@keyframes fadeIn { from {opacity:0} to {opacity:1} }
+@keyframes slideUp { from {opacity:0;transform:translateY(8px)} to {opacity:1;transform:none} }
+@media (prefers-reduced-motion: reduce) { * { transition:none !important; animation:none !important; } }
 ```
 
-```
-❌ ตัดออกจากระบบใหม่ (เคยมีใน Tactile Plant UI):
-   .breathing (ปุ่มเต้น)  ·  .pulse-dot (จุดกะพริบ)  ·  .gradient-text
-   เหตุผล: ขัดกับ "เรียบหรู มืออาชีพ" ที่พี่ A เลือก และเป็นสัญญาณของ UI ที่พยายามเรียกร้องความสนใจ
-   ถ้าต้องบอกว่า "เร่งด่วน" ให้ใช้สี crit + pill ก็พอแล้ว
-```
-
-## IG-10 · Icons — Lucide (คงเดิม)
+## ST-10 · Icons
 
 ```
-ใช้ Lucide icon set เสมอ (ไม่ใช่ emoji) — vendor ไฟล์ไว้ที่ public/vendor/lucide.js
-ติดตั้ง: npm install lucide → copy node_modules/lucide/dist/umd/lucide.min.js → public/vendor/lucide.js
-ใช้: <i data-lucide="ชื่อไอคอน"></i> แล้วเรียก lucide.createIcons() ทุกครั้งหลัง innerHTML เปลี่ยน
-ขนาดมาตรฐาน: 16px (ในปุ่ม/label) · 20px (nav) · stroke-width 1.75 (บางกว่า default = เรียบหรูขึ้น)
+Lucide icon set (ไม่ใช้ emoji) — vendor ไว้ที่ public/vendor/lucide.js
+ขนาด 16px (ในปุ่ม) · 18px (ทั่วไป) · 20px (nav) · stroke-width 1.9
+ไอคอนที่เป็นเนื้อหาต้องมี aria-label ที่ตัวปุ่ม และไอคอนเองใส่ aria-hidden="true"
 ```
 
-## IG-11 · PWA — บังคับทุกแอป (คงเดิม)
+## ST-11 · PWA — บังคับทุกแอป
 
 ```
-ทุกแอปต้องมี: public/manifest.json (name, icons, theme_color = --ground ของ light mode),
-public/sw.js (cache-first สำหรับ app shell), <link rel="manifest">,
-<meta name="theme-color" content="#F7F8F7"> + media dark variant "#0D1414",
-apple-mobile-web-app-capable meta
+manifest.webmanifest (theme_color = #F7F9FC) · sw.js cache-first · <link rel="manifest">
+<meta name="theme-color" content="#F7F9FC" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E1219" media="(prefers-color-scheme: dark)">
+apple-mobile-web-app-capable · bump CACHE_NAME ทุกครั้งที่แก้ไฟล์
+→ ของพร้อมใช้อยู่ใน design-lab/starter/
 ```
 
-## IG-12 · Chart — Chart.js (ปรับสีตามระบบใหม่)
+## ST-12 · Chart — Chart.js ผูกกับ token
 
 ```
-ใช้ Chart.js เมื่อต้องแสดงข้อมูลย้อนหลัง/แนวโน้ม — vendor ไว้ที่ public/vendor/chart.js
-สีเส้น/แท่ง: teal-deep เป็นเส้นหลัก, brass เป็นเส้นเปรียบเทียบ, ok/warn/crit สำหรับเส้นขีดจำกัด
-ฟอนต์แกน: --font-data ขนาด 11px สี --ink-soft (ตัวเลขบนแกนต้องเป็น mono ตาม IG-01)
-grid line: var(--line) เท่านั้น — จางกว่านี้จะอ่านไม่ออกบน dark mode
-ต้องเก็บ Chart instance ไว้ใน state แล้วเรียก .destroy() ก่อนสร้างใหม่ทุกครั้งที่ re-render
+ใช้ design-lab/starter/chart-theme.js ที่อ่านสีจาก CSS variable โดยตรง
+สลับธีมแล้วเรียก CHART_THEME.refresh(chart) กราฟจะเปลี่ยนตามเอง
+เส้นหลัก = --accent · เส้นเปรียบเทียบ = --accent-2 · เส้นขีดจำกัด = ok/warn/crit
+แกน/grid = --text-3 / --border · ฟอนต์แกน Noto 11px
+ต้องเก็บ instance แล้วเรียก .destroy() ก่อนสร้างใหม่ทุกครั้งที่ re-render
+```
+
+## ST-13 · Accessibility — ข้อบังคับที่ตรวจด้วยเครื่องได้
+
+```
+[ ] contrast ≥ 4.5:1 ทุกคู่สี ทั้งสว่างและมืด — วัดจากสีที่ browser render จริง ไม่ใช่กะเอา
+[ ] เป้าแตะบนมือถือ ≥ 44px ทุกปุ่ม/ลิงก์/ตัวเลือก
+[ ] ปุ่มไอคอนล้วนต้องมี aria-label · svg ข้างในใส่ aria-hidden="true"
+[ ] :focus-visible ต้องมีที่ทุกชิ้นที่โฟกัสได้ (ปุ่ม · field · ลิงก์ nav · tab · เมนู · accordion)
+[ ] ไม่มีการเลื่อนแนวนอน ทั้งจอคอมและมือถือ
+[ ] ระยะ hue ระหว่าง accent กับสีสถานะ ≥ 50° (ST-01)
+```
+
+## ST-14 · ส่วนประกอบมาตรฐาน
+
+มีให้ครบใน `design-lab/preview-kit.html` หน้า "คลังส่วนประกอบ" — คัดลอกไปใช้ อย่าประดิษฐ์ใหม่:
+
+```
+tabs · segmented control · dropdown menu · pagination · tooltip · notification badge ·
+accordion · การ์ดที่กดได้ทั้งใบ · progress/meter · breadcrumb · checkbox/radio ·
+ช่องค้นหาพร้อมไอคอน · avatar group · toast 3 ระดับ · empty state · skeleton ·
+modal/sheet · bottom nav · กราฟเส้น/แท่ง/วงแหวน/แท่งซ้อนชั้น
+```
+
+## ST-15 · A(i)CODER Badge
+
+```
+ใช้ชุด Studio: branding/exports/studio-badge-light.svg · studio-badge-dark.svg · studio-icon.svg
+ตำแหน่ง: position fixed · มุมขวาล่าง · เผื่อ env(safe-area-inset-bottom)
+พื้นของ badge คงที่เสมอ ไม่เปลี่ยนตามธีมแอป (badge คือของนอกแอป)
+favicon/PWA icon ใช้ studio-icon.svg เท่านั้น (ตัว A เป็นเส้น ไม่ใช่ฟอนต์ จึงอ่านออกที่ 16px ทุกเครื่อง)
+❌ ห้ามใช้ชุด neon เดิม (d1-neon-arcade / d2-crt-night / d3-street-sticker) กับแอปที่ใช้ Studio
 ```
 
 ---
 
-## Migration — แอปเดิมที่ใช้ Tactile Plant UI
+## Migration — แอปเดิมที่ใช้ Instrument Grade / Tactile Plant UI
 
 | ของเดิม | เปลี่ยนเป็น |
 |---|---|
-| `.tactile` (เงานูน) | `.card` (ขอบ 1px + surface ต่างจาก ground) |
-| `.tactile-sm` | `.card` padding 16px |
-| `.tactile-inset` | `.field input` (ยังใช้ inset shadow ได้) |
-| `.tactile-btn` | `.btn-ghost` |
-| `border-t-4` สีตามหมวดหมู่ | `.tag-strip` + `.pill` สถานะ (IG-02/IG-04) |
-| `.gradient-text` | ตัดออก — ใช้ `color: var(--teal-deep)` แทน |
-| `.breathing` / `.pulse-dot` | ตัดออกทั้งหมด |
-| `--bg-card` = `--bg-page` | `--surface` ≠ `--ground` (สำคัญที่สุด) |
-| Noto Sans Thai | IBM Plex Sans Thai + IBM Plex Mono |
-| `.dark` class | `[data-theme="dark"]` attribute |
+| teal `#0B4F4A` / `#12857C` / `#0d9488` | `--accent: #1D4ED8` (ST-01 ต้องห่างจากสีสถานะ) |
+| `--ground` | `--bg` |
+| IBM Plex Sans Thai + IBM Plex Mono | Noto Sans Thai อย่างเดียว |
+| บังคับ mono กับตัวเลข (IG-01) | ตัดกฎทิ้ง — เหลือแค่ `tabular-nums` (ดู ST-2) |
+| `.tag-strip` (IG-02) | `.eyebrow` + `.c-ref` chip |
+| ขอบคม radius 4/6/10 | 6/9/13/16 + ปุ่มแคปซูล |
+| `.btn` มุม 6px | `--r-btn: 999px` |
+| ไม่มี `--on-crit` | เพิ่ม `--on-crit` ทั้งสองธีม |
+| Brass `#8A6D28` | `--accent-2: #8A6410` (บทบาทเดิม: ข้อมูลอ้างอิง) |
 
-> ไม่บังคับให้ย้ายแอปเก่าทันที — ย้ายเมื่อแอปนั้นถูกแก้ครั้งใหญ่อยู่แล้ว
-> แต่**แอปใหม่ทุกตัวต้องใช้ Instrument Grade เท่านั้น**
+> **แอปเดิมไม่ต้องรีบย้าย** — ย้ายเมื่อแอปนั้นถูกแก้ครั้งใหญ่อยู่แล้ว
+> แต่**แอปใหม่ทุกตัวเริ่มจาก `design-lab/starter/` เท่านั้น**
