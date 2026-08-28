@@ -69,8 +69,8 @@ const haptic = (pattern = 50) => {
 |---|---|---|
 | CSS Framework | Tailwind CSS v3 (Play CDN) | `cdn.tailwindcss.com` — **prototype เท่านั้น ดูคำเตือนด้านล่าง** |
 | Icons | Lucide Icons | vendor ไว้ในเครื่อง `public/vendor/lucide.js` (ไม่ใช้ CDN — CSP-friendly + offline-first) |
-| Font UI/Body (Thai) | **IBM Plex Sans Thai** wght 300–700 | Google Fonts · preconnect — fallback `"Noto Sans Thai", system-ui` |
-| Font Data (ตัวเลข) | **IBM Plex Mono** wght 400–600 + `tabular-nums` | บังคับกับตัวเลข/รหัส/วันที่ทุกจุด (IG-01 — ดู design-system.md) |
+| Font (ทุกอย่าง) | **Noto Sans Thai** wght 300–700 | Google Fonts · preconnect — fallback `system-ui, -apple-system, sans-serif` |
+| ตัวเลขในตาราง/KPI | `font-variant-numeric: tabular-nums` | ไม่ต้องใช้ฟอนต์ mono — วัดแล้วตัวเลขของ Noto Sans Thai กว้างเท่ากันทุกตัวอยู่แล้ว (ดู design-system.md ST-2) |
 | Storage | IndexedDB | Native Promise-based wrapper |
 | Encryption | Web Crypto API | Native AES-GCM 256-bit |
 

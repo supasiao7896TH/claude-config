@@ -17,6 +17,10 @@ claude-config/
 │   ├── vibe-coding-core/references/       → deep-reference material (8 ไฟล์, โหลดตามความจำเป็น)
 │   └── vibe-coding-workflow/references/   → deep-reference material (1 ไฟล์, โหลดตามความจำเป็น)
 ├── agents/           → สำหรับ ~/.claude/agents/ (Personal scope, ใช้ได้ทุกโปรเจกต์)
+├── design-lab/       → ห้องแล็บ design system "Supasit.A Studio" (ไม่ต้องติดตั้ง — เปิดใช้จาก repo)
+│   ├── preview-kit.html   → เปิดด้วยเบราว์เซอร์: ดู/เทียบ/จูน UI ก่อนแก้เอกสารทุกครั้ง
+│   └── starter/           → ก๊อปทั้งโฟลเดอร์แล้วเริ่มแอปใหม่ได้เลย (token + 9 โมดูล + PWA + badge)
+├── branding/         → A(i)CODER identity (ชุด Studio ใช้กับแอปปัจจุบัน · ชุด neon เก็บไว้สำหรับของเดิม)
 ├── statusline.ps1    → source of truth สำหรับ ~/.claude/statusline.ps1 (Multi-line statusline: model/dir/branch + context bar + 5-hour/weekly rate limit)
 └── REVIEW.md         → audit trail ของการรีวิว SKILL.md 07/2026 (รวมมาจาก CLAUDE-Docc-For-Code)
 ```
@@ -25,7 +29,7 @@ claude-config/
 
 Skill ที่มีไฟล์ลึก (`vibe-coding-core`, `vibe-coding-workflow`) เก็บเนื้อหาเสริมไว้ใน `references/`
 แยกจาก `SKILL.md` หลัก ตามหลัก **progressive disclosure**: Claude Code จะโหลดเฉพาะไฟล์ reference
-ที่เกี่ยวกับงานที่กำลังทำจริงเท่านั้น (เช่น แก้ CSS ค่อยโหลด `design-system.md`, ทำ AI feature ค่อยโหลด
+ที่เกี่ยวกับงานที่กำลังทำจริงเท่านั้น (เช่น แก้ CSS ค่อยโหลด `design-system.md` — และดูของจริงที่ `design-lab/preview-kit.html` ก่อนเสมอ, ทำ AI feature ค่อยโหลด
 `ai-integration.md`) ไม่โหลดทั้งโฟลเดอร์ทุกครั้งที่เรียก skill — ดูตาราง Reference Library ท้าย
 `SKILL.md` ของแต่ละ skill ว่ามีไฟล์อะไรบ้างและใช้ตอนไหน
 
