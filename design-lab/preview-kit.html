@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="th" data-dir="d1" data-density="comfortable" data-font="anuphan">
+<html lang="th" data-dir="d4" data-density="comfortable" data-font="noto">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -206,6 +206,67 @@ html[data-dir="d3"][data-theme="dark"] {
   --shadow-1:0 1px 2px rgba(0,0,0,.55);
   --shadow-2:0 4px 18px rgba(0,0,0,.6);
   --topbar-bg:color-mix(in srgb, #0F0F0E 82%, transparent);
+}
+
+/* ============================================================
+   D4 · SUPASIT.A STUDIO — ตัวจริงรอบที่ 4 (พี่ A เลือก 2569-08-28)
+   สูตรผสม: โครง/จังหวะจาก D3 · สีจาก D1 · ปุ่มแคปซูลจาก D2
+   ฟอนต์ Noto Sans Thai · ความแน่นสบายตา · สว่างเป็นหลัก
+   ============================================================ */
+html[data-dir="d4"] {
+  /* พื้นผิว — สีจาก D1 (neutral เอียงเขียว ไม่ใช่เทาเปล่า) */
+  --bg:#F6FAF8; --surface:#FFFFFF; --surface-2:#EAF3F0; --surface-3:#DCEBE6;
+  /* เส้น hairline — วิธีสร้างความลึกแบบ D3 */
+  --border:#CFE0DA; --border-strong:#A9C7BE;
+  --text:#0E1F1B; --text-2:#41544F; --text-3:#5E7973;
+  /* accent — เขียวมิ้นท์ของ D1 */
+  --accent:#007F70; --accent-hover:#00695F; --on-accent:#FFFFFF;
+  --accent-soft:#CDF3EA; --accent-soft-text:#00544A;
+  /* accent รอง — อำพัน ใช้กับข้อมูลอ้างอิง/metadata ไม่ใช่ปุ่มหลัก */
+  --accent-2:#8A6410; --accent-2-soft:#FBEFCF; --accent-2-text:#6B4E08;
+  --ok:#1A7444; --ok-soft:#D6F0E1; --warn:#8A5A08; --warn-soft:#FBEBCF; --crit:#B3261E; --crit-soft:#FBDEDB;
+  /* มุม — สเกลของ D3 แต่ปุ่มเป็นแคปซูลตาม D2 */
+  --r-sm:6px; --r-md:9px; --r-lg:13px; --r-xl:16px; --r-pill:999px; --r-btn:999px;
+  /* เงาบางชั้นเดียวแบบ D3 — ชั้นหนาใช้เฉพาะ hover/modal */
+  --shadow-1:0 1px 2px rgba(10,40,34,.05);
+  --shadow-2:0 4px 16px rgba(10,40,34,.10);
+  --topbar-bg:color-mix(in srgb, #F6FAF8 85%, transparent);
+  --topbar-blur:blur(8px); --topbar-border:var(--border);
+  --ease:cubic-bezier(.4,0,.2,1); --dur:.16s;
+  --card-pad:calc(18px * var(--d)); --gap:calc(12px * var(--d));
+  --h1:clamp(24px,3.4vw,32px); --h1-weight:600; --title-ls:-.018em;
+  --body:calc(15px * var(--d)); --lh:1.6;
+  --btn-pad:calc(10px * var(--d)) calc(20px * var(--d)); --btn-weight:600;
+  --field-bg:var(--surface); --field-border:var(--border-strong); --field-radius:9px;
+  --input-focus-ring:0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);
+  --card-border:1px solid var(--border); --card-shadow:var(--shadow-1);
+  --nav-active-bg:var(--accent-soft); --nav-active-fg:var(--accent-soft-text);
+}
+@media (prefers-color-scheme: dark) {
+  html[data-dir="d4"]:not([data-theme="light"]) {
+    --bg:#0F1412; --surface:#161F1C; --surface-2:#1D2825; --surface-3:#26332F;
+    --border:#25332E; --border-strong:#3A4C46;
+    --text:#E7F0EC; --text-2:#B0C0BB; --text-3:#87968F;
+    --accent:#5FE0CB; --accent-hover:#8DF0E0; --on-accent:#04302A;
+    --accent-soft:#0D3B35; --accent-soft-text:#9DEDDF;
+    --accent-2:#E0B85C; --accent-2-soft:#332708; --accent-2-text:#F0D69A;
+    --ok:#5FD08D; --ok-soft:#0F2E1D; --warn:#E0AE52; --warn-soft:#32250A; --crit:#F0938A; --crit-soft:#3A1512;
+    --shadow-1:0 1px 2px rgba(0,0,0,.5);
+    --shadow-2:0 4px 18px rgba(0,0,0,.55);
+    --topbar-bg:color-mix(in srgb, #0F1412 85%, transparent);
+  }
+}
+html[data-dir="d4"][data-theme="dark"] {
+  --bg:#0F1412; --surface:#161F1C; --surface-2:#1D2825; --surface-3:#26332F;
+  --border:#25332E; --border-strong:#3A4C46;
+  --text:#E7F0EC; --text-2:#B0C0BB; --text-3:#87968F;
+  --accent:#5FE0CB; --accent-hover:#8DF0E0; --on-accent:#04302A;
+  --accent-soft:#0D3B35; --accent-soft-text:#9DEDDF;
+  --accent-2:#E0B85C; --accent-2-soft:#332708; --accent-2-text:#F0D69A;
+  --ok:#5FD08D; --ok-soft:#0F2E1D; --warn:#E0AE52; --warn-soft:#32250A; --crit:#F0938A; --crit-soft:#3A1512;
+  --shadow-1:0 1px 2px rgba(0,0,0,.5);
+  --shadow-2:0 4px 18px rgba(0,0,0,.55);
+  --topbar-bg:color-mix(in srgb, #0F1412 85%, transparent);
 }
 </style>
 <style>
@@ -478,7 +539,8 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 
   <div class="lab-group"><span>ทิศทาง</span>
     <div class="seg" id="seg-dir">
-      <button data-v="d1" aria-pressed="true">D1 Expressive</button>
+      <button data-v="d4" aria-pressed="true">D4 Supasit.A Studio ★</button>
+      <button data-v="d1" aria-pressed="false">D1 Expressive</button>
       <button data-v="d2" aria-pressed="false">D2 Clarity</button>
       <button data-v="d3" aria-pressed="false">D3 Studio</button>
     </div>
@@ -494,8 +556,8 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 
   <div class="lab-group"><span>ฟอนต์</span>
     <div class="seg" id="seg-font">
-      <button data-v="anuphan" aria-pressed="true">Anuphan</button>
-      <button data-v="noto" aria-pressed="false">Noto</button>
+      <button data-v="anuphan" aria-pressed="false">Anuphan</button>
+      <button data-v="noto" aria-pressed="true">Noto</button>
       <button data-v="sarabun" aria-pressed="false">Sarabun</button>
       <button data-v="baijam" aria-pressed="false">Bai Jamjuree</button>
       <button data-v="plex" aria-pressed="false">Plex (ของเดิม)</button>
@@ -745,6 +807,7 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
   });
 
   var NOTES = {
+    d4: "D4 · Supasit.A Studio — ตัวจริงรอบที่ 4: โครง สัดส่วน และจังหวะจาก D3 · ชุดสีเขียวมิ้นท์-อำพันจาก D1 · ปุ่มทรงแคปซูลจาก D2 · ฟอนต์ Noto Sans Thai · สว่างเป็นหลัก",
     d1: "D1 · Expressive — อ้างอิง Material 3 Expressive ของ Google (Play Store, แอป Google): สีสด tonal · มุมมน 18-30px · เงานุ่มไล่ระดับ · ปุ่มทรงแคปซูล · การเคลื่อนไหวแบบสปริง",
     d2: "D2 · Clarity — อ้างอิง Apple HIG / Liquid Glass (iOS 26): พื้นเทาอ่อนแบบ grouped · การ์ดขาวสะอาด · แถบบน-ล่างโปร่งแสงเบลอ · accent สีเดียวสด · หัวข้อใหญ่หนา",
     d3: "D3 · Studio — อ้างอิงเว็บทูลสมัยใหม่ (Linear · Notion · Vercel): neutral โทนอุ่น · มุม 9-16px · เงาบางชั้นเดียว + เส้น hairline · ตัวอักษรแน่นอ่านง่าย · การเคลื่อนไหวเร็วสั้น"
@@ -753,8 +816,8 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 
   // 2) เก็บค่าที่เลือกไว้ — localStorage ต้องอยู่ใน try/catch เสมอ
   //    (โหมดส่วนตัวของเบราว์เซอร์โยน error ได้ ถ้าไม่ดักไว้หน้าจะพังทั้งหน้า)
-  function save(k, v) { try { localStorage.setItem("dpk:" + k, v); } catch (e) {} }
-  function load(k) { try { return localStorage.getItem("dpk:" + k); } catch (e) { return null; } }
+  function save(k, v) { try { localStorage.setItem("dpk2:" + k, v); } catch (e) {} }
+  function load(k) { try { return localStorage.getItem("dpk2:" + k); } catch (e) { return null; } }
 
   function apply(group, value) {
     if (group === "theme") {
