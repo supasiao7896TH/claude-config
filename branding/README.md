@@ -20,6 +20,29 @@ Open `aicoder-mockups.html` in any browser, or look at `exports/`.
 | **D2** | CRT Night | `#0D0B14` night | terminal, dark README, PWA splash | needs its own dark plate — never sits on white |
 | **D3** | Street Sticker | `#EFEAFB` lilac | avatar, favicon, PWA icon, merch | re-composed to a stacked lockup; the only one legible at 16 px |
 
+### D4 — Studio (added 2026-08-28)
+
+The three directions above are neon: violet wordmarks, glow grounds, flicker. They
+were drawn for a visual system that no longer exists. **Supasit.A Studio** — the
+design system adopted 2026-08-28 — is mint, hairline-thin and deliberately quiet,
+and a neon sign dropped into it reads as a sticker from another app.
+
+`studio-badge-light.svg` · `studio-badge-dark.svg` · `studio-icon.svg` are that
+system's own mark: the same `A(i)CODER` name, drawn with the app's colours and no
+glow or flicker at all. The `(i)` carries the amber that means *reference* everywhere
+else in the system, so the mark states its own provenance the way a card does.
+
+| File | Ground | Use for |
+|---|---|---|
+| `studio-badge-light.svg` | grounds lighter than `#E8EFEC` | in-app badge, README, light header |
+| `studio-badge-dark.svg` | grounds darker than `#1A2320` | dark app chrome, terminal, dark README |
+| `studio-icon.svg` | draws its own mint tile | favicon, PWA icon, avatar — the `A` is stroked geometry, not type, so it survives 16 px on any machine |
+
+The wordmark uses `<text>`, so a viewer without Noto Sans Thai falls back to its own
+UI face; the icon does not, which is why the icon — never the wordmark — is what goes
+into a favicon. D1–D3 are unchanged and stay valid for apps still on the old system
+and for merch, where the neon is the point.
+
 D1/D2 share one horizontal lockup and differ only in treatment, so choosing
 between them is choosing a ground, not a logo. D3 is stacked because its job —
 fitting a square and surviving 16 px — makes the horizontal lockup impossible.
