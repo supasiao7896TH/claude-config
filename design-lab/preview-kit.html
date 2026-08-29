@@ -718,6 +718,89 @@ a.card-link:focus-visible { outline: none; border-radius: var(--r-lg); box-shado
 .ico { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; flex: none; }
 .ico-lg { width: 24px; height: 24px; }
 
+/* ============================================================
+   BADGE LAB — 3 ตำแหน่งของเครื่องหมายกะพริบตลอดเวลา (A(i)CODER neon)
+   เพิ่ม 2569-08-29 — เทียบก่อนเลือก 1 ใน 3 ไปทำจริงใน starter/index.html
+   ตั้งใจ "ไม่ผูก" กับ data-dir/data-tone ที่แถบบนสลับอยู่: ป้ายนี้คือของแอปจริง
+   (D4/Supasit.A Studio เท่านั้น) จึงประกาศ --bg/--surface/... ทับใหม่ในกรอบนี้เอง
+   ค่าเดียวกับ starter/index.html:24-66 เป๊ะๆ — สลับสว่าง/มืดยังใช้ data-theme
+   ตัวเดียวกับปุ่ม "ธีม" ด้านบน ไม่ใช่ปุ่ม "ทิศทาง"
+   ============================================================ */
+.badge-lab {
+  --bg:#F7F9FC; --surface:#FFFFFF; --border:#D6DEEE; --text:#131829; --text-2:#414A60;
+  --accent:#1D4ED8; --shadow-1:0 1px 2px rgba(15,25,50,.06);
+  --focus-ring:0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);
+  margin: 8px auto 40px; padding: 22px clamp(16px,3vw,28px) 28px; max-width: 1180px;
+  border-radius: 20px; background: var(--lab-card); border: 1px solid var(--lab-line);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .badge-lab {
+    --bg:#0E1219; --surface:#161C27; --border:#242C3A; --text:#E6EAF3; --text-2:#B0B9CB;
+    --accent:#7FA8FF; --shadow-1:0 1px 2px rgba(0,0,0,.5);
+  }
+}
+:root[data-theme="dark"] .badge-lab {
+  --bg:#0E1219; --surface:#161C27; --border:#242C3A; --text:#E6EAF3; --text-2:#B0B9CB;
+  --accent:#7FA8FF; --shadow-1:0 1px 2px rgba(0,0,0,.5);
+}
+
+.badge-lab .nz-dark { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .badge-lab .nz-light { display: none; }
+  :root:not([data-theme="light"]) .badge-lab .nz-dark { display: block; }
+}
+:root[data-theme="dark"] .badge-lab .nz-light { display: none; }
+:root[data-theme="dark"] .badge-lab .nz-dark { display: block; }
+
+.badge-lab-head { display: grid; gap: 4px; margin-bottom: 18px; }
+.badge-lab-head h2 { font-size: 16px; font-weight: 700; letter-spacing: -.01em; margin: 0; color: var(--lab-fg); }
+.badge-lab-head p { font-size: 12.5px; opacity: .68; margin: 0; max-width: 76ch; color: var(--lab-fg); }
+
+.badge-cand { display: grid; gap: 10px; padding: 22px 0; border-top: 1px dashed var(--lab-line); }
+.badge-cand:first-child { padding-top: 0; border-top: 0; }
+.badge-cand-label { display: flex; flex-wrap: wrap; align-items: baseline; gap: 3px 10px; color: var(--lab-fg); }
+.badge-cand-label strong { font-size: 13px; }
+.badge-cand-label span { font-size: 12px; opacity: .62; }
+
+.cand-link { display: inline-flex; border-radius: 999px; }
+.cand-link:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+
+/* ----- A · แถบล่างเต็มความกว้าง ----- */
+.cand-a-frame { position: relative; height: 320px; max-height: 55vh; overflow: hidden;
+  border-radius: 14px; background: var(--bg); border: 1px solid var(--border); }
+.cand-a-dock { position: absolute; left: 0; right: 0; bottom: 0; height: 100px;
+  background: var(--surface); border-top: 1px solid var(--border); box-shadow: var(--shadow-1);
+  display: flex; align-items: center; justify-content: center; }
+.cand-a-dock img { width: 280px; height: auto; display: block; }
+.cand-a-mobile { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin-top: 14px; }
+.cand-a-phone { position: relative; width: 195px; height: 422px; border: 6px solid #1b1b1f;
+  border-radius: 22px; overflow: hidden; background: var(--bg); flex: none; }
+.cand-a-phone .cand-a-dock { height: 50px; }
+.cand-a-phone .cand-a-dock img { width: 140px; }
+.cand-a-cost { font-size: 12.5px; color: var(--text-2); max-width: 48ch; }
+.cand-a-cost b { color: var(--text); }
+
+/* ----- B · ฝังในแถบบนสุด (topbar) ----- */
+.cand-b-frame { border-radius: 14px; overflow: hidden; border: 1px solid var(--border); }
+.cand-b-bar { background: var(--surface); border-bottom: 1px solid var(--border);
+  padding: 15px 22px; display: flex; align-items: center; }
+.cand-b-bar img { width: 280px; height: auto; display: block; }
+.cand-b-right { margin-left: auto; font-size: 12px; color: var(--text-2); }
+.cand-b-body { background: var(--bg); height: 140px; display: flex; align-items: center;
+  justify-content: center; color: var(--text-2); font-size: 12.5px; }
+
+/* ----- C · ย่อลงในขนาด badge เดิม ----- */
+.cand-c-row { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-end; }
+.cand-c-frame { position: relative; width: 320px; height: 200px; border-radius: 14px;
+  background: var(--bg); border: 1px solid var(--border); overflow: hidden; flex: none; }
+.cand-c-badge { position: absolute; right: 14px; bottom: 14px; display: inline-flex;
+  padding: 6px; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 999px; box-shadow: var(--shadow-1); }
+.cand-c-badge img { width: 130px; height: auto; display: block; }
+.cand-c-ref { display: grid; gap: 6px; }
+.cand-c-ref img { width: 280px; height: auto; display: block; border-radius: 8px; }
+.cand-c-ref span { font-size: 11.5px; opacity: .6; color: var(--lab-fg); }
+
 @media (prefers-reduced-motion: reduce) {
   * { transition-duration: .01ms !important; animation-duration: .01ms !important; }
 }
@@ -803,6 +886,79 @@ a.card-link:focus-visible { outline: none; border-radius: var(--r-lg); box-shado
     <div class="phone"><div class="screen-host" id="host-phone"></div></div>
   </div>
 </main>
+
+<section class="badge-lab" id="badge-lab" aria-labelledby="badge-lab-h">
+  <div class="badge-lab-head">
+    <h2 id="badge-lab-h">เครื่องหมายกะพริบตลอดเวลา — 3 ตำแหน่งให้เทียบ (เพิ่ม 2569-08-29)</h2>
+    <p>แทนที่ Studio badge นิ่งๆ มุมขวาล่างของเดิม ด้วยเครื่องหมาย A(i)CODER แบบนีออนที่กะพริบตลอดไป (ไม่ใช่แค่ตอนบูตเหมือนตอนนี้) —
+      ใช้ไฟล์ SVG ชุดเดียวกับ boot splash ปัจจุบัน สลับสว่าง/มืดตามปุ่ม "ธีม" ด้านบน ไม่ผูกกับปุ่ม "ทิศทาง"/"โทนสี"
+      เพราะป้ายนี้เป็นของแอปจริง (D4 เดียว) ไม่ใช่ตัวอย่างที่เปลี่ยนตามทิศทาง — ดูแล้วเลือก 1 ใน 3 ก่อนค่อยแก้ starter/index.html จริง</p>
+  </div>
+
+  <div class="badge-cand">
+    <div class="badge-cand-label">
+      <strong>ตัวเลือก A · แถบล่างเต็มความกว้าง (bottom dock)</strong>
+      <span>เครื่องหมายกว้าง 280px (พอสำหรับ D1 ≥240px และ D2 ≥280px พร้อมกัน) · แถบสูง 100px</span>
+    </div>
+    <div class="cand-a-frame">
+      <div class="cand-a-dock">
+        <a class="cand-link" href="#" aria-label="สร้างโดย A(i)CODER">
+          <img class="nz-light" src="starter/assets/d1-neon-arcade-bare.svg" alt="" width="1200" height="300">
+          <img class="nz-dark"  src="starter/assets/d2-crt-night-bare.svg"  alt="" width="1200" height="300">
+        </a>
+      </div>
+    </div>
+    <div class="cand-a-mobile" aria-hidden="true">
+      <div class="cand-a-phone">
+        <div class="cand-a-dock">
+          <img class="nz-light" src="starter/assets/d1-neon-arcade-bare.svg" alt="">
+          <img class="nz-dark"  src="starter/assets/d2-crt-night-bare.svg"  alt="">
+        </div>
+      </div>
+      <p class="cand-a-cost">จำลองย่อครึ่งสัดส่วนจากแบบด้านบน — บนจอมือถือสูง 844px (มาตรฐาน iPhone 12/13/14)
+        แถบนี้กิน <b>100px ≈ 11.8%</b> ของความสูงจอ ถาวรทุกหน้า ทุกเวลา</p>
+    </div>
+  </div>
+
+  <div class="badge-cand">
+    <div class="badge-cand-label">
+      <strong>ตัวเลือก B · ฝังในแถบบนสุด (topbar)</strong>
+      <span>ใช้ความกว้างเต็มหน้าของ topbar อยู่แล้ว จึงไม่ติดขั้นต่ำ 240/280px — ต้นทุนจริงคือความสูง topbar ต้องเพิ่มจาก ~54px เป็น ~100px ถาวร</span>
+    </div>
+    <div class="cand-b-frame">
+      <div class="cand-b-bar">
+        <a class="cand-link" href="#" aria-label="สร้างโดย A(i)CODER">
+          <img class="nz-light" src="starter/assets/d1-neon-arcade-bare.svg" alt="" width="1200" height="300">
+          <img class="nz-dark"  src="starter/assets/d2-crt-night-bare.svg"  alt="" width="1200" height="300">
+        </a>
+        <div class="cand-b-right" aria-hidden="true">ธีม</div>
+      </div>
+      <div class="cand-b-body" aria-hidden="true">เนื้อหาแอป…</div>
+    </div>
+  </div>
+
+  <div class="badge-cand">
+    <div class="badge-cand-label">
+      <strong>ตัวเลือก C · ย่อลงในขนาด badge เดิม (~110-150px)</strong>
+      <span>ทดสอบจริงว่า "อ่านไม่ออกต่ำกว่า 240px" จริงไหม — ดูข้างขนาดเต็มเทียบกัน</span>
+    </div>
+    <div class="cand-c-row">
+      <div class="cand-c-frame">
+        <div class="cand-c-badge">
+          <a class="cand-link" href="#" aria-label="สร้างโดย A(i)CODER">
+            <img class="nz-light" src="starter/assets/d1-neon-arcade-bare.svg" alt="" width="1200" height="300">
+            <img class="nz-dark"  src="starter/assets/d2-crt-night-bare.svg"  alt="" width="1200" height="300">
+          </a>
+        </div>
+      </div>
+      <div class="cand-c-ref" aria-hidden="true">
+        <span>ขนาดเต็ม 280px (ไว้เทียบเท่านั้น ไม่ใช่ตัวเลือกจริง)</span>
+        <img class="nz-light" src="starter/assets/d1-neon-arcade-bare.svg" alt="">
+        <img class="nz-dark"  src="starter/assets/d2-crt-night-bare.svg"  alt="">
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- ============================================================
      ตัวอย่างหน้าจอทั้งหมดอยู่ใน <template> ชุดเดียว
