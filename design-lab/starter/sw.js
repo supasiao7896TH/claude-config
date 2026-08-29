@@ -1,7 +1,8 @@
 /* Service Worker — cache-first สำหรับ app shell
    bump CACHE_NAME ทุกครั้งที่แก้ไฟล์ ไม่งั้นเครื่องที่เคยเปิดจะยังเห็นของเก่า */
-var CACHE_NAME = "supasit-studio-v1";
-var SHELL = ["./", "./index.html", "./chart-theme.js", "./assets/icon.svg", "./manifest.webmanifest"];
+var CACHE_NAME = "supasit-studio-v2";
+var SHELL = ["./", "./index.html", "./chart-theme.js", "./assets/icon.svg", "./manifest.webmanifest",
+  "./assets/d1-neon-arcade-bare.svg", "./assets/d2-crt-night-bare.svg"];
 
 self.addEventListener("install", function (e) {
   e.waitUntil(caches.open(CACHE_NAME).then(function (c) { return c.addAll(SHELL); }).then(function () { return self.skipWaiting(); }));

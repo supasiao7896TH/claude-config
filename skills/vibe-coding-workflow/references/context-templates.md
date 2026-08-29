@@ -172,7 +172,7 @@ project/
 ## 🎨 Brand Identity (บังคับทุกแอป — "Supasit.A Studio")
 ```
 เริ่มจาก      : design-lab/starter/ (token + component + PWA + badge ครบแล้ว)
-Badge        : A(i)CODER ชุด Studio · fixed bottom-right · พื้น = var(--surface)/var(--border) ของแอป (กลืนกับธีมอัตโนมัติ)
+Badge        : A(i)CODER neon (d1/d2-bare) · brand dock เต็มความกว้าง fixed bottom · กะพริบตลอดเวลา · พื้น = var(--surface)/var(--border) ของแอป (กลืนกับธีมอัตโนมัติ)
 สี            : accent #1D4ED8 (กดได้) · อำพัน #8A6410 (อ้างอิง) · ok/warn/crit (สถานะเท่านั้น)
 Header       : sticky · พื้น --bg blur 8px · เส้นล่าง hairline
 Dark/Light   : toggle บน header · [data-theme] attribute · CSS variables · ครบ 3 สถานะ

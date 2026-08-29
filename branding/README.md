@@ -34,26 +34,31 @@ else in the system, so the mark states its own provenance the way a card does.
 
 | File | Ground | Use for |
 |---|---|---|
-| `studio-badge-light.svg` | grounds lighter than `#E8EFEC` | in-app badge, README, light header |
-| `studio-badge-dark.svg` | grounds darker than `#1A2320` | dark app chrome, terminal, dark README |
-| `studio-icon.svg` | draws its own mint tile | favicon, PWA icon, avatar — the `A` is stroked geometry, not type, so it survives 16 px on any machine |
+| `studio-badge-light.svg` | grounds lighter than `#E8EFEC` | external/static embedding only (README badge, screenshot, non-CSS context) — no longer the in-app badge as of 2026-08-29, see D4 below |
+| `studio-badge-dark.svg` | grounds darker than `#1A2320` | dark app chrome, terminal, dark README — external/static embedding only, same as above |
+| `studio-icon.svg` | draws its own mint tile | favicon, PWA icon, avatar — the `A` is stroked geometry, not type, so it survives 16 px on any machine — unchanged by this round: a favicon must render as a static image reliably at 16px on any platform and can't rely on animation |
 
 The wordmark uses `<text>`, so a viewer without Noto Sans Thai falls back to its own
 UI face; the icon does not, which is why the icon — never the wordmark — is what goes
 into a favicon. D1–D3 are unchanged and stay valid for apps still on the old system
 and for merch, where the neon is the point.
 
-**D1/D2 are also allowed back inside a Studio app — but only where they fit at their
-own size.** Decided 2026-08-28: the neon flicker is worth keeping, and `-bare` has no
-painted ground (checked in the exported SVGs — no `<rect>` at all), so it sits directly
-on `var(--bg)` and reads as part of the page rather than a sticker, as long as the
-surface is actually light-enough/dark-enough per the ground rule below. The catch is
-size — D1/D2 need ≥240/280px wide to stay legible, which rules out the compact spots
-(`.logo`, `.aicoder-badge`) a Studio app shell already uses; those stay mint. The fit
-that works is a **boot splash**: full-width real estate, and the `.tube` warm-up (a
-2.6s irregular strike-in, see Flicker below) already reads as "the app is starting up"
-without any redesign. `design-lab/starter/index.html`'s `#bootSplash` is the reference
-implementation. Outside boot/splash/hero/about-sized surfaces, use the Studio marks.
+**Decided 2026-08-29: D1/D2 are now the permanent in-app badge, not a one-time boot
+splash.** The earlier framing — neon confined to a boot splash because it didn't fit
+the compact corner spots (`.logo`, the old `.aicoder-badge`) — is superseded: there is
+no more compact corner spot. The neon mark now lives in a full-width **bottom dock**
+(`.brand-dock` in `design-lab/starter/index.html`), a ~100px band fixed to the bottom
+of the viewport, wide enough (280px) to clear both D1's ≥240px and D2's ≥280px
+legibility minimums honestly — unlike a shrunk corner badge would have been. `-bare`
+still has no painted ground (no `<rect>` in the exported SVGs), so it sits directly on
+`var(--surface)` and reads as part of the dock, not a sticker. The `.tube` warm-up (a
+2.6s irregular strike-in, see Flicker below) plays once when the dock's `<img>`s mount
+on page load — giving the same "app is starting up" read the boot splash used to
+provide — after which the infinite `.tube-s`/`.tube-b` layers keep it flickering for as
+long as the page stays open. That continuous flicker *is* the badge now, not a
+side-effect of a splash. The old `#bootSplash` overlay and its `bootSplashOut()` JS
+have been removed — the dock's own first-mount strike-in fully covers what the splash
+provided, and running both together would double the strike-in on load.
 
 The two paw prints now trail **after** the wordmark (between "CODER" and the year
 mark) instead of leading into it from the left — `pawCluster`/`lockupGeometry` in
