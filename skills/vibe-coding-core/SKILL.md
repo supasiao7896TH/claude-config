@@ -305,7 +305,7 @@ ACCESSIBILITY
 
 BRAND (Supasit.A Studio)
   [ ] เริ่มจาก design-lab/starter/ ไม่ได้สร้าง token ขึ้นใหม่เอง
-  [ ] A(i)CODER badge ชุด Studio (studio-badge-*.svg) พื้นคงที่ ไม่ตามธีมแอป
+  [ ] A(i)CODER badge ชุด Studio · พื้นอ่าน var(--surface)/var(--border) ของแอป (กลืนกับธีมอัตโนมัติ, ดู design-system.md ST-15)
   [ ] Font Noto Sans Thai โหลดแล้ว · ตัวเลขในตาราง/KPI ใส่ tabular-nums
   [ ] --surface ต่างจาก --bg จริง
   [ ] accent ห่างจากสีสถานะ ≥ 50° บนวงล้อสี (ST-01) — เช็คก่อนเปลี่ยนสีทุกครั้ง

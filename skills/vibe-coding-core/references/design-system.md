@@ -313,7 +313,8 @@ modal/sheet · bottom nav · กราฟเส้น/แท่ง/วงแห�
 ```
 ใช้ชุด Studio: branding/exports/studio-badge-light.svg · studio-badge-dark.svg · studio-icon.svg
 ตำแหน่ง: position fixed · มุมขวาล่าง · เผื่อ env(safe-area-inset-bottom)
-พื้นของ badge คงที่เสมอ ไม่เปลี่ยนตามธีมแอป (badge คือของนอกแอป)
+พื้นของ badge อ่าน token เดียวกับแอป (var(--surface)/var(--border)/var(--shadow-1)) จึงกลืนกับพื้นแอปเสมอ
+ไม่ต้องแยกชุดสีเอง — ใช้ studio-badge-*.svg เฉพาะตอนฝังนอกแอป (README/screenshot/พื้นที่ไม่รู้สีล่วงหน้า) ที่ CSS variable ใช้ไม่ได้
 favicon/PWA icon ใช้ studio-icon.svg เท่านั้น (ตัว A เป็นเส้น ไม่ใช่ฟอนต์ จึงอ่านออกที่ 16px ทุกเครื่อง)
 ❌ ห้ามใช้ชุด neon เดิม (d1-neon-arcade / d2-crt-night / d3-street-sticker) กับแอปที่ใช้ Studio
 ```
