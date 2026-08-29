@@ -66,14 +66,16 @@ Header ของแอป:
   พื้น --bg ที่ blur 8px + เส้นล่าง hairline
   ปุ่มสลับธีมใช้ .btn .btn-ghost พร้อม aria-label
 
-A(i)CODER Badge (บังคับทุกแอป):
+A(i)CODER Badge — Brand Dock (บังคับทุกแอป, เปลี่ยนเป็นแถบล่างถาวร 2569-08-29):
   ที่มา: claude-config/branding/ (README.md หัวข้อ "D4 — Studio")
-  ใช้ studio-badge-light.svg บนพื้นสว่าง · studio-badge-dark.svg บนพื้นมืด
-  พื้นของ badge = var(--surface) + var(--border) + var(--shadow-1) ของแอปเอง (เหมือน .card) จึงกลืนกับธีมแอปอัตโนมัติ ไม่ต้องเขียน [data-theme="dark"] เพิ่ม
-  ตำแหน่ง: fixed มุมขวาล่าง · เผื่อ env(safe-area-inset-bottom) · ไม่ทับ bottom nav
-  favicon/PWA icon: studio-icon.svg เท่านั้น (ตัว A เป็นเส้น อ่านออกที่ 16px)
-  ❌ ห้ามใช้ชุด neon เดิม (d1-neon-arcade / d2-crt-night / d3-street-sticker) กับแอป Studio
-  ของพร้อมใช้: design-lab/starter/index.html มี badge แบบ inline ให้แล้ว
+  ใช้ assets/d1-neon-arcade-bare.svg บนพื้นสว่าง · assets/d2-crt-night-bare.svg บนพื้นมืด (ไม่ใช่ studio-badge-*.svg อีกต่อไป — ไฟล์นั้นเหลือแค่ฝังนอกแอปแบบ static)
+  พื้นของแถบ = var(--surface) + var(--border) + var(--shadow-1) ของแอปเอง (เหมือน .card) จึงกลืนกับธีมแอปอัตโนมัติ ไม่ต้องเขียน [data-theme="dark"] เพิ่ม
+  ตำแหน่ง: fixed เต็มความกว้างจอ ชิดล่าง (ไม่ใช่มุมขวาล่างแบบเดิม) · สูง 100px + env(safe-area-inset-bottom) · เครื่องหมายในแถบกว้าง 280px (ผ่านขั้นต่ำ D1 ≥240px และ D2 ≥280px พร้อมกัน)
+  main ต้องเผื่อ padding-bottom ให้พ้นแถบ (ดู design-lab/starter/index.html)
+  กะพริบตลอดเวลา (ไม่ใช่แค่ตอนบูตเหมือนเดิม): .tube strike-in เล่นครั้งเดียวตอนแถบถูกโหลดเข้าหน้า (แทนที่ #bootSplash เดิมได้ในตัว) แล้ว .tube-s/.tube-b (infinite) กะพริบต่อเนื่องไปตลอด — ไม่ต้องมี JS ควบคุมเลย
+  favicon/PWA icon: studio-icon.svg เท่านั้น (ตัว A เป็นเส้น อ่านออกที่ 16px) — ไม่เปลี่ยนจากเดิม
+  ✅ ชุด neon (d1-neon-arcade-bare / d2-crt-night-bare) คือ badge มาตรฐานของทุกแอปแล้ว — ไม่ใช่ของต้องห้ามอีกต่อไป
+  ของพร้อมใช้: design-lab/starter/index.html มี .brand-dock แบบ inline ให้แล้ว
 
 Icons: Lucide เท่านั้น stroke-width 1.9 — ห้าม emoji เป็นไอคอนของปุ่ม/nav
        ปุ่มไอคอนล้วนต้องมี aria-label และ svg ข้างในใส่ aria-hidden="true"

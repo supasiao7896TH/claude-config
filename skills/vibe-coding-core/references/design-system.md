@@ -308,15 +308,22 @@ accordion · การ์ดที่กดได้ทั้งใบ · progre
 modal/sheet · bottom nav · กราฟเส้น/แท่ง/วงแหวน/แท่งซ้อนชั้น
 ```
 
-## ST-15 · A(i)CODER Badge
+## ST-15 · A(i)CODER Badge (Brand Dock)
 
 ```
-ใช้ชุด Studio: branding/exports/studio-badge-light.svg · studio-badge-dark.svg · studio-icon.svg
-ตำแหน่ง: position fixed · มุมขวาล่าง · เผื่อ env(safe-area-inset-bottom)
-พื้นของ badge อ่าน token เดียวกับแอป (var(--surface)/var(--border)/var(--shadow-1)) จึงกลืนกับพื้นแอปเสมอ
-ไม่ต้องแยกชุดสีเอง — ใช้ studio-badge-*.svg เฉพาะตอนฝังนอกแอป (README/screenshot/พื้นที่ไม่รู้สีล่วงหน้า) ที่ CSS variable ใช้ไม่ได้
-favicon/PWA icon ใช้ studio-icon.svg เท่านั้น (ตัว A เป็นเส้น ไม่ใช่ฟอนต์ จึงอ่านออกที่ 16px ทุกเครื่อง)
-❌ ห้ามใช้ชุด neon เดิม (d1-neon-arcade / d2-crt-night / d3-street-sticker) กับแอปที่ใช้ Studio
+เปลี่ยนเป็นแถบล่างถาวร (.brand-dock) ตั้งแต่ 2569-08-29 — แทนที่ทั้งป้ายมุมขวาล่างแบบนิ่ง (.aicoder-badge เดิม)
+และกรอบ #bootSplash แบบครั้งเดียวตอนบูตที่เคยแยกกันมาก่อนหน้านี้ ตอนนี้รวมเป็นกลไกเดียว
+ใช้ไฟล์ neon: assets/d1-neon-arcade-bare.svg (สว่าง) · assets/d2-crt-night-bare.svg (มืด) — ไม่ใช่ studio-badge-*.svg อีกต่อไป
+ตำแหน่ง: position fixed · เต็มความกว้างจอ ชิดล่าง (left:0; right:0; bottom:0) — ไม่ใช่มุมขวาล่างแบบเดิม
+ความสูง: 100px + env(safe-area-inset-bottom) · เครื่องหมายในแถบกว้างคงที่ 280px — ผ่านขั้นต่ำของทั้ง D1 (≥240px) และ D2 (≥280px) พร้อมกัน
+พื้นของแถบอ่าน token เดียวกับแอป (var(--surface)/var(--border)/var(--shadow-1)) จึงกลืนกับธีมแอปเสมอ ไม่ต้องเขียน [data-theme="dark"] เพิ่ม
+สลับสว่าง/มืดด้วย [data-theme] / prefers-color-scheme ตัวเดียวกับปุ่ม "ธีม" บน topbar
+กะพริบตลอดเวลาโดยไม่ต้องมี JS: .tube strike-in (2.6s) เล่นครั้งเดียวตอนแถบถูก mount เข้าหน้า (ให้ผลแบบ boot splash เดิมในตัว)
+  แล้ว .tube-s/.tube-b (infinite) กะพริบต่อเนื่องไปตลอดที่หน้ายังเปิดอยู่
+main ต้องเพิ่ม padding-bottom ให้พ้นแถบ: calc(100px + env(safe-area-inset-bottom) + 24px) desktop / +16px มือถือ
+favicon/PWA icon ใช้ studio-icon.svg เท่านั้นเหมือนเดิม (คนละ requirement — ไม่เกี่ยวกับรอบนี้)
+studio-badge-light.svg / studio-badge-dark.svg ยังมีบทบาท แต่จำกัดเฉพาะฝังนอกแอปแบบ static (README badge, screenshot) เท่านั้น
+✅ ชุด neon (d1-neon-arcade-bare / d2-crt-night-bare) คือ badge มาตรฐานของทุกแอปแล้ว — ไม่ใช่ของต้องห้ามอีกต่อไป
 ```
 
 ---
