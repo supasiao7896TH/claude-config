@@ -69,7 +69,7 @@ Header ของแอป:
 A(i)CODER Badge (บังคับทุกแอป):
   ที่มา: claude-config/branding/ (README.md หัวข้อ "D4 — Studio")
   ใช้ studio-badge-light.svg บนพื้นสว่าง · studio-badge-dark.svg บนพื้นมืด
-  พื้นของ badge คงที่เสมอ ไม่เปลี่ยนตามธีมแอป
+  พื้นของ badge = var(--surface) + var(--border) + var(--shadow-1) ของแอปเอง (เหมือน .card) จึงกลืนกับธีมแอปอัตโนมัติ ไม่ต้องเขียน [data-theme="dark"] เพิ่ม
   ตำแหน่ง: fixed มุมขวาล่าง · เผื่อ env(safe-area-inset-bottom) · ไม่ทับ bottom nav
   favicon/PWA icon: studio-icon.svg เท่านั้น (ตัว A เป็นเส้น อ่านออกที่ 16px)
   ❌ ห้ามใช้ชุด neon เดิม (d1-neon-arcade / d2-crt-night / d3-street-sticker) กับแอป Studio
