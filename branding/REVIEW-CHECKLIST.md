@@ -15,7 +15,17 @@ push, so a stale export can no longer reach `main` unnoticed.
 If the machine has Chromium already but Playwright refuses to launch it
 (a corporate network that blocks the browser download, or a preinstalled
 build that does not match this Playwright version), point at it directly:
-`PW_CHROMIUM_PATH=/path/to/chrome npm run brand:verify`.
+`PW_CHROMIUM_PATH=/path/to/chrome npm run brand:build` — the same variable
+works for both scripts.
+
+One thing CI deliberately does **not** check: whether the committed PNGs
+match a fresh build. They are browser screenshots, so every build produces
+slightly different bytes even when the image is pixel-identical — measured
+on 2026-09-02, `d1-neon-arcade.png` came out 349947, 350113 and 350116 bytes
+on three runs of the same source. Only the SVGs and the generated HTML page
+are compared, because those are built from the template as text and are
+reproducible. The PNGs' actual content is still covered by `verify.mjs`,
+which opens the real page in a browser.
 
 It already covers:
 

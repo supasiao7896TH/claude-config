@@ -55,10 +55,21 @@ jobs:
         run: npm run brand:verify
 
       # ถ้า build แล้วไฟล์ที่ commit ไว้ไม่ตรงกับผลลัพธ์ แปลว่ามีคนแก้ไฟล์ export ด้วยมือ
-      - name: ไฟล์ที่ commit ไว้ตรงกับผล build
+      #
+      # ตรวจเฉพาะ SVG กับหน้า HTML ที่ generate ออกมา เพราะสองอย่างนี้เป็นข้อความล้วน
+      # ที่ build จากเทมเพลตแบบ deterministic — build กี่ครั้ง บนเครื่องไหนก็ได้ผลเท่ากัน
+      #
+      # ❌ ไม่ตรวจ PNG โดยตั้งใจ: มันคือ screenshot จากเบราว์เซอร์ จึงเปลี่ยนทุกครั้งที่ build
+      # แม้เนื้อหาจะเหมือนเดิมทุกพิกเซล (วัดจริง 2026-09-02: d1-neon-arcade.png
+      # ของเดิม 349947 bytes · CI ได้ 350116 · อีกเครื่องได้ 350113) ถ้าเอา PNG มารวมด้วย
+      # job นี้จะแดงตลอดกาลจนสุดท้ายโดนปิดทิ้ง ซึ่งแย่กว่าไม่มีเลย
+      # เนื้อหาของ PNG มี verify.mjs ตรวจอยู่แล้วผ่านการเปิดหน้าจริงในเบราว์เซอร์
+      - name: ไฟล์ที่ generate แบบ deterministic ตรงกับผล build
         run: |
-          if [ -n "$(git status --porcelain branding/)" ]; then
-            echo "::error::branding/ ที่ commit ไว้ไม่ตรงกับผล build — รัน npm run brand:build แล้ว commit ผลลัพธ์ด้วย"
-            git --no-pager diff --stat branding/
+          DRIFT=$(git status --porcelain -- branding/exports/'*.svg' branding/aicoder-mockups.html)
+          if [ -n "$DRIFT" ]; then
+            echo "::error::ไฟล์ที่ build ได้ไม่ตรงกับที่ commit ไว้ — รัน npm run brand:build แล้ว commit ผลลัพธ์ด้วย"
+            echo "$DRIFT"
+            git --no-pager diff --stat -- branding/exports/'*.svg' branding/aicoder-mockups.html
             exit 1
           fi
