@@ -108,13 +108,21 @@ Git Safety Protocol · subagent 7 ตัว) — **ปัญหาคือท�
 เปิดแอปไว้ 2 แท็บแล้ว deploy ที่ bump `DB_VERSION` = แท็บที่สอง**ค้างถาวรโดยไม่มี error**
 แก้แล้วและมีเทสต์คุมไว้
 
-### ยังต้องทำต่อ (เฟส 3-4 ที่ทำจากเครื่องนี้ไม่ได้)
-1. **ยืนยันคำสั่ง `wrangler`** — `npx wrangler versions --help` / `rollback --help` /
-   `deployments --help` แล้วแก้ `rollback-runbook.md` ให้ตรงกับ output จริง
-2. **ซ้อม rollback จริง 1 ครั้ง** จับเวลา เป้า < 5 นาที (ถ้าเกิน runbook ยังใช้ไม่ได้)
-3. **ลอง test harness กับแอปจริง** — session นี้ clone repo แอปไม่ได้ (ถูกบล็อก)
-   จึงทดสอบได้แค่กับ starter · วิธีย้าย: `vibe-coding-quality/references/testing-single-html.md`
-4. ตั้ง repo variable `APP_URL` + secret `CLOUDFLARE_API_TOKEN` ในแอปที่ deploy จริง
+### ✅ ทำต่อจนครบแล้ว (2026-09-02 รอบบ่าย) — ปิด 3 ใน 4 ข้อที่เคยค้าง
+
+1. ~~ยืนยันคำสั่ง `wrangler`~~ **เสร็จ** — รันจริงผ่าน GitHub Actions ของ `condo-rental-app`
+   (`CLOUDFLARE_API_TOKEN` เป็น secret อยู่แล้วที่นั่น) ได้ syntax จริงจาก `wrangler 4.128.0`
+2. ~~ซ้อม rollback จริง~~ **เสร็จ** — deploy ของผิดขึ้นจริง (เปลี่ยน `<title>` เป็นข้อความทดสอบ
+   จุดเดียว ไม่แตะ logic/ข้อมูล) แล้ว rollback กลับสำเร็จ **รวมเวลา 1 นาที 31 วินาที**
+   (เป้า < 5 นาที) เจอบั๊กจริงในตัว runbook เองด้วย (ลืมใส่ version-id เข้าคำสั่ง rollback)
+   → รายละเอียดเต็มอยู่ที่ `vibe-coding-quality/references/rollback-runbook.md` § 7
+3. ~~ลอง test harness กับแอปจริง~~ **เสร็จ** — ดูหัวข้อด้านบน (§25.0/`where-we-stand.md`)
+4. **ยังไม่ได้ทำ:** ตั้ง repo variable `APP_URL` + ยืนยัน `CLOUDFLARE_API_TOKEN` ในแอปอื่นๆ
+   นอกจาก `condo-rental-app` (ตัวนั้นมี secret อยู่แล้ว ยืนยันแล้วว่าใช้งานได้จริง)
+
+**⚠️ เก็บกวาดที่ยังค้าง:** branch `claude/rollback-drill` บน repo
+`Model-Vibe-Coding-Rental-Loan-Management-` ยังอยู่บน GitHub (มีแค่ workflow ทดลอง
+ไม่กระทบแอปเลย) — ลบทิ้งได้จากหน้า GitHub ตอนสะดวก (session ลบเองไม่ได้ ติด permission)
 
 ---
 
