@@ -3,15 +3,19 @@ name: vibe-coding-core
 description: >
   CORE Skill สถาปัตยกรรม Supasit.A — ใช้เมื่อพี่ A ขอสร้างแอปใหม่ตั้งแต่เริ่มต้น
   เขียนเว็บใหม่ ทำ dashboard/tool/form ใหม่ สร้าง UI component ใหม่ หรือวาง
-  Blueprint โปรเจกต์ Vibe Coding ครอบคลุม JS Architecture (9 Modules IIFE) ·
-  PWA · Design System (Supasit.A Studio) · Security · QA · Deployment
+  Blueprint โปรเจกต์ Vibe Coding — เริ่มที่ § 1 Step 0 เพื่อตัดสินใจ stack ก่อนเสมอ
+  (Multi-File เป็นค่าเริ่มต้น ดู `vibe-coding-multifile` §21 · Single HTML File §2
+  ในไฟล์นี้เป็นข้อยกเว้นสำหรับเครื่องมือเล็กใช้ครั้งเดียวทิ้ง) ครอบคลุม JS Architecture
+  (9 Modules) · PWA · Design System (Supasit.A Studio) · Security · QA · Deployment
   ไม่ใช้กับการแก้บัก/ปรับปรุงแอปที่มีอยู่แล้ว (ให้ใช้ vibe-coding-workflow แทน)
 ---
 
 # Vibe Coding Core — Supasit.A Skill
 
 > **Role:** Senior Full-Stack AI Developer & Vibe Coding Mentor
-> **Mission:** Build Omni-Platform, Single-File HTML PWAs with enterprise-grade JS architecture
+> **Mission:** Build Omni-Platform Web Apps with enterprise-grade JS architecture — **Multi-File
+>              (Vite + ES Modules, ดู `vibe-coding-multifile` §21) เป็นค่าเริ่มต้น**
+>              Single-File HTML PWA (§2 ในไฟล์นี้) ใช้เฉพาะเครื่องมือเล็กมากที่ใช้ครั้งเดียวทิ้ง
 > **Mandate:** Act as collaborative mentor — explain the *"why"* behind technical choices
 >              and add educational comments inside generated code to explain complex logic.
 
@@ -29,9 +33,10 @@ Don't load a reference file unless the task actually touches that topic.
 
 ---
 
-## § 1 · Mandatory Pre-Coding Workflow (6 Steps — ห้ามข้าม)
+## § 1 · Mandatory Pre-Coding Workflow (Step 0 + 6 Steps — ห้ามข้าม)
 
 ```
+Step 0 → Stack Decision (Multi-File หรือ Single HTML File?)
 Step 1 → Target Device Inquiry
 Step 2 → ASCII/Text UI Mockup
 Step 3 → Architecture Blueprint
@@ -39,6 +44,24 @@ Step 4 → Approval
 Step 5 → Code Delivery
 Step 6 → Auto-generate Context Files + Push GitHub
 ```
+
+### 🆕 Step 0 — Stack Decision (อัปเดต 2569-09-02)
+
+> **ค่าเริ่มต้นของทุกโปรเจกต์ใหม่คือ Multi-File (Vite + ES Modules)** — ไม่ใช่ Single HTML
+> File อีกต่อไป ดู Decision Table เต็มที่ `vibe-coding-multifile` §21
+
+ก่อนเข้า Step 1 ให้เช็คเงื่อนไขนี้ก่อนเสมอ:
+
+```
+เป็นเครื่องมือเล็กมาก ใช้ครั้งเดียวแล้วทิ้ง ไม่ต้อง deploy ขึ้น URL ถาวร?
+  → ใช่  → Single HTML File (ข้อยกเว้น) → ทำตาม § 2 ในไฟล์นี้ต่อไป
+  → ไม่ใช่ (ค่าเริ่มต้น) → ส่งต่อให้ skill `vibe-coding-multifile` §21 ทำ Step 1–7 แทน
+                          (JS architecture ยังเป็น 9-module pattern เดิม แค่เปลี่ยนจาก
+                          IIFE เป็น ES modules คนละไฟล์ — ดู `vibe-coding-multifile` §21)
+```
+
+ถ้าไม่แน่ใจว่าเข้าเงื่อนไขข้อไหน ให้ถามพี่ A ตรงๆ ก่อน Step 1:
+> *"โปรเจกต์นี้จะใช้ต่อเนื่อง/deploy ขึ้น URL จริงไหมคะพี่ A หรือเป็นเครื่องมือเล็กๆ ใช้ครั้งเดียวทิ้ง?"*
 
 ### Step 1 — Target Device Inquiry
 ถามพี่ A 1–2 ข้อก่อนเสมอ บังคับถาม:
@@ -139,8 +162,12 @@ npm run check     # ต้องเขียวก่อนถือว่าแ
 
 ---
 
-## § 2 · JS Architecture — 9 IIFE Modules Pattern
+## § 2 · JS Architecture — 9 IIFE Modules Pattern (Single HTML File เท่านั้น)
 
+> ใช้ pattern นี้เฉพาะกรณี Step 0 เลือก Single HTML File (ข้อยกเว้น) แล้วเท่านั้น
+> ถ้าเลือก Multi-File ให้ใช้ 9-module pattern แบบ ES module คนละไฟล์แทน — ดู
+> `vibe-coding-multifile` §21 (โครงสร้างไฟล์มาตรฐาน)
+>
 > กฎหลัก: JS ทั้งหมดต้องอยู่ใน IIFE modules เท่านั้น — ห้ามมี Global function
 
 ```

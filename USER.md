@@ -36,8 +36,11 @@
 
 ## 🏗️ มาตรฐานสถาปัตยกรรม Web App (พี่ A Standard)
 
-- **โครงสร้าง:** Single HTML File · Local-first IndexedDB → Cloud-sync Firestore
-- **9 Modules (IIFE):** `APP_CONFIG`, `STATE_STORE`, `STORAGE_ENGINE`, `CLOUD_SYNC_MANAGER`, `AUTH_PROVIDER`, `GEMINI_AI_BRIDGE`, `UI_RENDERER`, `DEBUG_MODULE`, `APP_CORE`
+- **โครงสร้าง (อัปเดต 2569-09-02):** **Multi-File (Vite + ES Modules) เป็นค่าเริ่มต้น** · Local-first IndexedDB → Cloud-sync Firestore · deploy ขึ้น URL จริงทุกโปรเจกต์
+  Single HTML File ยังใช้ได้เป็น**ข้อยกเว้น**สำหรับเครื่องมือเล็กมากที่ใช้ครั้งเดียวทิ้ง
+  (ดูเหตุผลที่เปลี่ยนใน "การตัดสินใจที่ยืนยันแล้ว" ท้ายหัวข้อนี้)
+- **9 Modules:** `APP_CONFIG`, `STATE_STORE`, `STORAGE_ENGINE`, `CLOUD_SYNC_MANAGER`, `AUTH_PROVIDER`, `GEMINI_AI_BRIDGE`, `UI_RENDERER`, `DEBUG_MODULE`, `APP_CORE`
+  — multi-file: แต่ละโมดูลเป็น ES module คนละไฟล์ (`import`/`export`) · single-file (ข้อยกเว้น): ยังเป็น IIFE `var MODULE = (function(){})()` เหมือนเดิม
 - **State:** Reactive (Pub/Sub) + Optimistic UI พร้อม Rollback
 
 **Tech Stack:** Tailwind CSS CDN · Lucide Icons (vendored local) · Noto Sans Thai · IndexedDB (Promise-based) · Firestore v11+ (Delta Sync) · Firebase Auth (Anonymous/Custom Token) · Web Crypto AES-GCM 256-bit · Chart.js (vendored local) · Gemini 2.5 Flash (Backoff/Rate limit/24h Cache)
@@ -46,7 +49,12 @@
 
 **รอบนี้ต่างจาก 3 รอบก่อนตรงที่เลือกจากหน้าจอจริง ไม่ใช่จากเอกสาร** — เทียบ 3 ทิศทางบน markup ชุดเดียวกัน (Material 3 Expressive · Apple HIG/Liquid Glass · เว็บทูลสมัยใหม่) แล้วเลือกเป็นสูตรผสม: โครง/จังหวะจากเว็บทูลสมัยใหม่ (Linear/Notion/Vercel) · ปุ่มแคปซูลจาก Apple · โทนน้ำเงินหมึก
 
-**ของจริงอยู่ที่ `claude-config/design-lab/preview-kit.html` (กดเล่นได้) · แอปใหม่เริ่มจาก `design-lab/starter/`**
+**ของจริงอยู่ที่ `claude-config/design-lab/preview-kit.html` (กดเล่นได้)**
+
+**แอปใหม่เริ่มจาก:**
+- Multi-file (ค่าเริ่มต้น) → `vibe-coding-multifile` skill § Tech Stack มาตรฐาน — ยังไม่มีโฟลเดอร์ starter
+  สำเร็จรูปให้ copy เหมือนฝั่ง single-file (ช่องว่างที่รู้ตัวแล้ว รอทำเป็นงานถัดไป)
+- Single HTML File (ข้อยกเว้น เครื่องมือเล็กใช้ครั้งเดียว) → `design-lab/starter/`
 
 4 กติกาเอกลักษณ์: **ST-01** สีแบรนด์ต้องห่างจากสีสถานะ ≥50° บนวงล้อสี · **ST-02** ความลึกมาจากเส้น 1px + เงาบางชั้นเดียว · **ST-03** ปุ่มแคปซูล 999px แต่การ์ดมุม 13px (แยก "กดได้" ออกจาก "อ่าน") · **ST-04** ทุกคู่สีต้องวัด contrast ด้วยเครื่อง ไม่ใช่กะด้วยตา
 
@@ -60,11 +68,19 @@ Token หลัก: Ink Blue `#1D4ED8` (สิ่งที่กดได้) ·
 
 **Workflow (บังคับ):** Phase 1 เสนอ Blueprint → รอคำว่า **"อนุมัติ"** → Phase 4 เขียนโค้ด → Phase 5 Review + Root Cause
 
-**Roadmap 4 เฟส:** ① Local-First HTML+IndexedDB (ฟรี) → ② AI Gemini BYOK → ③ Firebase Spark Delta-Sync (ฟรี) → ④ Deploy GitHub Pages/Vercel + โดเมน (~300-500฿/ปี)
+**Roadmap 4 เฟส:** ① Local-First (IndexedDB) (ฟรี) → ② AI Gemini BYOK → ③ Firebase Spark Delta-Sync (ฟรี) → ④ Deploy Cloudflare Workers/GitHub Pages + โดเมน (~300-500฿/ปี)
 
 **หลักการ:** ประมวลผลฝั่ง Client ให้มากที่สุด, หลีกเลี่ยงการดึงข้อมูลซ้ำซ้อน, ประหยัด Quota
 
-**การตัดสินใจที่ยืนยันแล้ว:** ใช้ Single HTML File เท่านั้น (ไม่ใช้ React build tools เพราะจะทำให้ workflow 2 เครื่องพัง)
+**การตัดสินใจที่ยืนยันแล้ว (แก้ไข 2569-09-02 — พลิกกลับจากเดิม):**
+ใช้ **Multi-File (Vite + ES Modules) เป็นค่าเริ่มต้นทุกโปรเจกต์ใหม่** แล้ว deploy ขึ้น URL จริง
+ใช้งาน · Single HTML File เก็บไว้เป็นข้อยกเว้นสำหรับเครื่องมือเล็กมากที่ใช้ครั้งเดียวทิ้งเท่านั้น
+
+เดิมล็อกไว้ที่ "Single HTML File เท่านั้น" เพราะกลัว build tools ทำ workflow 2 เครื่องพัง —
+เหตุผลนั้นไม่จริงอีกต่อไปแล้ว: (1) ยืนยันแล้วว่า Node/npm ลงได้ทั้ง 2 เครื่อง (2569-09-02)
+(2) แอป multi-file จริง 2 ตัว (Plant Log Analyzer, condo-rental-app) ใช้งานได้ปกติมาหลายสัปดาห์
+พร้อม Vitest ที่ผ่านครบ 146 เทสต์ (3) deploy ทั้งหมดรันผ่าน GitHub Actions ไม่ต้องพึ่ง `wrangler`
+บนเครื่อง local เลย — สลับเครื่องแล้วไม่มีอะไรพัง เพราะไม่มีอะไรผูกกับเครื่องใดเครื่องหนึ่งอยู่แล้ว
 
 ---
 
