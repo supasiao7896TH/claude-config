@@ -172,7 +172,7 @@ jobs:
   deploy-pages:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -184,10 +184,10 @@ jobs:
       contents: read
       id-token: write   # จำเป็นสำหรับ Workload Identity Federation
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
-          node-version: '20'
+          node-version: 22
       - run: npm ci --prefix functions
 
       - id: auth

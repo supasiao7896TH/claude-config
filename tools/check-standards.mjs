@@ -226,6 +226,50 @@ const skillDirs = existsSync(join(ROOT, "skills"))
   check("README ตรงกับจำนวน skill และรายชื่อ agent จริง", problems);
 }
 
+/* ── 7 · เวอร์ชันของ GitHub Action และ Node ต้องตรงกันทุกที่ ─────────────
+   ตัวอย่าง YAML ในสกิลถูกคัดลอกไปใช้กับโปรเจกต์ใหม่จริง ถ้ามันตกยุคคนละที่กัน
+   แอปใหม่แต่ละตัวจะได้ของไม่เหมือนกันโดยไม่มีใครรู้ — เจอมาแล้ว 2026-09-02
+   (starter เป็น @v4 · claude-config เป็น @v7 · node-version มี 20/22/24 ปนกัน)
+
+   จงใจไม่ตรึงเลขเวอร์ชันไว้ในไฟล์นี้ ตรวจแค่ว่า "ทุกที่ใช้เลขเดียวกัน"
+   ไม่งั้นตัว linter เองจะกลายเป็นของที่ต้องไล่อัปเดตตามอีกที่หนึ่ง */
+{
+  const files = [
+    ...walk(join(ROOT, ".github"), [".yml", ".yaml"]),
+    ...walk(join(ROOT, "design-lab"), [".yml", ".yaml"]),
+    ...walk(join(ROOT, "skills"), [".md"])
+  ];
+  const seen = {}; // key -> Map(value -> [ที่พบ])
+  const track = (key, value, where) => {
+    (seen[key] ??= new Map()).set(value, [...(seen[key].get(value) ?? []), where]);
+  };
+
+  for (const file of files) {
+    read(file)
+      .split("\n")
+      .forEach((line, i) => {
+        const where = `${rel(file)}:${i + 1}`;
+        const action = line.match(/uses:\s*(actions\/[\w-]+)@(v[\w.]+)/);
+        if (action) track(action[1], action[2], where);
+        const node = line.match(/node-version:\s*'?([\d.]+)'?/);
+        if (node) track("node-version", node[1], where);
+      });
+  }
+
+  const problems = [];
+  for (const [key, values] of Object.entries(seen)) {
+    if (values.size <= 1) continue;
+    const detail = [...values.entries()]
+      .map(
+        ([v, wheres]) =>
+          `${v} (${wheres.length} จุด: ${wheres.slice(0, 2).join(", ")}${wheres.length > 2 ? " …" : ""})`
+      )
+      .join("  vs  ");
+    problems.push(`${key} ใช้คนละเวอร์ชัน — ${detail}`);
+  }
+  check("GitHub Action และ node-version ใช้เวอร์ชันเดียวกันทุกที่", problems);
+}
+
 console.log(
   failures === 0
     ? "\nผ่านทุกข้อ — repo สอดคล้องกับมาตรฐานตัวเอง"

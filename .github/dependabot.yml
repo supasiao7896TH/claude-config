@@ -1,6 +1,8 @@
 version: 2
 updates:
-  # เปิดเฉพาะ github-actions — กัน actions/checkout@v4, wrangler-action@v4 ตกยุคเงียบๆ
+  # เปิดเฉพาะ github-actions — กัน action ที่ pin ไว้ตกยุคเงียบๆ
+  # (พิสูจน์แล้วว่าได้ผล: เปิดใช้ 2026-09-02 แล้วมันเปิด PR bump checkout/setup-node
+  #  จาก v4 เป็น v7 ภายใน 1 นาที ซึ่งแก้ warning "Node.js 20 is deprecated" ที่ CI เตือนพอดี)
   #
   # จงใจไม่เปิด npm ecosystem: repo นี้มี devDependency ไม่กี่ตัวและไม่มีอะไรถูกส่งไป
   # ที่เบราว์เซอร์ PR อัปเดตรายสัปดาห์จะกลายเป็น noise จนสุดท้ายไม่มีใครอ่าน
