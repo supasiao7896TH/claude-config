@@ -2,7 +2,7 @@
 
 > ใช้ไฟล์นี้ส่งต่องานข้ามเครื่อง (บ้าน ↔ ที่ทำงาน) — อ่านไฟล์นี้ก่อนเริ่ม session ถัดไป
 
-**อัปเดตล่าสุด:** 2026-08-28 (session บนเว็บ — branch `claude/web-app-ui-redesign-8qzu2p`)
+**อัปเดตล่าสุด:** 2026-09-02 (session บนเว็บ — branch `claude/software-engineering-workflow-h8eqj3`)
 
 ---
 
@@ -31,10 +31,58 @@
    ```powershell
    Copy-Item "$env:USERPROFILE\claude-config\agents\*.md" "$env:USERPROFILE\.claude\agents\" -Force
    ```
+7. **🆕 ขั้นตอนใหม่ 2026-09-02 — ต้องรัน `npm ci` หนึ่งครั้งต่อเครื่อง**
+   ```powershell
+   cd "$env:USERPROFILE\claude-config"
+   npm ci
+   npm run check        # ต้อง exit 0
+   ```
+   ทำแค่ครั้งเดียวต่อ clone · `npm ci` จะติดตั้ง git hook ให้อัตโนมัติ (ผ่าน `prepare`)
+   ถ้าข้ามข้อนี้ hook จะไม่ทำงานและ `npm run check` จะรันไม่ได้ — **แต่ทุกอย่างอื่นยังใช้ได้ปกติ**
+   (`node_modules/` อยู่ใน `.gitignore` แล้ว จึงไม่ทำให้ `git pull` ชนกัน)
 
 ---
 
-## 🆕 สรุปงานล่าสุด (2026-08-28) — Design System รอบที่ 4 "Supasit.A Studio"
+## 🆕 สรุปงานล่าสุด (2026-09-02) — Quality Gate + วิธี test Single HTML File
+
+> อยู่บน branch `claude/software-engineering-workflow-h8eqj3` (ยังไม่ merge เข้า main)
+
+### โจทย์
+พี่ A ถามว่า workflow ปัจจุบันถูกหลัก software engineering ไหม เทียบกับมาตรฐานมืออาชีพ
+
+### คำตอบสั้นๆ
+กระบวนการที่มีอยู่แล้วดีกว่าที่คิด (Blueprint gate · Loop protocol · QA checklist ·
+Git Safety Protocol · subagent 7 ตัว) — **ปัญหาคือทั้งหมดเป็นข้อความใน markdown
+ที่ต้องจำเอง ไม่มีเครื่องบังคับสักตัว** ค้นจริงพบว่า repo ไม่มี CI · ไม่มี test ·
+ไม่มี lint · ไม่มีแม้แต่ `.gitignore`
+
+### ของใหม่ที่ใช้งานได้ทันที
+
+| สิ่งที่เพิ่ม | ใช้ยังไง |
+|---|---|
+| `npm run check` ใน `claude-config` | lint + secret scan + ตรวจความสอดคล้องเอกสาร |
+| `tools/check-standards.mjs` | ตรวจ 6 กฎที่เคยเป็นแค่ข้อความ · เจอ 5 ข้อผิดพลาดจริงตั้งแต่รันครั้งแรก |
+| ชุดทดสอบใน `design-lab/starter/` | 15 unit (jsdom) + 16 e2e (Playwright) รันรวม ~15 วิ |
+| skill `vibe-coding-quality` (§25) | เอกสารมาตรฐาน — Claude โหลดเองเมื่อพูดถึง test/CI/rollback |
+| `/ตรวจ` `/preview` `/rollback` | slash command ใหม่ 3 ตัว |
+| pre-commit hook | format + secret scan + unit test ก่อน commit อัตโนมัติ |
+
+### บักจริงที่เทสต์เจอ (ไม่ได้เจอจากการอ่านโค้ด)
+`STORAGE_ENGINE.open()` ใน starter ไม่มี `onblocked`/`onversionchange` →
+เปิดแอปไว้ 2 แท็บแล้ว deploy ที่ bump `DB_VERSION` = แท็บที่สอง**ค้างถาวรโดยไม่มี error**
+แก้แล้วและมีเทสต์คุมไว้
+
+### ยังต้องทำต่อ (เฟส 3-4 ที่ทำจากเครื่องนี้ไม่ได้)
+1. **ยืนยันคำสั่ง `wrangler`** — `npx wrangler versions --help` / `rollback --help` /
+   `deployments --help` แล้วแก้ `rollback-runbook.md` ให้ตรงกับ output จริง
+2. **ซ้อม rollback จริง 1 ครั้ง** จับเวลา เป้า < 5 นาที (ถ้าเกิน runbook ยังใช้ไม่ได้)
+3. **ลอง test harness กับแอปจริง** — session นี้ clone repo แอปไม่ได้ (ถูกบล็อก)
+   จึงทดสอบได้แค่กับ starter · วิธีย้าย: `vibe-coding-quality/references/testing-single-html.md`
+4. ตั้ง repo variable `APP_URL` + secret `CLOUDFLARE_API_TOKEN` ในแอปที่ deploy จริง
+
+---
+
+## 📌 สรุปงานก่อนหน้า (2026-08-28) — Design System รอบที่ 4 "Supasit.A Studio"
 
 > อยู่บน branch `claude/web-app-ui-redesign-8qzu2p` (ยังไม่ merge เข้า main)
 
