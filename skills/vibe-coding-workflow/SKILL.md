@@ -17,8 +17,8 @@ description: >
 
 | | |
 |---|---|
-| **Version** | 6.0 |
-| **Updated** | 2026-07 |
+| **Version** | 6.1 |
+| **Updated** | 2026-09 |
 | **Brand** | A-Class WebCraft · Code • Share • Inspire · by Supasit.A |
 | **Sections in this file** | §18–19, §23–24 |
 | **Related skills** | `vibe-coding-core` (§1–17) — โหลดร่วมกันเสมอ |
@@ -52,13 +52,16 @@ npm install     # หรือ bun install
 
 ### 18.2 · CLAUDE.md Structure (บังคับทุก Project)
 
+> เลือกบรรทัดที่ตรงกับ stack ของโปรเจกต์นี้ (ดู `vibe-coding-core` §1 Step 0) ในบล็อก
+> `Stack`/`Architecture`/`Current Phase` ด้านล่าง ลบบรรทัดของอีก stack ทิ้ง
+
 ```markdown
 # CLAUDE.md — [ชื่อ Project]
 
 ## Project Context
 - ชื่อแอป: [ชื่อ]
-- Stack: Single HTML · IndexedDB · [Firebase/Gemini optional]
-- Deploy: GitHub Pages / Cloudflare Workers
+- Stack: [Multi-File (Vite + ES Modules) — ค่าเริ่มต้น / Single HTML File — ข้อยกเว้น] · IndexedDB · [Firebase/Gemini optional]
+- Deploy: [Cloudflare Workers / GitHub Pages]
 - Branch: main
 
 ## Commands
@@ -67,11 +70,14 @@ npm install     # หรือ bun install
 - `npm test` — unit อย่างเดียว (เร็ว ใช้ระหว่างแก้โค้ด)
 
 ## Architecture
-- Pattern: 9 IIFE Modules (เลือกเท่าที่ใช้)
+- Pattern: 9-Module Pattern (เลือกเท่าที่ใช้) — [Multi-File: 1 module = 1 ES module ไฟล์ใน
+  `src/modules/`, ดู `vibe-coding-multifile` §21 / Single HTML File: 1 module = 1 IIFE รวมไฟล์เดียว]
 - State: Reactive Pub/Sub via STATE_STORE
 - Storage: IndexedDB first → Firestore delta sync
-- โมดูลประกาศด้วย `var` ที่ top-level เท่านั้น — ห้ามเปลี่ยนเป็น `const`
+- **[เฉพาะ Single HTML File]** โมดูลประกาศด้วย `var` ที่ top-level เท่านั้น — ห้ามเปลี่ยนเป็น `const`
   (`var` ติดกับ window ทำให้ test harness มองเห็นโมดูลได้ · `const` ไม่ติด)
+- **[เฉพาะ Multi-File]** โมดูลประกาศด้วย `export const`/`export function` — ES module ไม่ auto-global,
+  ถ้า `index.html` มี `onclick` inline ต้อง `window.foo = ...` ท้าย `main.js` เอง (ดู §21)
 
 ## Brand Rules
 - A(i)CODER brand dock ชุด Studio ต้องมีทุกแอป (พื้นอ่าน var(--surface)/var(--border) ของแอปเอง)
@@ -80,7 +86,7 @@ npm install     # หรือ bun install
 - Dark/Light mode: CSS variables บังคับ ครบทั้ง 3 สถานะ
 
 ## Current Phase
-- [ ] Phase 1: Local-First HTML
+- [ ] Phase 1: Local-First ([Multi-File: scaffold จาก `design-lab/starter-multifile/` / Single HTML File])
 - [ ] Phase 2: AI (Gemini BYOK)
 - [ ] Phase 3: Cloud Sync
 - [ ] Phase 4: Deploy
@@ -402,7 +408,7 @@ Manual Verify — เหลือเฉพาะสิ่งที่เคร�
 
 ---
 
-*SKILL: vibe-coding-workflow v6.0 | Sections: §18–19, §23–24 (+ references/)*
+*SKILL: vibe-coding-workflow v6.1 | Sections: §18–19, §23–24 (+ references/)*
 *Supasit.A × A-Class WebCraft | Code • Share • Inspire*
 *Related: vibe-coding-core (โหลดร่วมกันเสมอ)*
 *Updated: July 2026 (พ.ศ. 2569)*

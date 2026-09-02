@@ -28,6 +28,19 @@
 ## 🏗️ Architecture
 
 ### Stack
+> เลือกบล็อกที่ตรงกับ stack ที่ Step 0 เลือกไว้ (ดู `vibe-coding-core` §1) ลบอีกบล็อกทิ้ง
+
+**ถ้า Multi-File (ค่าเริ่มต้น — ดู `vibe-coding-multifile` §21):**
+- **Frontend:** Vite + ES Modules · Tailwind CSS CDN · Vanilla JS
+- **Storage:** IndexedDB (local-first) → Firestore (sync optional)
+- **AI:** Gemini 2.5 Flash · BYOK · 24h Cache
+- **Auth:** [Firebase Anonymous / None]
+- **Deploy:** Cloudflare Workers / GitHub Pages (ดู §21 Decision Table)
+- **Test/CI:** Vitest · GitHub Actions (build-and-test → deploy)
+- **Repo:** [repo URL]
+- **Branch:** main
+
+**ถ้า Single HTML File (ข้อยกเว้น — ดู `vibe-coding-core` §2):**
 - **Frontend:** Single-File HTML · Tailwind CSS CDN · Vanilla JS
 - **Storage:** IndexedDB (local-first) → Firestore (sync optional)
 - **AI:** Gemini 2.5 Flash · BYOK · 24h Cache
@@ -36,7 +49,10 @@
 - **Repo:** github.com/supasiao7896TH/supasit-a-apps
 - **Branch:** main
 
-### JS Modules (9 IIFE Pattern — ใช้เท่าที่จำเป็น)
+### JS Modules (9-Module Pattern — ใช้เท่าที่จำเป็น)
+> Multi-File: 1 module = 1 ES module ไฟล์ใน `src/modules/` (ดู `vibe-coding-multifile` §21) ·
+> Single HTML File: 1 module = 1 IIFE รวมในไฟล์เดียว (ดู `vibe-coding-core` §2)
+
 | Module | ใช้ | หน้าที่ |
 |--------|-----|---------|
 | APP_CONFIG | ✅ | Config, tokens, CDN |
@@ -90,6 +106,25 @@ Store: [store_name]
 ---
 
 ## 📁 โครงสร้างไฟล์
+> เลือกบล็อกที่ตรงกับ stack ที่ Step 0 เลือกไว้ ลบอีกบล็อกทิ้ง
+
+**Multi-File (ค่าเริ่มต้น):**
+```
+project/
+├── index.html          ← markup/modal ทั้งหมด — CDN <script> tags อยู่ตรงนี้
+├── src/
+│   ├── main.js          ← entry point
+│   └── modules/*.js     ← 1 module ต่อ 1 ไฟล์
+├── tests/*.test.js      ← Vitest
+├── package.json
+├── manifest.webmanifest
+├── sw.js               ← Service Worker
+├── CLAUDE.md           ← Claude Code instructions
+├── context.md          ← ไฟล์นี้
+└── agents.md           ← Agent rules
+```
+
+**Single HTML File (ข้อยกเว้น):**
 ```
 project/
 ├── index.html          ← Single-file app (ทั้งหมดอยู่ที่นี่)
@@ -143,9 +178,11 @@ project/
 ---
 
 ## 📐 Architecture Rules (ห้ามเบี่ยง)
+> เลือกบรรทัดแรกที่ตรงกับ stack ของโปรเจกต์นี้ (ดู context.md → Stack) ลบอีกบรรทัดทิ้ง
 ```
-✅ Single-File HTML เสมอ — ห้ามแยกหลายไฟล์ JS/CSS
-✅ JS อยู่ใน IIFE modules เท่านั้น — ห้าม Global function
+✅ [Multi-File: 1 module = 1 ES module ไฟล์ใน src/modules/ — import/export ตาม vibe-coding-multifile §21]
+✅ [Single HTML File: ทุกอย่างอยู่ใน index.html เดียว — ห้ามแยกหลายไฟล์ JS/CSS]
+✅ JS อยู่ใน module namespace เดียวต่อโดเมน (IIFE หรือ ES module ตาม stack) — ห้าม Global function ลอยๆ
 ✅ IndexedDB ก่อนเสมอ → Firestore เป็น optional sync
 ✅ CSS variables สำหรับ color — ห้าม hardcode hex
 ✅ Tailwind CDN สำหรับ prototype — build ผ่าน CLI ก่อนขึ้น production จริง

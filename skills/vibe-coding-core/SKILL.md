@@ -21,8 +21,8 @@ description: >
 
 | | |
 |---|---|
-| **Version** | 7.0 |
-| **Updated** | 2026-08 |
+| **Version** | 7.1 |
+| **Updated** | 2026-09 |
 | **Brand** | A-Class WebCraft · Code • Share • Inspire · by Supasit.A |
 | **Sections in this file** | §1–2, §8, §16–17 |
 | **Related skills** | `vibe-coding-workflow` (§18–19, §23–24) · `vibe-coding-firebase` (§20) · `vibe-coding-multifile` (§21) · `vi-analysis` (§22) |
@@ -50,14 +50,20 @@ Step 6 → Auto-generate Context Files + Push GitHub
 > **ค่าเริ่มต้นของทุกโปรเจกต์ใหม่คือ Multi-File (Vite + ES Modules)** — ไม่ใช่ Single HTML
 > File อีกต่อไป ดู Decision Table เต็มที่ `vibe-coding-multifile` §21
 
-ก่อนเข้า Step 1 ให้เช็คเงื่อนไขนี้ก่อนเสมอ:
+ก่อนเข้า Step 1 ให้เช็คเงื่อนไขนี้ก่อนเสมอ — **Step 1–6 ด้านล่างใช้ flow เดียวกันทั้ง 2
+stack** (Blueprint → Approval Gate ห้ามข้ามไม่ว่าจะเลือก stack ไหน) ต่างกันแค่ Step 5
+(Code Delivery) กับโครงสร้างไฟล์ที่ได้:
 
 ```
 เป็นเครื่องมือเล็กมาก ใช้ครั้งเดียวแล้วทิ้ง ไม่ต้อง deploy ขึ้น URL ถาวร?
-  → ใช่  → Single HTML File (ข้อยกเว้น) → ทำตาม § 2 ในไฟล์นี้ต่อไป
-  → ไม่ใช่ (ค่าเริ่มต้น) → ส่งต่อให้ skill `vibe-coding-multifile` §21 ทำ Step 1–7 แทน
+  → ใช่  → Single HTML File (ข้อยกเว้น) → ทำ Step 1–6 ต่อในไฟล์นี้ตามปกติ
+                          Step 5 ใช้ § 2 (9 IIFE Modules) ในไฟล์นี้
+  → ไม่ใช่ (ค่าเริ่มต้น) → Multi-File (Vite + ES Modules) → ทำ Step 1–6 ต่อในไฟล์นี้
+                          เหมือนกัน แค่ Step 5 ให้ copy `design-lab/starter-multifile/`
+                          แล้วใช้โครงสร้าง/tooling ตาม `vibe-coding-multifile` §21 แทน
                           (JS architecture ยังเป็น 9-module pattern เดิม แค่เปลี่ยนจาก
-                          IIFE เป็น ES modules คนละไฟล์ — ดู `vibe-coding-multifile` §21)
+                          IIFE เป็น ES modules คนละไฟล์ — §21 ไม่มี Step 1–7 แยกของตัวเอง
+                          สำหรับโปรเจกต์ใหม่ มีแค่ Migration Playbook สำหรับย้ายของเดิม)
 ```
 
 ถ้าไม่แน่ใจว่าเข้าเงื่อนไขข้อไหน ให้ถามพี่ A ตรงๆ ก่อน Step 1:
@@ -115,9 +121,10 @@ Mobile (vertical + bottom-nav):               PC/Desktop (sidebar + content):
 
 ```bash
 # 1. สร้าง context.md (ดึง context จาก conversation มาเติม template — ดู
-#    references/ ของ vibe-coding-workflow §24.2)
-# 2. สร้าง agents.md (§24.3 ของ vibe-coding-workflow)
-# 3. สร้าง CLAUDE.md (ถ้ายังไม่มี)
+#    references/ ของ vibe-coding-workflow §24.2 — template มีบล็อกแยกตาม stack
+#    Multi-File/Single HTML File แล้ว เลือกบล็อกที่ตรงกับ Step 0)
+# 2. สร้าง agents.md (§24.3 ของ vibe-coding-workflow — เลือกบล็อก stack เดียวกัน)
+# 3. สร้าง CLAUDE.md (ถ้ายังไม่มี — ดู §18.2 ของ vibe-coding-workflow เลือกบล็อก stack เดียวกัน)
 # 4. Commit และ Push ทุกไฟล์
 
 #    → มอบให้ sa-git-manager ทำ ไม่ต้องรัน git เอง
@@ -125,8 +132,10 @@ Mobile (vertical + bottom-nav):               PC/Desktop (sidebar + content):
 #    (repo ใหม่ที่มี .gitignore จาก starter แล้ว มันจึงยอมให้ commit แรกเหมารวมได้)
 #    commit message: "feat: init [ชื่อแอป] + context + agents"
 
-# 5. แจ้ง URL GitHub Pages ให้พี่ A
-# → https://supasiao7896th.github.io/supasit-a-apps/[ชื่อแอป]/
+# 5. แจ้ง URL ให้พี่ A
+# → Multi-File (ค่าเริ่มต้น): URL จาก Cloudflare Workers/GitHub Pages ตาม
+#   `vibe-coding-multifile` §21 Decision Table (ไม่ใช่ URL ตายตัว ขึ้นกับที่เลือก deploy)
+# → Single HTML File (ข้อยกเว้น): https://supasiao7896th.github.io/supasit-a-apps/[ชื่อแอป]/
 ```
 
 ### 🆕 Step 7 — Quality Scaffold (ทำทันทีหลัง commit แรก)
@@ -420,7 +429,7 @@ Deploy ปลายทาง:
 
 ---
 
-*SKILL: vibe-coding-core v7.0 | Sections: §1–2, §8, §16–17 (+ references/)*
+*SKILL: vibe-coding-core v7.1 | Sections: §1–2, §8, §16–17 (+ references/)*
 *Supasit.A × A-Class WebCraft | Code • Share • Inspire*
 *Related: vibe-coding-workflow · vibe-coding-firebase · vi-analysis*
-*Updated: August 2026 (พ.ศ. 2569)*
+*Updated: September 2026 (พ.ศ. 2569)*

@@ -18,8 +18,8 @@ description: >
 
 | | |
 |---|---|
-| **Version** | 1.0 |
-| **Updated** | 2026-08 |
+| **Version** | 1.1 |
+| **Updated** | 2026-09 |
 | **Brand** | A-Class WebCraft · Code • Share • Inspire · by Supasit.A |
 | **Sections in this file** | §21 |
 | **Related skills** | `vibe-coding-core` (§1–17) · `vibe-coding-workflow` (§18–19, §23–24) · `cloudflare-workers-deploy` |
@@ -301,8 +301,8 @@ Static site ล้วน ไม่มี server-side logic  → Cloudflare Worke
 
 ---
 
-*SKILL: vibe-coding-multifile v1.0 | Section: §21*
+*SKILL: vibe-coding-multifile v1.1 | Section: §21*
 *Supasit.A × A-Class WebCraft | Code • Share • Inspire*
 *Related: vibe-coding-core · vibe-coding-workflow · cloudflare-workers-deploy*
 *Derived from: Monitor-Quality-PTA migration (August 2026 / พ.ศ. 2569)*
-*Updated: August 2026 (พ.ศ. 2569)*
+*Updated: September 2026 (พ.ศ. 2569)*
