@@ -6,9 +6,18 @@ placement, a template edit, a new direction. Referenced from
 
 ## Automated — `tools/verify.mjs`
 
-Run `node branding/tools/build.mjs && node branding/tools/verify.mjs` and
-require exit code 0 before merging any change to `src/mockups.template.html`
-or `exports/`. It already covers:
+Run `npm run brand:build && npm run brand:verify` and require exit code 0
+before merging any change to `src/mockups.template.html` or `exports/`.
+Both are now declared dependencies in the repo's `package.json`, so
+`npm ci` is all the setup there is — and CI runs this same pair on every
+push, so a stale export can no longer reach `main` unnoticed.
+
+If the machine has Chromium already but Playwright refuses to launch it
+(a corporate network that blocks the browser download, or a preinstalled
+build that does not match this Playwright version), point at it directly:
+`PW_CHROMIUM_PATH=/path/to/chrome npm run brand:verify`.
+
+It already covers:
 
 - every brand token resolves to a literal in each exported SVG (a standalone
   file has no `:root` to read a CSS variable from)

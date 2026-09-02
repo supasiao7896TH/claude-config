@@ -1,0 +1,4 @@
+# hook นี้ต้องเร็ว (<3 วิ) ไม่งั้นจะถูกข้ามด้วย --no-verify ซึ่ง sa-git-manager ห้ามไว้
+# ของหนัก (Playwright/branding build) ปล่อยให้ CI รัน
+npx lint-staged
+node tools/check-standards.mjs

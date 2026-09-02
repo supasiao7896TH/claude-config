@@ -254,6 +254,44 @@ VS Code extension เป็น UI wrapper ของ engine เดียวกั
 > ไม่ใช่การบังคับที่ tool level — อย่ารัน agent เหล่านี้ในโหมด auto-accept/bypass-permissions
 > ถ้าต้องการให้ขอบเขตนี้เข้มงวดจริง
 
+## Quality Gate (เฟส 0 — ติดตั้งแล้ว)
+
+repo นี้ตรวจตัวเองได้แล้ว ไม่ต้องพึ่งความจำ รันครั้งเดียวต่อเครื่อง:
+
+```bash
+npm ci          # ติดตั้ง toolchain + ติดตั้ง git hook ให้อัตโนมัติ (ผ่าน prepare)
+npm run check   # lint + secret scan + ตรวจความสอดคล้องของเอกสาร
+```
+
+| คำสั่ง | ทำอะไร |
+|---|---|
+| `npm run check` | รัน 3 อย่างล่างนี้ต่อกัน — ใช้คำสั่งเดียวจบ |
+| `npm run lint` | prettier ตรวจ format ของไฟล์ config/JS/YAML (**ไม่แตะ .md** — ดูเหตุผลใน `.prettierignore`) |
+| `npm run secrets` | secretlint หา API key / private key / service account ที่หลุดเข้ามา |
+| `npm run check:standards` | ตรวจว่าเอกสารใน repo ยังสอดคล้องกันเอง (รายละเอียดข้างล่าง) |
+| `npm run brand:build` / `brand:verify` | build + ตรวจไฟล์แบรนด์ (ต้องมี Chromium) |
+
+### `tools/check-standards.mjs` ตรวจอะไร
+
+กฎที่เคยเป็นแค่ข้อความใน markdown ตอนนี้ทำให้ CI แดงได้จริง 6 ข้อ:
+
+1. ไม่มีคำที่ตกยุค (`Sarabun`, `Instrument Grade`, `.pulse-dot` ฯลฯ) หลงเหลือใน skills/agents/design-lab
+   — บรรทัดที่ *สั่งห้าม* ของเก่าถูกยกเว้นให้ · `REVIEW.md`/`HANDOFF.md`/`design-lab/README.md`
+   ยกเว้นทั้งไฟล์เพราะเป็นบันทึกประวัติ
+2. `skills/` ไม่สั่ง `git add -A` (เคยขัดกับ `sa-git-manager` อยู่ 2 จุด)
+3. ฟอนต์ใน `design-lab/starter/` ตรงกับที่ `USER.md` ประกาศไว้
+4. โทเคนธีมมืดครบเท่ากันทั้ง 2 บล็อก และไม่มี `var(--x)` ที่ไม่ถูกนิยาม
+5. ทุก skill มี `SKILL.md` · `name` ตรงชื่อโฟลเดอร์ · มี `description`
+6. README ตรงกับจำนวน skill จริง และรายชื่อ agent จริงบนดิสก์
+
+**pre-commit hook** (`.husky/pre-commit`) รัน prettier + secretlint + check-standards
+ให้อัตโนมัติก่อน commit — ตั้งใจให้เร็วกว่า 3 วินาที ของหนักปล่อยให้ CI รัน
+
+> **เครื่องที่โหลด Chromium ไม่ได้** (เน็ตบริษัทกรอง / มี Chromium อยู่แล้วคนละ build):
+> `PW_CHROMIUM_PATH=/path/to/chrome npm run brand:verify`
+
+---
+
 ## Workflow แนะนำ
 
 1. sa-explore → สำรวจโค้ดที่เกี่ยวข้องก่อน (โปรเจกต์ multi-file ที่ระบุขอบเขตชัดเจน รันขนานได้หลายตัว)

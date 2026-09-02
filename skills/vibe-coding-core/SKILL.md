@@ -97,9 +97,10 @@ Mobile (vertical + bottom-nav):               PC/Desktop (sidebar + content):
 # 3. สร้าง CLAUDE.md (ถ้ายังไม่มี)
 # 4. Commit และ Push ทุกไฟล์
 
-git add -A
-git commit -m "feat: init [ชื่อแอป] + context + agents"
-git push origin main
+#    → มอบให้ sa-git-manager ทำ ไม่ต้องรัน git เอง
+#    เหตุผล: sa-git-manager จะ stage ทีละไฟล์ + สแกน secret ใน staged diff ก่อน commit
+#    (repo ใหม่ที่มี .gitignore จาก starter แล้ว มันจึงยอมให้ commit แรกเหมารวมได้)
+#    commit message: "feat: init [ชื่อแอป] + context + agents"
 
 # 5. แจ้ง URL GitHub Pages ให้พี่ A
 # → https://supasiao7896th.github.io/supasit-a-apps/[ชื่อแอป]/

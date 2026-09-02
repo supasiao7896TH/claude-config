@@ -34,7 +34,22 @@ async function loadPlaywright() {
 const pw = await loadPlaywright();
 const chromium = pw.chromium ?? pw.default?.chromium;
 
-const browser = await chromium.launch();
+/* PW_CHROMIUM_PATH — ทางออกสำหรับเครื่องที่ "มี Chromium อยู่แล้ว แต่คนละ build
+   กับที่ Playwright เวอร์ชันนี้คาดไว้" เช่นเครื่องที่บริษัทบล็อกการดาวน์โหลด
+   เบราว์เซอร์ หรือ CI container ที่ preinstall ไว้คนละ build
+   ไม่ตั้ง = ใช้เบราว์เซอร์ที่ `npx playwright install chromium` โหลดมา ตามปกติ */
+const executablePath = process.env.PW_CHROMIUM_PATH || undefined;
+let browser;
+try {
+  browser = await chromium.launch(executablePath ? { executablePath } : {});
+} catch (err) {
+  console.error(
+    "\nเปิด Chromium ไม่ได้ — รัน `npx playwright install chromium`\n" +
+    "หรือถ้าเครื่องนี้มี Chromium อยู่แล้ว ให้ชี้ path เอง:\n" +
+    "  PW_CHROMIUM_PATH=/path/to/chrome node branding/tools/verify.mjs\n"
+  );
+  throw err;
+}
 
 /* ── Exported SVGs ─────────────────────────────────────────────────── */
 
