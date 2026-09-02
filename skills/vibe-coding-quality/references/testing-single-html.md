@@ -66,6 +66,48 @@ await mod(win, "STORAGE_ENGINE").put("records", { id: "FI-2104", value: 128.4 })
 เปลี่ยน `var MODULE` เป็น `const MODULE` แล้วแอปยังทำงานปกติทุกอย่าง แต่โมดูลหลุดจาก `window`
 → `mod(win, "NAME")` จึงมีข้อความบอกสาเหตุนี้ไว้โดยเฉพาะ แทนที่จะโยน `undefined is not an object`
 
+## ผลการลองจริงกับแอปของพี่ A (2026-09-02)
+
+สำรวจแอปจริง ~10 ตัวเพื่อหาตัวมาทดสอบ harness พบภาพที่ชัดเจน:
+
+| กลุ่มแอป | ลักษณะ | ตัวอย่าง |
+|---|---|---|
+| ย้ายไป Vite/ES-Modules แล้ว | `<script type="module" src="/src/main.js">` — มี `import`/`export` จริง | Monitor-log-sheet-boardman (Plant Log Analyzer — มี Vitest 146 เทสต์อยู่แล้ว ผ่านหมด), Monitor-Quality-PTA, IPS-Auto-Update |
+| Single HTML File เก่าก่อนมาตรฐาน 9-module | โค้ดทั้งหมดอยู่ใน `document.addEventListener('DOMContentLoaded', () => {...})` — ไม่มีอะไรหลุดออกมาที่ `window` เลย ไม่ว่าจะ `var` หรือ `const` | Log-EQ-history, Dog-feeding-tracker, RAW-to-PV |
+| React/Vite scaffold | `<div id="root"></div>` + `main.jsx` | ToDo-list- |
+
+**ไม่มีแอปจริงตัวไหนใช้ `var MODULE = (function(){})()` แบบ 9-module เป๊ะๆ เลย** — เหตุผลตรงไปตรงมา: pattern นี้เพิ่งกลายเป็นมาตรฐานตอน Supasit.A Studio รอบที่ 4 (ปลายสิงหาคม 2569) ส่วนแอปจริงถูกสร้างก่อนหน้านั้นด้วยสไตล์ที่ต่างกันไปเรื่อยๆ ตามยุค — **นี่ไม่ใช่เรื่องผิดปกติ เป็นเรื่องคาดหมายได้**
+
+### โหมดที่ 2 — DOM-driven (สำหรับแอปเก่าที่ไม่มีอะไรหลุดออกมาที่ window)
+
+ทดสอบจริงกับ `Log-EQ-history` (796 บรรทัด, โค้ดทั้งหมดอยู่ในปิด DOMContentLoaded) — `mod(win, "NAME")`
+ใช้ไม่ได้เลยเพราะไม่มีชื่อโมดูลให้ดึง แต่ **jsdom ยังทำงานกับแอปสไตล์นี้ได้เต็มรูปแบบ** แค่เปลี่ยนวิธี
+ทดสอบจาก "เรียกโมดูลตรงๆ" เป็น "จำลองคลิกแล้วดู DOM":
+
+```js
+// ไม่มี mod(win, "STORAGE_ENGINE") ให้เรียก แต่คลิกปุ่มจริงแล้วดู DOM ได้ปกติ
+const win = await ready(loadApp({ file: "index.html" })); // แอปเก่าไม่จำเป็นต้องมีโมดูล
+const modal = win.document.getElementById("manager-modal");
+expect(modal.hidden).toBe(true); // ปิดอยู่ก่อนคลิก
+
+win.document.getElementById("open-manager-btn")
+  .dispatchEvent(new win.MouseEvent("click", { bubbles: true }));
+await new Promise((r) => setTimeout(r, 50)); // ให้ event handler แบบ async ทำงานจบ
+
+expect(modal.hidden).toBe(false); // เปิดจริงหลังคลิก — พิสูจน์แล้วบนแอปจริง
+```
+
+**หลักการเลือกโหมด:**
+
+| แอปแบบไหน | ใช้โหมดไหน |
+|---|---|
+| ใหม่ ตาม starter ปัจจุบัน (`var MODULE = ...`) | โหมด 1 — เรียกโมดูลตรงๆ ผ่าน `mod(win, "NAME")` |
+| เก่า ก่อนมาตรฐาน 9-module (ไม่มีอะไรหลุดถึง window) | โหมด 2 — DOM-driven: หา element ด้วย id, จำลองคลิก, เช็คว่า DOM เปลี่ยนตามที่ควร |
+| ไม่แน่ใจ | รัน `Object.keys(win).filter(k => /^[A-Z]/.test(k))` ดูว่ามีอะไรหลุดออกมาไหม ถ้าไม่มีเลย ให้ใช้โหมด 2 |
+
+ข้อดีของโหมด 2: **ทดสอบพฤติกรรมที่ผู้ใช้เห็นจริง** ไม่ขึ้นกับว่าโค้ดข้างในเขียนแบบไหน — ใช้ได้กับ
+แอปเก่าทุกยุคโดยไม่ต้อง refactor อะไรเลยเหมือนกับโหมด 1
+
 ## ย้าย harness ไปใช้กับแอปเดิม
 
 ```bash
