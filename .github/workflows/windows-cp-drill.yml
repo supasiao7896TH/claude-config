@@ -1,0 +1,46 @@
+name: Windows cp-r Drill (temporary)
+
+# ไฟล์ชั่วคราว — ทดสอบจริงว่า design-lab/starter-multifile ใช้งานได้บน Windows จริง
+# (git checkout ของ Windows แปลง LF -> CRLF ตาม core.autocrlf=true ค่าเริ่มต้น)
+# trigger ด้วย push เข้า branch นี้เท่านั้น เพราะ session ที่สร้างไฟล์นี้ไม่มีสิทธิ์
+# workflow_dispatch (Actions: write) — ลบไฟล์นี้ทิ้งหลังดูผลเสร็จแล้ว ไม่ merge เข้า main
+on:
+  push:
+    branches: [claude/windows-cp-drill]
+
+jobs:
+  windows-cp-test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: design-lab/starter-multifile/package-lock.json
+
+      - name: Copy-Item -Recurse (จำลอง cp -r บน Windows)
+        run: Copy-Item -Recurse design-lab/starter-multifile my-new-app
+
+      - name: npm ci
+        working-directory: my-new-app
+        run: npm ci
+
+      - name: ตรวจว่าไฟล์เป็น LF จริง (ไม่ใช่ CRLF) หลัง checkout บน Windows
+        working-directory: my-new-app
+        shell: bash
+        run: |
+          crlf_count=$(grep -rlP '\r$' --include='*.js' --include='*.mjs' --include='*.json' --include='*.html' . | wc -l)
+          echo "ไฟล์ที่มี CRLF: $crlf_count"
+          if [ "$crlf_count" -ne 0 ]; then
+            echo "::error::เจอไฟล์ CRLF $crlf_count ไฟล์ — .gitattributes ไม่ได้ผล"
+            grep -rlP '\r$' --include='*.js' --include='*.mjs' --include='*.json' --include='*.html' .
+            exit 1
+          fi
+
+      - run: npx playwright install --with-deps chromium
+        working-directory: my-new-app
+
+      - name: npm run check
+        working-directory: my-new-app
+        run: npm run check
