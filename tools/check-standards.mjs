@@ -270,6 +270,20 @@ const skillDirs = existsSync(join(ROOT, "skills"))
   check("GitHub Action และ node-version ใช้เวอร์ชันเดียวกันทุกที่", problems);
 }
 
+/* ── 8 · .gitattributes ต้องมีทั้ง root และ starter พร้อม eol=lf ────────
+   ไม่มีไฟล์นี้ = เครื่อง Windows จะกลับไปเจอปัญหา CRLF vs LF ที่เจอจริง 2026-09-02
+   (prettier แจ้งผิด format ทั้งที่โค้ดเหมือนกันทุกตัวอักษร เพราะ git ของ Windows
+   แปลง LF → CRLF ตอน checkout ตามค่าเริ่มต้น core.autocrlf=true) */
+{
+  const problems = [];
+  for (const path of [".gitattributes", "design-lab/starter/.gitattributes"]) {
+    const full = join(ROOT, path);
+    if (!existsSync(full)) problems.push(`ไม่พบ ${path}`);
+    else if (!read(full).includes("eol=lf")) problems.push(`${path} มีอยู่ แต่ไม่ได้ตั้ง eol=lf`);
+  }
+  check(".gitattributes บังคับ eol=lf ทั้ง root และ starter", problems);
+}
+
 console.log(
   failures === 0
     ? "\nผ่านทุกข้อ — repo สอดคล้องกับมาตรฐานตัวเอง"
