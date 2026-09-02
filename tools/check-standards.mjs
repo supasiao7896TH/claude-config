@@ -123,17 +123,23 @@ const INTENT_MARKERS = [
   check("skills/ ไม่สั่ง `git add -A` (ขัดกับ sa-git-manager)", problems);
 }
 
+/* มี starter 2 ตัวขนานกัน (single-file / multi-file) ตั้งแต่ 2569-09-02 — ต้องตรวจทั้งคู่
+   ไม่งั้นจะ drift ออกจากกันแบบเดียวกับที่ design system เคย drift มาแล้ว 4 รอบ */
+const STARTERS = ["design-lab/starter/index.html", "design-lab/starter-multifile/index.html"];
+
 /* ── 3 · ฟอนต์ใน starter ต้องตรงกับที่ USER.md ประกาศไว้ ─────────────── */
 {
-  const starter = join(ROOT, "design-lab/starter/index.html");
   const problems = [];
-  if (!existsSync(starter)) {
-    problems.push("ไม่พบ design-lab/starter/index.html");
-  } else {
+  for (const p of STARTERS) {
+    const starter = join(ROOT, p);
+    if (!existsSync(starter)) {
+      problems.push(`ไม่พบ ${p}`);
+      continue;
+    }
     const m = read(starter).match(/--font-ui\s*:\s*([^;]+);/);
-    if (!m) problems.push("starter ไม่ได้ประกาศ --font-ui");
+    if (!m) problems.push(`${p} ไม่ได้ประกาศ --font-ui`);
     else if (!m[1].includes("Noto Sans Thai"))
-      problems.push(`--font-ui = ${m[1].trim()} แต่ USER.md ระบุ Noto Sans Thai`);
+      problems.push(`${p} · --font-ui = ${m[1].trim()} แต่ USER.md ระบุ Noto Sans Thai`);
   }
   check("ฟอนต์ใน starter ตรงกับมาตรฐานใน USER.md", problems);
 }
@@ -141,9 +147,11 @@ const INTENT_MARKERS = [
 /* ── 4 · โทเคนธีมมืดต้องครบเท่ากันทั้ง 2 บล็อก และทุกโทเคนที่ใช้ต้องถูกนิยาม ──
    กฎ "Dark mode ครบ 3 สถานะ" ใน USER.md เคยเป็นแค่ข้อความ — ตรงนี้ทำให้เครื่องตรวจได้จริง */
 {
-  const starter = join(ROOT, "design-lab/starter/index.html");
   const problems = [];
-  if (existsSync(starter)) {
+  for (const p of STARTERS) {
+    const starter = join(ROOT, p);
+    if (!existsSync(starter)) continue; // rule 3 รายงานไฟล์หายไปแล้ว ไม่ต้องซ้ำ
+
     const css = read(starter);
     const tokensIn = (block) => new Set([...block.matchAll(/(--[\w-]+)\s*:/g)].map((m) => m[1]));
 
@@ -153,9 +161,9 @@ const INTENT_MARKERS = [
     );
     const attrBlock = css.match(/:root\[data-theme="dark"\]\s*\{([\s\S]*?)\n\}/);
 
-    if (!rootBlock) problems.push("ไม่พบบล็อก :root");
-    if (!mediaBlock) problems.push("ไม่พบบล็อก @media (prefers-color-scheme: dark)");
-    if (!attrBlock) problems.push('ไม่พบบล็อก :root[data-theme="dark"]');
+    if (!rootBlock) problems.push(`${p} · ไม่พบบล็อก :root`);
+    if (!mediaBlock) problems.push(`${p} · ไม่พบบล็อก @media (prefers-color-scheme: dark)`);
+    if (!attrBlock) problems.push(`${p} · ไม่พบบล็อก :root[data-theme="dark"]`);
 
     if (rootBlock && mediaBlock && attrBlock) {
       const light = tokensIn(rootBlock[1]);
@@ -163,15 +171,18 @@ const INTENT_MARKERS = [
       const darkAttr = tokensIn(attrBlock[1]);
 
       for (const t of darkMedia)
-        if (!darkAttr.has(t)) problems.push(`${t} มีใน @media dark แต่ขาดใน [data-theme="dark"]`);
+        if (!darkAttr.has(t))
+          problems.push(`${p} · ${t} มีใน @media dark แต่ขาดใน [data-theme="dark"]`);
       for (const t of darkAttr)
-        if (!darkMedia.has(t)) problems.push(`${t} มีใน [data-theme="dark"] แต่ขาดใน @media dark`);
+        if (!darkMedia.has(t))
+          problems.push(`${p} · ${t} มีใน [data-theme="dark"] แต่ขาดใน @media dark`);
       for (const t of darkMedia)
-        if (!light.has(t)) problems.push(`${t} นิยามในธีมมืด แต่ไม่มีค่าตั้งต้นใน :root`);
+        if (!light.has(t)) problems.push(`${p} · ${t} นิยามในธีมมืด แต่ไม่มีค่าตั้งต้นใน :root`);
 
       /* ทุก var(--x) ที่ถูกใช้ ต้องมีนิยามอยู่จริง ไม่งั้นจะ render เป็นค่าว่าง */
       const used = new Set([...css.matchAll(/var\(\s*(--[\w-]+)/g)].map((m) => m[1]));
-      for (const t of used) if (!light.has(t)) problems.push(`ใช้ var(${t}) แต่ไม่มีนิยามใน :root`);
+      for (const t of used)
+        if (!light.has(t)) problems.push(`${p} · ใช้ var(${t}) แต่ไม่มีนิยามใน :root`);
     }
   }
   check("โทเคนธีมครบทั้ง 3 สถานะ และไม่มี var() ที่ไม่ถูกนิยาม", problems);
@@ -276,12 +287,16 @@ const skillDirs = existsSync(join(ROOT, "skills"))
    แปลง LF → CRLF ตอน checkout ตามค่าเริ่มต้น core.autocrlf=true) */
 {
   const problems = [];
-  for (const path of [".gitattributes", "design-lab/starter/.gitattributes"]) {
+  for (const path of [
+    ".gitattributes",
+    "design-lab/starter/.gitattributes",
+    "design-lab/starter-multifile/.gitattributes"
+  ]) {
     const full = join(ROOT, path);
     if (!existsSync(full)) problems.push(`ไม่พบ ${path}`);
     else if (!read(full).includes("eol=lf")) problems.push(`${path} มีอยู่ แต่ไม่ได้ตั้ง eol=lf`);
   }
-  check(".gitattributes บังคับ eol=lf ทั้ง root และ starter", problems);
+  check(".gitattributes บังคับ eol=lf ทั้ง root และ starter ทั้ง 2 ตัว", problems);
 }
 
 console.log(

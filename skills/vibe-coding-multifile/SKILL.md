@@ -85,6 +85,14 @@ GitHub คือสะพานซิงค์เหมือนเดิม (�
 | Deploy target | Cloudflare Workers *หรือ* GitHub Pages | ดู `cloudflare-workers-deploy` skill สำหรับ setup เต็ม |
 | Third-party libs | ยังโหลดผ่าน CDN `<script>` ใน `index.html` เหมือนเดิมได้ | ไม่บังคับย้ายเป็น npm import — ดู "สิ่งที่ไม่ต้องแตะ" ด้านล่าง |
 
+### เริ่มโปรเจกต์ใหม่ — copy จาก starter ตรงๆ ไม่ต้องสร้างเอง
+
+> `cp -r design-lab/starter-multifile <ชื่อโปรเจกต์ใหม่>` แล้ว `npm ci && npm test` ให้เขียว
+> ก่อนเริ่มฟีเจอร์แรก — มีครบ: 6 โมดูล ES · Vitest+Playwright 2 ชั้น (เทียบเท่า
+> `design-lab/starter` ฝั่ง single-file) · `vite-plugin-pwa` (service worker generate อัตโนมัติ
+> ไม่ต้อง bump CACHE_NAME มือ) · CI/preview/uptime workflow ครบ ดูรายละเอียดที่
+> `design-lab/starter-multifile/README.md`
+
 ### โครงสร้างไฟล์มาตรฐาน
 
 ```
