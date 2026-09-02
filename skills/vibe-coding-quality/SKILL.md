@@ -178,6 +178,7 @@ preview ในตัว และ deploy ลงโฟลเดอร์ `preview
 
 | ไฟล์ | เนื้อหา | โหลดเมื่อ |
 |---|---|---|
+| `references/where-we-stand.md` | ตารางเทียบ workflow เรา vs หลัก SE 19 ข้อ (ก่อน/หลัง) + สิ่งที่จงใจข้าม | อยากรู้ว่าตอนนี้อยู่ตรงไหน หรือถูกถามว่ามาตรฐานพอหรือยัง |
 | `references/testing-single-html.md` | harness ทำงานยังไง · เขียนเทสต์ใหม่ยังไง · กับดักที่เจอมาแล้ว | จะเขียน/แก้เทสต์ |
 | `references/ci-cd-templates.md` | YAML เต็มของ ci.yml + preview.yml + uptime.yml | จะตั้ง CI ให้ repo ใหม่ |
 | `references/rollback-runbook.md` | ขั้นตอนย้อนกลับพร้อมคำสั่งจริง ทั้ง Workers และ Pages | production พัง หรือจะซ้อม |

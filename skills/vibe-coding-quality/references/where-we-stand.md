@@ -1,0 +1,59 @@
+# Workflow ของ Supasit.A เทียบกับหลัก Software Engineering
+
+> ส่วนหนึ่งของ `vibe-coding-quality` §25.0 · ประเมินเมื่อ 2026-09-02
+> เกณฑ์: **solo developer + AI pair สำหรับ internal tool ผู้ใช้หลักสิบคน**
+> ไม่ใช่ทีม 20 คนทำ SaaS — สิ่งที่ควรข้ามอยู่ท้ายไฟล์
+
+## ตารางเทียบ
+
+| # | ขั้นตอนมาตรฐาน SE | ของเรา | ก่อน 2026-09 | หลัง |
+|---|---|---|---|---|
+| 1 | Requirements / Discovery | core §1 Step 1 · workflow §23 STEP 2 CONFIRM | 🟢 | 🟢 |
+| 2 | Design spec + sign-off gate | core §1 Step 3 Blueprint + คำว่า "อนุมัติ" | 🟢 | 🟢 + Test Plan/DoD |
+| 3 | Design system review | `design-lab/preview-kit.html` ตัดสินจากหน้าจอจริง | 🟢 | 🟢 |
+| 4 | Coding standard | core §2 · 9 IIFE modules · ฟังก์ชัน ≤30 บรรทัด | 🟡 มีกฎ ไม่มีเครื่องตรวจ | 🟡 (กฎที่ตรวจได้ ตรวจแล้ว) |
+| 5 | **Automated test** | — | 🔴 stack หลักไม่มีเลย | 🟢 15 unit + 16 e2e |
+| 6 | Code review | `sa-code-reviewer` | 🟡 มี agent ไม่มีใครเรียก | 🟢 อยู่ใน loop STEP 5 |
+| 7 | **Static analysis** | — | 🔴 | 🟢 prettier + pre-commit |
+| 8 | **Secret scanning** | ตาเปล่า | 🔴 | 🟢 secretlint 2 ชั้น |
+| 9 | Version control discipline | Git Safety Protocol · conventional commits | 🟢 (ขาด test:/chore:) | 🟢 ครบ |
+| 10 | **CI gate ก่อน deploy** | — | 🔴 | 🟢 check + cache-guard |
+| 11 | **Preview ก่อนขึ้นจริง** | "ไม่มี staging แยก" | 🔴 | 🟢 preview URL ทุก PR |
+| 12 | Release / deploy | core §17 · `/deploy` | 🟡 checklist ดี รันมือ | 🟢 gate + build stamp |
+| 13 | **Rollback plan** | — | 🔴 ไม่มีสักบรรทัด | 🟡 มี runbook · **ยังไม่ซ้อม** |
+| 14 | **Observability** | `DEBUG_MODULE` → IndexedDB | 🔴 อ่านจากระยะไกลไม่ได้ | 🟢 error boundary + ปุ่มรายงาน + uptime |
+| 15 | **Issue tracking** | bullet ใน CLAUDE.md | 🔴 | 🟢 GitHub Issues + template |
+| 16 | **Versioning** | — | 🔴 ไม่รู้ว่า production คือ commit ไหน | 🟢 build stamp + git tag |
+| 17 | Handoff | `HANDOFF.md` · `sa-handoff` | 🟢 | 🟢 |
+| 18 | Accessibility | ST-13 · WCAG AA · ≥44px | 🟡 "ตรวจด้วยเครื่องได้" แต่ไม่มีเครื่อง | 🟢 axe ทั้ง 2 ธีม |
+| 19 | Security | core §8 CSP/SRI/AES-GCM | 🟡 กฎครบ ไม่มี scan | 🟢 เทสต์ XSS + secretlint |
+
+**ก่อน: 6 🟢 · 6 🟡 · 7 🔴 → หลัง: 15 🟢 · 3 🟡 · 0 🔴**
+
+🟡 ที่เหลือ 3 ข้อ:
+- **ข้อ 4** — "ฟังก์ชัน ≤30 บรรทัด" กับ naming convention ยังไม่มีเครื่องตรวจ
+  (ยังไม่ได้ตั้ง ESLint เพราะ Single HTML File ทำให้ config ยุ่งกว่าที่ควร — คุ้มค่าน้อยเทียบกับที่ทำไปแล้ว)
+- **ข้อ 13** — runbook เขียนแล้วแต่ **ยังไม่เคยซ้อมจริง** และคำสั่ง `wrangler` ยังไม่ได้ยืนยัน
+  กับ `--help` บนเครื่องจริง · **runbook ที่ยังไม่เคยซ้อม คือเอกสาร ไม่ใช่ความสามารถ**
+- **harness ยังไม่เคยลองกับแอปจริง** — ทดสอบได้แค่กับ starter เพราะ session ที่ทำ clone
+  repo แอปไม่ได้ · ดู `testing-single-html.md` หัวข้อ "ย้าย harness ไปใช้กับแอปเดิม"
+
+## สิ่งที่จงใจข้าม และเหตุผล
+
+| ข้าม | เหตุผล |
+|---|---|
+| Branch protection บังคับ PR review | รีวิว PR ตัวเองไม่ได้ — **gate ที่ deploy ไม่ใช่ gate ที่ push** |
+| Staging environment ถาวร | preview URL ชั่วคราวดีกว่าและไม่ต้องดูแล |
+| Sprint / story point / velocity | ทีมคนเดียว ไม่มีอะไรให้ประมาณเทียบ |
+| เป้า coverage | เขียนเทสต์เฉพาะกฎที่มีอยู่แล้วและบักที่เคยเกิดจริง |
+| Semver + CHANGELOG เขียนมือ | ไม่มีใครอ่านแล้วจะเน่า → git tag วันที่ + `--generate-notes` |
+| TypeScript / Docker / k8s | เกินจำเป็นมหาศาลสำหรับ scale นี้ |
+| ย้ายไป Vite เพื่อให้ test ได้ | §25.2 แก้ปัญหานี้แล้ว |
+
+## ข้อสรุปที่อยากให้จำ
+
+กระบวนการเดิม **ไม่ได้ขาดความรู้** — Blueprint gate, loop ที่จำกัดรอบ, QA checklist,
+Git Safety Protocol ล้วนเป็น SE practice ของจริงที่หลายทีมยังไม่มี
+
+สิ่งที่ขาดคือ **เครื่องบังคับ** · กฎที่ต้องพึ่งความจำ สุดท้ายจะกลายเป็นกฎที่ถูกลืม
+และไม่มีใครรู้ว่าลืมไปแล้วด้วยซ้ำ — จนกระทั่งมีเครื่องมาตรวจ แล้วพบว่ามันไม่ตรงมา 2 design system แล้ว
