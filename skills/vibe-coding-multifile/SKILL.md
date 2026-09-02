@@ -1,21 +1,20 @@
 ---
 name: vibe-coding-multifile
 description: >
-  Multi-File Stack Skill สำหรับ Vibe Coding ของ Supasit.A — ใช้เมื่อพี่ A ต้องการ
-  ย้ายโปรเจกต์เดิมจาก Single HTML File ไปเป็นหลายไฟล์ (Vite + ES Modules +
-  Vitest + GitHub Actions CI/CD), ต้องการเริ่มโปรเจกต์ใหม่เป็น multi-file ตั้งแต่
-  แรก, หรือพูดถึงคำว่า "แยกไฟล์", "แยกโค้ด", "Vite", "ES Modules", "npm run dev",
-  "unit test"/"Vitest", "CI/CD" ตรงๆ กับโปรเจกต์ที่เป็น web app ก็ใช้ skill นี้
-  ก่อนเสมอเพื่อเช็คว่าจำเป็นต้องย้ายจริงไหม (ดู Decision Table) แล้วค่อยวางแผน
-  ย้าย — ไม่ใช้กับโปรเจกต์ที่จะคงเป็น Single HTML File ต่อ (ให้ใช้
-  vibe-coding-core ตามมาตรฐานเดิม)
+  Multi-File Stack Skill สำหรับ Vibe Coding ของ Supasit.A — **ค่าเริ่มต้นของทุก
+  โปรเจกต์ใหม่ตั้งแต่ 2569-09-02** (Vite + ES Modules + Vitest + GitHub Actions
+  CI/CD + deploy ขึ้น URL จริง) ใช้ skill นี้ทุกครั้งที่พี่ A ขอสร้างแอปใหม่ ย้าย
+  โปรเจกต์เดิมจาก Single HTML File ไปหลายไฟล์ หรือพูดถึงคำว่า "แยกไฟล์",
+  "แยกโค้ด", "Vite", "ES Modules", "npm run dev", "unit test"/"Vitest", "CI/CD"
+  — ใช้ vibe-coding-core (Single HTML File) เฉพาะข้อยกเว้น: เครื่องมือเล็กมาก
+  ใช้ครั้งเดียวทิ้ง ไม่ต้อง deploy (ดู Decision Table)
 ---
 
 # Vibe Coding Multi-File — Supasit.A Skill
 
-> **Scope:** Vite + ES Modules · Vitest · GitHub Actions CI/CD · Single-File → Multi-File Migration
-> **ใช้เมื่อ:** จะย้ายโปรเจกต์เดิมออกจาก Single HTML File, หรือเริ่มโปรเจกต์ใหม่แบบ multi-file ตั้งแต่ต้น
-> **ใช้ร่วมกับ:** vibe-coding-core (§2 module pattern ยังใช้ได้ แค่เปลี่ยน "1 IIFE" เป็น "1 ไฟล์") · vibe-coding-workflow (§18 session hygiene) · cloudflare-workers-deploy (deploy จริง)
+> **Scope:** Vite + ES Modules · Vitest · GitHub Actions CI/CD · **ค่าเริ่มต้นของแอปใหม่ทุกตัว**
+> **ใช้เมื่อ:** เริ่มโปรเจกต์ใหม่ (ค่าเริ่มต้น) หรือย้ายโปรเจกต์เดิมออกจาก Single HTML File
+> **ใช้ร่วมกับ:** vibe-coding-core (§2 module pattern ยังใช้ได้ แค่เปลี่ยน "1 IIFE" เป็น "1 ไฟล์" · ใช้เต็มรูปแบบเฉพาะข้อยกเว้น single-file) · vibe-coding-workflow (§18 session hygiene) · cloudflare-workers-deploy (deploy จริง)
 
 | | |
 |---|---|
@@ -28,39 +27,50 @@ description: >
 
 ---
 
-## § 21 · Multi-File Stack (Vite + ES Modules)
+## § 21 · Multi-File Stack (Vite + ES Modules) — **ค่าเริ่มต้นของทุกโปรเจกต์ใหม่**
 
-> **WHY มี skill นี้แยก:** มาตรฐานเดิมของพี่ A คือ **Single HTML File เท่านั้น** (ดู USER.md) — ตัดสินใจแบบนี้เพราะทำให้ workflow 2 เครื่อง (บ้าน/ที่ทำงาน) ง่าย ไม่ต้องมี build step
-> แต่เมื่อโค้ดยาวเกิน ~1,000 บรรทัดในไฟล์เดียว หรือพี่ A อยากมี automated test คุ้มครอง business logic ที่เคยพังมาก่อน มาตรฐานเดิมเริ่มไม่พอ — skill นี้คือทางเลือกที่ยัง**ใช้ได้ที่เครื่อง Office ที่ไม่มีสิทธิ์ admin ติดตั้ง Node.js** เพราะให้ GitHub Actions เป็นคนรัน `npm`/`vite`/`wrangler` แทน ไม่ใช่เครื่อง local
+> **อัปเดต 2569-09-02 — พลิกกลับจาก skill เสริมมาเป็นค่าเริ่มต้น:** มาตรฐานเดิมคือ Single HTML
+> File เท่านั้น เหตุผลตอนนั้นคือกลัว build tools ทำ workflow 2 เครื่อง (บ้าน/ที่ทำงาน) พัง
+> เหตุผลนั้นไม่จริงอีกต่อไป — Node/npm ลงได้ทั้ง 2 เครื่องแล้ว, deploy ทั้งหมดรันผ่าน GitHub
+> Actions ไม่ต้องพึ่งเครื่อง local เลย, และมีแอปจริง 2 ตัว (Plant Log Analyzer, condo-rental-app)
+> ใช้ stack นี้มาหลายสัปดาห์พร้อม Vitest ที่ผ่านครบ 146 เทสต์ Single HTML File
+> (`vibe-coding-core` มาตรฐานเดิม) ยังใช้ได้อยู่ แต่เป็น**ข้อยกเว้น**สำหรับเครื่องมือเล็กมาก
+> ที่ใช้ครั้งเดียวทิ้ง ไม่ใช่จุดเริ่มต้นของโปรเจกต์ทั่วไปอีกต่อไป
 
-### Decision Table — ยังใช้ Single HTML File อยู่ หรือย้ายมา Multi-File?
+### Decision Table — เริ่มโปรเจกต์ใหม่ ใช้ Multi-File หรือ Single HTML File?
 
 ```
 คำถาม                                              → Stack
 ─────────────────────────────────────────────────────────────────────
-โค้ดยังสั้น (< ~800 บรรทัด), แอปใช้คนเดียว/ทีมเล็ก  → Single HTML File (vibe-coding-core มาตรฐานเดิม)
-ไม่มีแผนจะเขียน automated test                      → Single HTML File
-โค้ดยาวจนแก้ยาก / หา bug ยาก ในไฟล์เดียว             → Multi-File (skill นี้)
-เคยมี bug จริงใน business logic ที่อยากกัน regression → Multi-File + Vitest (skill นี้)
+โปรเจกต์ทั่วไป จะใช้งานต่อเนื่อง / ให้คนอื่นใช้ด้วย   → Multi-File (ค่าเริ่มต้น — skill นี้)
+อยากมี automated test คุ้มครอง business logic       → Multi-File + Vitest (skill นี้)
 อยากมี CI ตรวจ build/test อัตโนมัติก่อน deploy       → Multi-File + GitHub Actions (skill นี้)
-เครื่องที่ใช้งานไม่มีสิทธิ์ install Node.js เอง        → ยังทำได้! ดู "ข้อจำกัด No-Admin" ด้านล่าง
+เครื่องมือเล็กมาก ใช้ครั้งเดียวแล้วทิ้ง ไม่ต้อง deploy → Single HTML File (ข้อยกเว้น — vibe-coding-core)
+ทดลองไอเดียเร็วๆ ยังไม่แน่ใจว่าจะใช้จริงไหม           → Single HTML File (ข้อยกเว้น — vibe-coding-core)
 ```
 
-> **ข้อควรรู้:** การย้ายมา multi-file เพิ่มความซับซ้อนของ workflow จริง (ต้อง `npm install`, เข้าใจ build step, อ่าน error จาก CI แทนเปิด browser ตรงๆ) — เป็น **tradeoff ที่ต้องแลกกับ code quality** ไม่ใช่ default ที่ควรทำทุกโปรเจกต์ ถ้าพี่ A ไม่แน่ใจว่าคุ้มไหม ให้ถามก่อนเริ่มย้าย
+> **ข้อควรรู้:** multi-file มีต้นทุนเริ่มต้นที่ single-file ไม่มี — ต้องมี repo, ตั้ง
+> `CLOUDFLARE_API_TOKEN` secret เอง (Claude ทำให้ไม่ได้), เขียน `wrangler.jsonc`, `npm install`
+> ก่อนรันครั้งแรก ถ้าเป็นเครื่องมือใช้ครั้งเดียวทิ้งจริงๆ ต้นทุนนี้ไม่คุ้ม — นั่นคือเหตุผลที่
+> single-file ยังไม่ถูกตัดทิ้ง ไม่ใช่เพราะเป็นค่าเริ่มต้นที่แข่งกันอยู่
 
-### ข้อจำกัด "No-Admin" ที่ทำให้ stack นี้ยังใช้ที่ Office ได้
+### ทำไม stack นี้ใช้ได้ทั้งบ้านและ Office (อัปเดต 2569-09-02)
 
 ```
-ปัญหา: เครื่อง Office ไม่มีสิทธิ์ admin → ติดตั้ง Node.js/npm ในเครื่องไม่ได้ (เจอ UAC popup)
+เดิม: เครื่อง Office ไม่มีสิทธิ์ admin → กลัวติดตั้ง Node.js/npm ไม่ได้ (เจอ UAC popup)
+      → เลยล็อกไว้ที่ Single HTML File เพื่อกัน build tools พัง workflow 2 เครื่อง
 
-ทางแก้: ให้ GitHub Actions รัน npm/vite/vitest/wrangler บน cloud runner แทนทั้งหมด
-        เครื่อง Office มีแค่ Git + Claude Code CLI ก็พอ — แค่ git push ก็จบ
+ยืนยันแล้ว 2569-09-02: Node/npm ลงได้จริงทั้ง 2 เครื่อง (ไม่ต้อง admin) — ข้อกังวลเดิมไม่จริงแล้ว
 
-ผลคือ:
-  - เครื่องบ้าน (มี Node.js): ใช้ npm run dev ทดสอบ local ได้ตามปกติ
-  - เครื่อง Office (ไม่มี Node.js): แก้โค้ดผ่าน Claude Code ตรงๆ, push ขึ้น GitHub,
-    แล้วดูผล build/test จากแท็บ "Actions" บน GitHub แทนการรันเองในเครื่อง
-  - GitHub คือสะพานซิงค์เหมือนเดิม (ตาม USER.md) — ไม่มีอะไรเปลี่ยนตรงนี้
+แต่ที่สำคัญกว่านั้น: ต่อให้เครื่องไหนไม่มี Node.js ก็ยังใช้ stack นี้ได้ปกติ เพราะ
+build/test/deploy ทั้งหมดรันผ่าน GitHub Actions ไม่ใช่เครื่อง local:
+  - npm ci, npm run build, npm test, wrangler deploy → รันบน cloud runner ทั้งหมด
+  - เครื่องที่ไม่มี Node.js: แก้โค้ดผ่าน Claude Code ตรงๆ, push ขึ้น GitHub,
+    ดูผล build/test/deploy จากแท็บ "Actions" แทนการรันเองในเครื่อง
+  - เครื่องที่มี Node.js (ทั้ง 2 เครื่องตอนนี้): ใช้ npm run dev ทดสอบ local เพิ่มได้ตามสะดวก
+    แต่ไม่ใช่ข้อบังคับ — CI คือ source of truth เสมอ
+
+GitHub คือสะพานซิงค์เหมือนเดิม (ตาม USER.md) — สลับเครื่องแล้วไม่มีอะไรพัง
 ```
 
 ### Tech Stack มาตรฐาน
