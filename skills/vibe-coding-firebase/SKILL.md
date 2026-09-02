@@ -16,8 +16,8 @@ description: >
 
 | | |
 |---|---|
-| **Version** | 6.2 |
-| **Updated** | 2026-08 |
+| **Version** | 6.3 |
+| **Updated** | 2026-09 |
 | **Brand** | A-Class WebCraft · Code • Share • Inspire · by Supasit.A |
 | **Sections in this file** | §20 |
 | **Related skills** | `vibe-coding-core` (§1–17) — โหลดร่วมกันเสมอ |
@@ -33,7 +33,7 @@ description: >
 
 | หมวด | เทคโนโลยี | หมายเหตุ |
 |---|---|---|
-| Frontend | Single-File HTML + Tailwind CSS (CDN) + Vanilla JS | เหมือน Local-First |
+| Frontend | Multi-File (Vite+ES Modules, ค่าเริ่มต้น) หรือ Single-File HTML (ข้อยกเว้น) + Tailwind CSS (CDN) + Vanilla JS | ใช้ stack เดียวกับที่เลือกไว้ใน `vibe-coding-core` §1 Step 0 |
 | Database | **Firebase Firestore** (real-time `onSnapshot`) | Sync ทุก client อัตโนมัติ |
 | Auth | **Firebase Anonymous Auth + `inMemoryPersistence`** | ⚠️ ห้ามใช้ default — LINE/FB WebView บล็อก IndexedDB |
 | Push Notification | **Firebase Cloud Messaging (FCM)** + Cloud Functions v2 | ส่ง notification ข้าม device |
@@ -231,7 +231,7 @@ Setup ครั้งเดียวต่อโปรเจกต์ (นอก
 
 ---
 
-*SKILL: vibe-coding-firebase v6.2 | Section: §20*
+*SKILL: vibe-coding-firebase v6.3 | Section: §20*
 *Supasit.A × A-Class WebCraft | Code • Share • Inspire*
 *Related: vibe-coding-core (โหลดร่วมกันเสมอ)*
-*Updated: August 2026 (พ.ศ. 2569)*
+*Updated: September 2026 (พ.ศ. 2569)*

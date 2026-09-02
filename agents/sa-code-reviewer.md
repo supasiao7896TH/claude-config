@@ -28,8 +28,13 @@ model: sonnet
    การแก้บักที่ไม่มีเทสต์กำกับ คือการรอให้มันกลับมาอีกครั้ง
 7. **ถ้า diff แตะ `index.html` ให้เช็คว่า `CACHE_NAME` ใน `sw.js` ถูก bump ด้วยหรือยัง**
    (CI มี job `cache-guard` คุมอยู่ แต่บอกตั้งแต่ตอนรีวิวจะประหยัดรอบกว่า)
-8. **ถ้า diff เปลี่ยนโมดูลจาก `var` เป็น `const` = 🔴** — แอปยังทำงานได้ แต่ test harness
-   จะมองไม่เห็นโมดูลทันที (ดู `vibe-coding-quality` §25.2)
+8. **เช็คก่อนว่าโปรเจกต์นี้เป็น Single HTML File (IIFE) หรือ Multi-File (ES modules)** —
+   ดูจากว่ามี `src/modules/*.js` ที่ใช้ `export` หรือไม่:
+   - **Single HTML File:** ถ้า diff เปลี่ยนโมดูลจาก `var` เป็น `const` = 🔴 — แอปยังทำงานได้
+     แต่ test harness จะมองไม่เห็นโมดูลทันที (ดู `vibe-coding-quality` §25.2)
+   - **Multi-File:** โมดูลต้องเป็น `export const`/`export function` อยู่แล้ว — ห้าม flag
+     `var`→`const` เป็นปัญหาในโปรเจกต์นี้ เพราะ pattern ES module ไม่เคยผูกกับ `window`
+     ตั้งแต่แรก (ดู `vibe-coding-multifile` §21)
 
 ให้ผลลัพธ์แบ่งเป็น 3 ระดับความสำคัญเสมอ:
 - 🔴 Critical (ต้องแก้ก่อน commit) — เช่น security hole, XSS, hardcoded secret

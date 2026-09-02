@@ -17,7 +17,7 @@ description: >
 
 | | |
 |---|---|
-| **Version** | 1.0 |
+| **Version** | 1.1 |
 | **Updated** | 2026-09 |
 | **Sections in this file** | §25 |
 | **Related skills** | `vibe-coding-core` (§1–2, §8, §16–17) · `vibe-coding-workflow` (§18–19, §23–24) · `vibe-coding-multifile` (§21) · `cloudflare-workers-deploy` |
@@ -67,8 +67,11 @@ npm run e2e           # เบราว์เซอร์จริง ~10 วิ
 
 ## § 25.2 · วิธีทดสอบ Single HTML File (หัวใจของ skill นี้)
 
-**Single HTML File เป็นการตัดสินใจที่ยืนยันแล้ว (`USER.md`) — ห้ามเสนอให้ย้ายไป Vite
-เพื่อให้ test ได้ วิธีข้างล่างนี้มีอยู่เพื่อไม่ให้ต้องเสนอแบบนั้นอีก**
+**หัวข้อนี้ใช้เฉพาะกรณี Single HTML File (ข้อยกเว้น ดู `vibe-coding-multifile` §21 Decision
+Table — Multi-File คือค่าเริ่มต้นตั้งแต่ 2569-09-02) ถ้าโปรเจกต์เลือก Single HTML File โดย
+ตั้งใจแล้ว ห้ามเสนอให้ย้ายไป Vite แค่เพื่อให้ test ได้ — วิธีข้างล่างนี้มีอยู่เพื่อไม่ให้ต้อง
+เสนอแบบนั้นอีก (ถ้าโปรเจกต์เป็น Multi-File อยู่แล้ว ใช้ Vitest ตรงๆ ตาม `vibe-coding-multifile`
+§21 แทน ไม่ต้องอ่านหัวข้อนี้)**
 
 ข้อเท็จจริง 2 ข้อที่ทำให้ทดสอบได้โดยไม่ต้องแก้สถาปัตยกรรม:
 

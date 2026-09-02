@@ -13,12 +13,16 @@ model: sonnet
 
 1. สำรวจโปรเจกต์ปัจจุบัน (ถ้ามี) ว่าใช้ pattern อะไรอยู่แล้ว เพื่อไม่เสนอสิ่งที่ขัดกับของเดิม
 
-2. ถ้าเป็นโปรเจกต์ใหม่ ให้ยึดมาตรฐาน Supasit.A เป็นจุดตั้งต้น:
-   - Single HTML File + 9 Modules IIFE (APP_CONFIG, STATE_STORE, STORAGE_ENGINE, CLOUD_SYNC_MANAGER, AUTH_PROVIDER, GEMINI_AI_BRIDGE, UI_RENDERER, DEBUG_MODULE, APP_CORE)
+2. ถ้าเป็นโปรเจกต์ใหม่ ให้ยึดมาตรฐาน Supasit.A เป็นจุดตั้งต้น — เช็ค Decision Table ก่อนเสมอ
+   (ดู `vibe-coding-core` skill §1 Step 0 และ `vibe-coding-multifile` skill §21):
+   - **Multi-File (Vite + ES Modules) = ค่าเริ่มต้นของทุกโปรเจกต์ใหม่** ตั้งแต่ 2569-09-02 —
+     Single HTML File เป็น**ข้อยกเว้น**เฉพาะเครื่องมือเล็กมากที่ใช้ครั้งเดียวทิ้ง ไม่ต้อง deploy ถาวร
+   - 9 Modules (APP_CONFIG, STATE_STORE, STORAGE_ENGINE, CLOUD_SYNC_MANAGER, AUTH_PROVIDER, GEMINI_AI_BRIDGE, UI_RENDERER, DEBUG_MODULE, APP_CORE)
+     — Multi-File: 1 module = 1 ES module ไฟล์ใน `src/modules/` · Single HTML File (ข้อยกเว้น): 1 module = 1 IIFE รวมไฟล์เดียว
    - Local-first (IndexedDB ก่อนเสมอ) → Cloud-sync Firestore ทีหลัง
    - Reactive State (Pub/Sub) + Optimistic UI + Rollback
    - "Supasit.A Studio" design system (ถ้ามีส่วน UI) — ดู `vibe-coding-core` skill, `references/design-system.md`
-     แอปใหม่ให้เริ่มจาก `claude-config/design-lab/starter/` ไม่ต้องออกแบบ token ใหม่
+     Multi-File เริ่มจาก `claude-config/design-lab/starter-multifile/` · Single HTML File (ข้อยกเว้น) เริ่มจาก `claude-config/design-lab/starter/` — ไม่ต้องออกแบบ token ใหม่ทั้งคู่
 
 3. เสนอ Blueprint ที่ประกอบด้วยหัวข้อเหล่านี้เสมอ:
    - 🎯 ขอบเขตงาน (ทำอะไร / ไม่ทำอะไร)
@@ -26,7 +30,7 @@ model: sonnet
    - 🔄 Data Flow (ข้อมูลไหลจากไหนไปไหน)
    - 🛡️ ประเด็นความปลอดภัยที่ต้องออกแบบเผื่อไว้ตั้งแต่ต้น (XSS ผ่าน textContent, ไม่ hardcode secret, input validation, Firestore Rules ถ้าใช้ cloud)
    - 🗺️ ลำดับการทำตาม 4-Phase Roadmap:
-     ① Local-First HTML + IndexedDB → ② AI Intelligence (BYOK) → ③ Cloud Sync (Firebase Spark Delta-Sync) → ④ Deploy (GitHub Pages/Vercel)
+     ① Local-First (IndexedDB) → ② AI Intelligence (BYOK) → ③ Cloud Sync (Firebase Spark Delta-Sync) → ④ Deploy (Cloudflare Workers/GitHub Pages)
    - ⚠️ ความเสี่ยง/ข้อควรระวัง
 
 4. ปิดท้ายด้วยการถามเสมอว่า: "อนุมัติ Blueprint นี้ไหมคะ หรือมีจุดไหนอยากปรับก่อน?"
