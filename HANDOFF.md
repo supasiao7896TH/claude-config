@@ -43,6 +43,42 @@
 
 ---
 
+## 🐛 บั๊กที่พี่ A เจอจริงหลัง merge (2026-09-02) — CRLF บน Windows
+
+**อาการ:** pull โค้ดชุด Quality Gate มาที่เครื่องบ้าน (PowerShell) รัน `npm run check`
+แล้ว prettier แจ้งว่า 10 ไฟล์ผิด format ทั้งที่ CI บน GitHub เพิ่งตรวจผ่านโค้ดชุดเดียวกันเป๊ะ
+
+**สาเหตุที่ยืนยันแล้ว:** ทุกไฟล์ที่ commit ไว้เป็น LF ล้วน (ตรวจครบทุกไฟล์) แต่ Git for Windows
+ตั้ง `core.autocrlf=true` เป็นค่าเริ่มต้น (ตัวติดตั้งแนะนำเอง) ซึ่งแปลง LF → CRLF ตอน checkout
+prettier ที่บังคับ `endOfLine:"lf"` จึงมองว่าไฟล์ผิด format — **ไม่เกี่ยวกับโค้ดเลย เป็นเรื่องของ
+git บนเครื่อง Windows ล้วนๆ**
+
+**แก้แล้วด้วย `.gitattributes`** (ที่ root และ `design-lab/starter/`) บังคับ `eol=lf` ทุกเครื่อง
+ไม่ว่า `core.autocrlf` จะตั้งไว้ยังไง — พิสูจน์แล้วด้วยการ clone จำลองด้วย `core.autocrlf=true`
+ก่อนแก้เจอ CRLF 30 ตัวใน `package.json` ตรงกับที่พี่ A เจอเป๊ะ · หลังแก้ `npm run lint` ผ่านจริง
+
+### ⚠️ ต้องทำที่เครื่องที่ pull โค้ดตัวแก้นี้ไปแล้ว (เครื่องบ้าน)
+
+`.gitattributes` มีผลกับการ checkout **ครั้งใหม่** เท่านั้น — ไฟล์ที่แปลงเป็น CRLF ไปแล้ว
+บนดิสก์จะไม่หายเองแค่ pull มา ต้องบังคับให้ git เช็คเอาท์ใหม่ 1 ครั้ง:
+
+```powershell
+cd ~/claude-config
+git pull
+git status              # ต้องขึ้นว่า "nothing to commit, working tree clean" ก่อนทำขั้นถัดไป
+git rm -r --cached .
+git reset --hard
+npm run check            # ต้อง exit 0 คราวนี้
+```
+
+ถ้า `git status` ก่อนขั้นที่ 3 ไม่ clean (มีไฟล์ที่แก้ค้างอยู่) ให้หยุดแล้วบอกหนูก่อน
+อย่ารัน `git reset --hard` ทับงานที่ยังไม่ได้ commit
+
+**เครื่อง office** ยังไม่เคย pull โค้ดชุดนี้เลย → พอ `git clone`/`git pull` ครั้งแรกจะได้ LF ถูกต้อง
+ตั้งแต่ต้น ไม่ต้องทำขั้นตอนพิเศษด้านบน
+
+---
+
 ## 🆕 สรุปงานล่าสุด (2026-09-02) — Quality Gate + วิธี test Single HTML File
 
 > อยู่บน branch `claude/software-engineering-workflow-h8eqj3` (ยังไม่ merge เข้า main)

@@ -287,7 +287,7 @@ npm run check   # lint + secret scan + ตรวจความสอดคล�
 
 ### `tools/check-standards.mjs` ตรวจอะไร
 
-กฎที่เคยเป็นแค่ข้อความใน markdown ตอนนี้ทำให้ CI แดงได้จริง 7 ข้อ:
+กฎที่เคยเป็นแค่ข้อความใน markdown ตอนนี้ทำให้ CI แดงได้จริง 8 ข้อ:
 
 1. ไม่มีคำที่ตกยุค (`Sarabun`, `Instrument Grade`, `.pulse-dot` ฯลฯ) หลงเหลือใน skills/agents/design-lab
    — บรรทัดที่ *สั่งห้าม* ของเก่าถูกยกเว้นให้ · `REVIEW.md`/`HANDOFF.md`/`design-lab/README.md`
@@ -300,6 +300,8 @@ npm run check   # lint + secret scan + ตรวจความสอดคล�
 7. เวอร์ชันของ GitHub Action (`actions/checkout`, `actions/setup-node`) และ `node-version`
    ตรงกันทุกที่ — ทั้งใน `.github/`, `design-lab/starter/` และตัวอย่าง YAML ในสกิล
    (ตรวจแค่ "ตรงกัน" ไม่ตรึงว่าต้องเป็นเลขอะไร ไม่งั้น linter จะตกยุคเองแทน)
+8. `.gitattributes` มีอยู่พร้อม `eol=lf` ทั้งที่ root และ `design-lab/starter/`
+   (กันปัญหา CRLF บน Windows ที่เจอจริง 2026-09-02 — ดู HANDOFF.md)
 
 **pre-commit hook** (`.husky/pre-commit`) รัน prettier + secretlint + check-standards
 ให้อัตโนมัติก่อน commit — ตั้งใจให้เร็วกว่า 3 วินาที ของหนักปล่อยให้ CI รัน
