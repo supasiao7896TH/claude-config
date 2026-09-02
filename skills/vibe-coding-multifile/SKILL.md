@@ -18,7 +18,7 @@ description: >
 
 | | |
 |---|---|
-| **Version** | 1.1 |
+| **Version** | 1.2 |
 | **Updated** | 2026-09 |
 | **Brand** | A-Class WebCraft · Code • Share • Inspire · by Supasit.A |
 | **Sections in this file** | §21 |
@@ -88,7 +88,7 @@ GitHub คือสะพานซิงค์เหมือนเดิม (�
 ### เริ่มโปรเจกต์ใหม่ — copy จาก starter ตรงๆ ไม่ต้องสร้างเอง
 
 > `cp -r design-lab/starter-multifile <ชื่อโปรเจกต์ใหม่>` แล้ว `npm ci && npm test` ให้เขียว
-> ก่อนเริ่มฟีเจอร์แรก — มีครบ: 6 โมดูล ES · Vitest+Playwright 2 ชั้น (เทียบเท่า
+> ก่อนเริ่มฟีเจอร์แรก — มีครบ: 7 โมดูล ES · Vitest+Playwright 2 ชั้น (เทียบเท่า
 > `design-lab/starter` ฝั่ง single-file) · `vite-plugin-pwa` (service worker generate อัตโนมัติ
 > ไม่ต้อง bump CACHE_NAME มือ) · CI/preview/uptime workflow ครบ ดูรายละเอียดที่
 > `design-lab/starter-multifile/README.md`
@@ -109,7 +109,7 @@ project/
 │   └── *.test.js            # Vitest — เฉพาะ business logic ที่เคยพัง/ซับซ้อน
 ├── package.json
 ├── vite.config.js           # ถ้าต้องปรับ default (ส่วนใหญ่ไม่ต้องมีไฟล์นี้เลยก็ได้)
-├── wrangler.jsonc           # ถ้า deploy ขึ้น Cloudflare Workers
+├── wrangler.jsonc.example   # copy เป็น wrangler.jsonc เอง ถ้า deploy ขึ้น Cloudflare Workers
 └── .github/workflows/ci.yml
 ```
 
@@ -201,20 +201,26 @@ window.saveAction = ActionLogUI.save;
    - เพิ่ม "History note" อธิบายว่าทำไมย้าย (เช่นเดียวกับที่ทำใน Monitor-Quality-PTA)
 ```
 
-### GitHub Actions CI/CD — ตัวอย่างจริง (build-and-test + deploy)
+### GitHub Actions CI/CD — ไฟล์จริงคือ source of truth
+
+> `design-lab/starter-multifile/.github/workflows/ci.yml` คือไฟล์จริงที่ copy ไปใช้ตรงๆ
+> ตัวอย่างย่อด้านล่างนี้แสดงแค่โครง flow — ไฟล์จริงมีรายละเอียดเพิ่มที่ตัวอย่างนี้ไม่ได้ใส่:
+> ขั้น `playwright install --with-deps chromium` ก่อนรัน `npm run check`, ฝัง build stamp
+> ลง `index.html` ก่อน build เพื่อตรวจว่า deploy จริงหรือยัง, deploy แบบ 2-step ของ
+> `wrangler-action` (`versions upload` → `versions deploy -y`) และขั้น verify URL จริงหลัง
+> deploy เทียบ commit hash — **ห้ามพิมพ์ ci.yml ใหม่ตามตัวอย่างนี้ ให้ใช้ไฟล์จริงจาก starter**
 
 ```yaml
-# .github/workflows/ci.yml
+# .github/workflows/ci.yml — โครงคร่าวๆ (ดูไฟล์จริงสำหรับรายละเอียดเต็ม)
 name: CI
 
 on:
   push:
     branches: [main]
   pull_request:
-    branches: [main]
 
 jobs:
-  build-and-test:
+  check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -223,11 +229,11 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm run build
-      - run: npm test
+      - run: npx playwright install --with-deps chromium
+      - run: npm run check   # lint + secrets + unit + e2e
 
   deploy:
-    needs: build-and-test
+    needs: check
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
@@ -238,36 +244,27 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
-
-      # ถ้า deploy ขึ้น Cloudflare Workers (ดู cloudflare-workers-deploy skill สำหรับ setup เต็ม)
-      - name: Deploy to Cloudflare Workers
-        uses: cloudflare/wrangler-action@v4
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      # deploy จริงเป็น 2-step wrangler-action + verify URL — ดูไฟล์จริงสำหรับ syntax เต็ม
 ```
 
-> **WHY `needs: build-and-test`:** กัน deploy โค้ดที่ test ไม่ผ่านขึ้น production โดยไม่ตั้งใจ — เป็นจุดที่ Single HTML File เดิมไม่มีทางทำได้เลยเพราะไม่มี test ให้รอผ่าน
+> **WHY `needs: check`:** กัน deploy โค้ดที่ test ไม่ผ่านขึ้น production โดยไม่ตั้งใจ — เป็นจุดที่ Single HTML File เดิมไม่มีทางทำได้เลยเพราะไม่มี test ให้รอผ่าน
 
-### package.json — ตัวอย่างจริง
+### package.json — ไฟล์จริงคือ source of truth
 
-```json
-{
-  "name": "project-name",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "test": "vitest run",
-    "test:watch": "vitest"
-  },
-  "devDependencies": {
-    "vite": "^6.0.0",
-    "vitest": "^3.0.0"
-  }
-}
-```
+> `design-lab/starter-multifile/package.json` มี scripts และ devDependencies ครบกว่านี้มาก
+> (ผูกกับ quality gate ของ `vibe-coding-quality` skill) และ dependency versions ขยับตามเวลา
+> **ห้ามพิมพ์ตามตัวอย่างย่อด้านล่าง — ให้ `cp -r` จาก starter-multifile ตรงๆ ตามหัวข้อด้านบน**
+> ตารางนี้บอกแค่ชื่อ script ที่ต้องมีเสมอ (ชื่อคงที่ แม้ implementation ข้างในจะเปลี่ยน):
+
+| Script | หน้าที่ |
+|---|---|
+| `dev` / `build` / `preview` | Vite ปกติ |
+| `test` / `test:watch` | Vitest |
+| `e2e` | Playwright |
+| `lint` / `fix` | Prettier check / write |
+| `secrets` | secretlint |
+| `check` | lint + secrets + test + e2e — gate เต็มก่อน deploy |
+| `check:local` | ชุดเดียวกันแต่ไม่รวม e2e (เครื่องที่ลง Chromium ไม่ได้) |
 
 ### CLAUDE.md — ส่วนที่ต่างจาก Single HTML File (§18.2 ของ vibe-coding-workflow)
 
@@ -301,7 +298,7 @@ Static site ล้วน ไม่มี server-side logic  → Cloudflare Worke
 
 ---
 
-*SKILL: vibe-coding-multifile v1.1 | Section: §21*
+*SKILL: vibe-coding-multifile v1.2 | Section: §21*
 *Supasit.A × A-Class WebCraft | Code • Share • Inspire*
 *Related: vibe-coding-core · vibe-coding-workflow · cloudflare-workers-deploy*
 *Derived from: Monitor-Quality-PTA migration (August 2026 / พ.ศ. 2569)*
