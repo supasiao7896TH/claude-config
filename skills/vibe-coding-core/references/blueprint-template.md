@@ -41,6 +41,26 @@ Store: [store_name]
 - [ ] [Feature 1]
 - [ ] [Feature 2]
 
+### Test Plan
+> ตอบก่อนเขียนโค้ด ไม่ใช่หลัง — ถ้าตอบไม่ได้ว่าจะพิสูจน์ยังไงว่ามันถูก
+> แปลว่ายังไม่รู้ว่า "ถูก" แปลว่าอะไร
+
+| จะพิสูจน์อะไร | ชั้นไหน | ทำอะไรแล้วมันต้องแดง |
+|---|---|---|
+| [logic หลักของแอปนี้] | unit | [เปลี่ยนอะไรแล้วเทสต์ต้องจับได้] |
+| [กฎ §8 ที่เกี่ยวกับแอปนี้] | unit | |
+| contrast/44px/โฟกัส ทั้ง 2 ธีม | e2e | ได้ฟรีจาก starter |
+
+### Definition of Done
+```
+[ ] npm run check เขียว
+[ ] เทสต์ใหม่ถูกพิสูจน์แล้วว่าแดงได้จริง
+[ ] sa-code-reviewer ไม่เหลือ 🔴
+[ ] เปิด preview URL บนมือถือจริงแล้ว
+[ ] รู้คำสั่ง rollback ก่อน deploy
+```
+> รายละเอียด: `vibe-coding-quality` §25.3
+
 ### Roadmap Phases
 ① Local-First HTML+IndexedDB
 ② AI Intelligence (Gemini BYOK)

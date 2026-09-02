@@ -189,15 +189,22 @@ git push origin main
 
 ```
 ╔══════════════════════════════════════════════════════╗
-║          LOOP ENGINEERING — 5-STEP CYCLE             ║
+║          LOOP ENGINEERING — 6-STEP CYCLE             ║
 ╠══════════════════════════════════════════════════════╣
 ║  STEP 1 → READ     อ่านโครงสร้างโปรเจกต์ก่อนเสมอ   ║
 ║  STEP 2 → CONFIRM  สรุปสิ่งที่เข้าใจ + ขอ confirm   ║
 ║  STEP 3 → PLAN     วางแผนเป็น task ย่อย ทีละชิ้น    ║
 ║  STEP 4 → EXECUTE  ลงมือแก้ไปทีละอย่าง              ║
-║  STEP 5 → VERIFY   บอกวิธีตรวจสอบ + สรุปไฟล์ที่แก้  ║
+║  STEP 5 → REVIEW   /ตรวจ — เทสต์ + sa-code-reviewer ║
+║  STEP 6 → VERIFY   แปะผลจริง + สรุปไฟล์ที่แก้        ║
 ╚══════════════════════════════════════════════════════╝
 ```
+
+> **STEP 5 เพิ่มเข้ามา 2026-09** — `sa-code-reviewer` เขียนไว้ตั้งแต่แรกว่า
+> "ใช้หลังแก้โค้ดทุกครั้งก่อน commit" แต่ไม่เคยมี step ไหนเรียกมันจริง
+> ตอนนี้ `/ตรวจ` รันเทสต์ก่อนแล้วส่งต่อให้ reviewer — เทสต์ตรวจสิ่งที่เขียนเทสต์ไว้แล้ว
+> reviewer ตรวจสิ่งที่ยังไม่มีเทสต์ · เจอ 🔴 = หยุด ห้าม commit
+> (ดู `vibe-coding-quality` §25)
 
 **STEP 1 — READ**
 ```
@@ -366,13 +373,18 @@ Claude จะ:
 ║            VERIFICATION LOOP PROTOCOL                ║
 ╠══════════════════════════════════════════════════════╣
 ║  1. CODE    → Claude เขียนโค้ด                      ║
-║  2. BUILD   → npm run build / ไม่มี error?           ║
-║  3. TEST    → เปิดจริง ลองใช้จริง ทุก flow          ║
-║  4. VERIFY  → ✅ ผ่าน → commit │ ❌ พัง → loop back ║
+║  2. CHECK   → npm run check (lint+secret+unit+e2e)   ║
+║  3. REVIEW  → sa-code-reviewer — 🔴 = หยุด           ║
+║  4. TEST    → เปิดจริงบน preview URL ทุก flow        ║
+║  5. VERIFY  → ✅ ผ่าน → commit │ ❌ พัง → loop back ║
 ╚══════════════════════════════════════════════════════╝
 
-Manual Verify (บังคับทุกครั้ง):
-  [ ] เปิดแอปบน Mobile จริง (ไม่ใช่แค่ DevTools)
+ขั้นที่ 2-3 รวมอยู่ในคำสั่งเดียว: `/ตรวจ`
+(`npm run build` เดิมไม่มีความหมายกับ Single HTML File เพราะไม่มี build step)
+
+Manual Verify — เหลือเฉพาะสิ่งที่เครื่องตรวจแทนไม่ได้จริงๆ:
+  [ ] เปิดแอปบน Mobile จริงผ่าน preview URL (ไม่ใช่แค่ DevTools)
+      → `/preview` สร้าง URL ให้ — ทำได้ *ก่อน* ขึ้น production แล้ว
   [ ] ทดสอบ Happy Path — flow หลักใช้งานได้
   [ ] ทดสอบ Edge Case — กด cancel / ปิดระหว่างทาง
   [ ] เปิด Console — ไม่มี error สีแดง

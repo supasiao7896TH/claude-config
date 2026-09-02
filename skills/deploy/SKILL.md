@@ -9,7 +9,18 @@ disable-model-invocation: true
 > เรียกด้วย `/deploy` เท่านั้น — ตั้ง `disable-model-invocation: true` เพื่อไม่ให้ auto-trigger
 > กลางบทสนทนาโดยไม่ตั้งใจ (พี่ A อาจแค่ถามเกี่ยวกับ deploy โดยยังไม่พร้อมให้ลงมือจริง)
 
-เมื่อถูกเรียก ให้ Claude รัน **Deployment Checklist** ของ `vibe-coding-core` §17 ทีละข้อ
+**ขั้นแรกสุด: รัน `/ตรวจ` ก่อนเสมอ — ไม่เขียว ไม่ deploy**
+`npm run check` ต้อง exit 0 และ `sa-code-reviewer` ต้องไม่เหลือ 🔴
+ถ้ายังไม่ผ่าน ให้หยุดแล้วรายงานว่าติดข้อไหน **ห้ามข้ามไปทำ checklist ต่อ**
+
+**ขั้นที่สอง: ต้องเคยเปิด preview URL บนมือถือจริงแล้ว** (`/preview`)
+ถ้ายังไม่เคย ให้เสนอทำก่อน — §24.5 บังคับข้อนี้ไว้ และตอนนี้ทำได้ *ก่อน* ขึ้น production แล้ว
+
+**ขั้นที่สาม: ต้องรู้คำสั่ง rollback ก่อนกด deploy**
+อ่าน `vibe-coding-quality/references/rollback-runbook.md` แล้วบอกพี่ A ว่าถ้าพัง
+จะย้อนด้วยคำสั่งอะไร — ก่อนกด ไม่ใช่ตอนพัง
+
+จากนั้นให้ Claude รัน **Deployment Checklist** ของ `vibe-coding-core` §17 ทีละข้อ
 (อ่าน `vibe-coding-core/SKILL.md` §17 เต็มๆ ก่อนเริ่ม) — ติ๊กผ่าน/ไม่ผ่านแต่ละข้อพร้อมเหตุผลสั้นๆ
 ไม่ใช่แค่บอกว่า "deploy เสร็จแล้ว" เฉยๆ
 
