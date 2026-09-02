@@ -1,0 +1,34 @@
+# ── Node / toolchain ────────────────────────────────────────────────
+node_modules/
+npm-debug.log*
+*.log
+
+# ── ผลลัพธ์จากการทดสอบ (สร้างใหม่ได้เสมอ ไม่ต้องเก็บใน git) ──────────
+test-results/
+playwright-report/
+blob-report/
+.playwright/
+
+# ── Cloudflare / Wrangler ───────────────────────────────────────────
+.wrangler/
+
+# ── ความลับ — ซ้ำกับ permissions.deny ใน settings.json โดยตั้งใจ ────
+# deny กัน Claude อ่าน · .gitignore กันไฟล์หลุดขึ้น GitHub — คนละชั้นกัน
+.env
+.env.*
+!.env.example
+secrets/
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+*serviceAccount*.json
+*firebase-adminsdk*.json
+
+# ── OS / editor ─────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+!.vscode/extensions.json

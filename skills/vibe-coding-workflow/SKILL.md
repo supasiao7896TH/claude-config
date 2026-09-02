@@ -58,19 +58,26 @@ npm install     # หรือ bun install
 ## Project Context
 - ชื่อแอป: [ชื่อ]
 - Stack: Single HTML · IndexedDB · [Firebase/Gemini optional]
-- Deploy: GitHub Pages / Vercel
-- Branch: main (repo: supasit-a-apps)
+- Deploy: GitHub Pages / Cloudflare Workers
+- Branch: main
+
+## Commands
+- `npm run check` — lint + secret scan + unit test + e2e (ต้องเขียวก่อน deploy)
+- `npm run check:local` — ชุดเดียวกันแต่ไม่รวม e2e (เครื่องที่ลง Chromium ไม่ได้)
+- `npm test` — unit อย่างเดียว (เร็ว ใช้ระหว่างแก้โค้ด)
 
 ## Architecture
 - Pattern: 9 IIFE Modules (เลือกเท่าที่ใช้)
 - State: Reactive Pub/Sub via STATE_STORE
 - Storage: IndexedDB first → Firestore delta sync
+- โมดูลประกาศด้วย `var` ที่ top-level เท่านั้น — ห้ามเปลี่ยนเป็น `const`
+  (`var` ติดกับ window ทำให้ test harness มองเห็นโมดูลได้ · `const` ไม่ติด)
 
 ## Brand Rules
-- Glass Badge "by Supasit.A" ต้องมีทุกแอป
-- Status glow: Green=Online · Amber=Offline · Blue=Syncing
-- Font: Sarabun (body) · Fraunces (hero/metric)
-- Dark/Light mode: CSS variables บังคับ
+- A(i)CODER brand dock ชุด Studio ต้องมีทุกแอป (พื้นอ่าน var(--surface)/var(--border) ของแอปเอง)
+- สี ok/warn/crit ใช้บอกสถานะเท่านั้น · accent-2 (อำพัน) ใช้กับข้อมูลอ้างอิงเท่านั้น
+- Font: Noto Sans Thai อย่างเดียว · ตัวเลขในตาราง/KPI ใส่ tabular-nums
+- Dark/Light mode: CSS variables บังคับ ครบทั้ง 3 สถานะ
 
 ## Current Phase
 - [ ] Phase 1: Local-First HTML
@@ -79,12 +86,13 @@ npm install     # หรือ bun install
 - [ ] Phase 4: Deploy
 
 ## Known Issues
-- [รายการ bug หรือ TODO ที่รู้อยู่แล้ว]
+→ ติดตามที่ GitHub Issues ของ repo นี้ (ไม่ต้องจดซ้ำในไฟล์นี้ เพราะจะตกยุคทันที)
 
 ## DO NOT
 - ❌ ห้ามแก้ไฟล์ sw.js โดยไม่แจ้ง
 - ❌ ห้าม hardcode API key
 - ❌ ห้ามเปลี่ยน DB_VERSION โดยไม่ทำ migration
+- ❌ ห้าม deploy โดยที่ `npm run check` ยังไม่เขียว
 ```
 
 ### 18.3 · Claude Code Modes
@@ -103,19 +111,29 @@ Pattern แนะนำสำหรับพี่ A:
 ### 18.4 · Session Commit Pattern
 
 ```bash
-# Commit message format (บังคับ)
-git add -A
+# 1. stage เฉพาะไฟล์ที่ตั้งใจแก้ — ห้าม stage ทั้งโฟลเดอร์แบบเหมารวม
+#    ถ้าไม่แน่ใจว่าไฟล์ไหนบ้าง ให้ sa-git-manager จัดการ (มันจะ git diff --staged
+#    สแกนหา secret ให้ก่อน commit ด้วย)
+git add path/to/file.html path/to/other.js
+
+# 2. Commit message format (บังคับ)
 git commit -m "feat: [สิ่งที่เพิ่ม]"
 git commit -m "fix: [สิ่งที่แก้]"
 git commit -m "refactor: [สิ่งที่ปรับโครงสร้าง]"
 git commit -m "style: [สิ่งที่ปรับ UI]"
 git commit -m "docs: [สิ่งที่เพิ่มใน docs]"
+git commit -m "test: [เทสต์ที่เพิ่ม/แก้]"
+git commit -m "chore: [งานดูแลระบบ เช่น อัปเดต dependency, config]"
 
-# Push
+# 3. Push
 git push origin main
 
-# ถ้า GitHub Actions ทำงาน CI/CD → deploy อัตโนมัติ
+# ถ้า GitHub Actions ทำงาน CI/CD → test ต้องเขียวก่อน ถึงจะ deploy อัตโนมัติ
 ```
+
+> **ทำไมไม่ stage แบบเหมารวม:** `sa-git-manager` ห้ามไว้เพราะมันดึงไฟล์ที่ไม่ตั้งใจติดมาด้วย
+> (ไฟล์ทดลอง · log · ไฟล์ที่มี key) ข้อยกเว้นเดียวคือ commit แรกของ repo ใหม่ที่ scaffold
+> จาก `design-lab/starter/` ซึ่งมี `.gitignore` แล้วและ secretlint ผ่านแล้ว
 
 ### 18.5 · Token Efficiency Tips
 
@@ -171,15 +189,22 @@ git push origin main
 
 ```
 ╔══════════════════════════════════════════════════════╗
-║          LOOP ENGINEERING — 5-STEP CYCLE             ║
+║          LOOP ENGINEERING — 6-STEP CYCLE             ║
 ╠══════════════════════════════════════════════════════╣
 ║  STEP 1 → READ     อ่านโครงสร้างโปรเจกต์ก่อนเสมอ   ║
 ║  STEP 2 → CONFIRM  สรุปสิ่งที่เข้าใจ + ขอ confirm   ║
 ║  STEP 3 → PLAN     วางแผนเป็น task ย่อย ทีละชิ้น    ║
 ║  STEP 4 → EXECUTE  ลงมือแก้ไปทีละอย่าง              ║
-║  STEP 5 → VERIFY   บอกวิธีตรวจสอบ + สรุปไฟล์ที่แก้  ║
+║  STEP 5 → REVIEW   /ตรวจ — เทสต์ + sa-code-reviewer ║
+║  STEP 6 → VERIFY   แปะผลจริง + สรุปไฟล์ที่แก้        ║
 ╚══════════════════════════════════════════════════════╝
 ```
+
+> **STEP 5 เพิ่มเข้ามา 2026-09** — `sa-code-reviewer` เขียนไว้ตั้งแต่แรกว่า
+> "ใช้หลังแก้โค้ดทุกครั้งก่อน commit" แต่ไม่เคยมี step ไหนเรียกมันจริง
+> ตอนนี้ `/ตรวจ` รันเทสต์ก่อนแล้วส่งต่อให้ reviewer — เทสต์ตรวจสิ่งที่เขียนเทสต์ไว้แล้ว
+> reviewer ตรวจสิ่งที่ยังไม่มีเทสต์ · เจอ 🔴 = หยุด ห้าม commit
+> (ดู `vibe-coding-quality` §25)
 
 **STEP 1 — READ**
 ```
@@ -348,13 +373,18 @@ Claude จะ:
 ║            VERIFICATION LOOP PROTOCOL                ║
 ╠══════════════════════════════════════════════════════╣
 ║  1. CODE    → Claude เขียนโค้ด                      ║
-║  2. BUILD   → npm run build / ไม่มี error?           ║
-║  3. TEST    → เปิดจริง ลองใช้จริง ทุก flow          ║
-║  4. VERIFY  → ✅ ผ่าน → commit │ ❌ พัง → loop back ║
+║  2. CHECK   → npm run check (lint+secret+unit+e2e)   ║
+║  3. REVIEW  → sa-code-reviewer — 🔴 = หยุด           ║
+║  4. TEST    → เปิดจริงบน preview URL ทุก flow        ║
+║  5. VERIFY  → ✅ ผ่าน → commit │ ❌ พัง → loop back ║
 ╚══════════════════════════════════════════════════════╝
 
-Manual Verify (บังคับทุกครั้ง):
-  [ ] เปิดแอปบน Mobile จริง (ไม่ใช่แค่ DevTools)
+ขั้นที่ 2-3 รวมอยู่ในคำสั่งเดียว: `/ตรวจ`
+(`npm run build` เดิมไม่มีความหมายกับ Single HTML File เพราะไม่มี build step)
+
+Manual Verify — เหลือเฉพาะสิ่งที่เครื่องตรวจแทนไม่ได้จริงๆ:
+  [ ] เปิดแอปบน Mobile จริงผ่าน preview URL (ไม่ใช่แค่ DevTools)
+      → `/preview` สร้าง URL ให้ — ทำได้ *ก่อน* ขึ้น production แล้ว
   [ ] ทดสอบ Happy Path — flow หลักใช้งานได้
   [ ] ทดสอบ Edge Case — กด cancel / ปิดระหว่างทาง
   [ ] เปิด Console — ไม่มี error สีแดง

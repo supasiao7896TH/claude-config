@@ -1,6 +1,6 @@
 /* Service Worker — cache-first สำหรับ app shell
    bump CACHE_NAME ทุกครั้งที่แก้ไฟล์ ไม่งั้นเครื่องที่เคยเปิดจะยังเห็นของเก่า */
-var CACHE_NAME = "supasit-studio-v2";
+var CACHE_NAME = "supasit-studio-v4";
 var SHELL = ["./", "./index.html", "./chart-theme.js", "./assets/icon.svg", "./manifest.webmanifest",
   "./assets/d1-neon-arcade-bare.svg", "./assets/d2-crt-night-bare.svg"];
 

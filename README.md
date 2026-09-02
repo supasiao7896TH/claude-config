@@ -140,7 +140,7 @@ Copy-Item "$env:USERPROFILE\claude-config\settings.json" "$env:USERPROFILE\.clau
 - **`hooks.Stop` / `UserPromptSubmit` / `Notification`** — เสียงแจ้งเตือน Start/Stop/ขออนุมัติ permission ผ่าน Windows TTS
 - **`enabledPlugins` / `extraKnownMarketplaces`** — plugin ที่ติดตั้งไว้ (⚠️ ตัว plugin เองไม่ sync ผ่าน git ต้องรัน `/plugin install` ซ้ำที่เครื่องใหม่ — ดูหัวข้อด้านล่าง ไฟล์นี้แค่บันทึกว่าเปิดใช้ตัวไหนอยู่)
 
-## รายการ Skills (20 ตัว)
+## รายการ Skills (24 ตัว)
 
 - pta-exapilot-logic
 - pta-industry-insight
@@ -156,14 +156,18 @@ Copy-Item "$env:USERPROFILE\claude-config\settings.json" "$env:USERPROFILE\.clau
 - vibe-coding-firebase
 - vibe-coding-workflow
 - vibe-coding-multifile
+- vibe-coding-quality
 - cloudflare-workers-deploy
 - domain-modeling
 - grilling
 - grill-with-docs
 - พัง
 - deploy
+- ตรวจ
+- preview
+- rollback
 
-### Slash Commands จริง: /พัง, /deploy
+### Slash Commands จริง: /พัง, /deploy, /ตรวจ, /preview, /rollback
 
 เพิ่มเข้ามา 2026-08-08 — แปลงมาจาก keyword ใน `vibe-coding-workflow` §19 ที่เดิมพึ่งให้ Claude
 "จับสัญญาณ" คำในประโยคเอง (ไม่การันตี trigger จริง) ทั้งคู่ตั้ง `disable-model-invocation: true`
@@ -176,6 +180,16 @@ Copy-Item "$env:USERPROFILE\claude-config\settings.json" "$env:USERPROFILE\.clau
 
 ส่วน 4 keyword ที่เหลือ (ปรับ/ลอง/เริ่มใหม่/สรุป) ยังปล่อยเป็น prose convention ต่อไป — เป็นคำไทย
 ที่ใช้ในบทสนทนาทั่วไปบ่อยเกินกว่าจะบังคับเป็น explicit-only command ได้โดยไม่เพิ่มความยุ่งยาก
+
+### Slash Commands ชุด Quality (2026-09): /ตรวจ, /preview, /rollback
+
+มาพร้อม skill `vibe-coding-quality` (§25) ทั้งสามตั้ง `disable-model-invocation: true`
+
+| คำสั่ง | ทำอะไร | ทำไมต้องพิมพ์เอง |
+|---|---|---|
+| `/ตรวจ` | `npm run check` (lint + secret + unit + e2e) แล้วต่อด้วย `sa-code-reviewer` รายงานทีละข้อ | คำว่า "ตรวจ" ใช้ในบริบทงานโรงงานบ่อยมาก ไม่ควร auto-trigger |
+| `/preview` | push branch → เปิด PR → ได้ URL ชั่วคราวที่เปิดบนมือถือจริงได้ ก่อนขึ้น production | สร้าง branch/PR = แก้ของจริงบน GitHub |
+| `/rollback` | ย้อน production ตาม runbook ทีละขั้น พร้อมยืนยันทุกคำสั่งก่อนรัน | กระทบผู้ใช้จริง ต้องมาจากคำสั่งพี่ A เท่านั้น |
 
 ### Engineering Skills เพิ่มเติม: domain-modeling / grilling / grill-with-docs
 
@@ -254,14 +268,57 @@ VS Code extension เป็น UI wrapper ของ engine เดียวกั
 > ไม่ใช่การบังคับที่ tool level — อย่ารัน agent เหล่านี้ในโหมด auto-accept/bypass-permissions
 > ถ้าต้องการให้ขอบเขตนี้เข้มงวดจริง
 
+## Quality Gate (เฟส 0 — ติดตั้งแล้ว)
+
+repo นี้ตรวจตัวเองได้แล้ว ไม่ต้องพึ่งความจำ รันครั้งเดียวต่อเครื่อง:
+
+```bash
+npm ci          # ติดตั้ง toolchain + ติดตั้ง git hook ให้อัตโนมัติ (ผ่าน prepare)
+npm run check   # lint + secret scan + ตรวจความสอดคล้องของเอกสาร
+```
+
+| คำสั่ง | ทำอะไร |
+|---|---|
+| `npm run check` | รัน 3 อย่างล่างนี้ต่อกัน — ใช้คำสั่งเดียวจบ |
+| `npm run lint` | prettier ตรวจ format ของไฟล์ config/JS/YAML (**ไม่แตะ .md** — ดูเหตุผลใน `.prettierignore`) |
+| `npm run secrets` | secretlint หา API key / private key / service account ที่หลุดเข้ามา |
+| `npm run check:standards` | ตรวจว่าเอกสารใน repo ยังสอดคล้องกันเอง (รายละเอียดข้างล่าง) |
+| `npm run brand:build` / `brand:verify` | build + ตรวจไฟล์แบรนด์ (ต้องมี Chromium) |
+
+### `tools/check-standards.mjs` ตรวจอะไร
+
+กฎที่เคยเป็นแค่ข้อความใน markdown ตอนนี้ทำให้ CI แดงได้จริง 6 ข้อ:
+
+1. ไม่มีคำที่ตกยุค (`Sarabun`, `Instrument Grade`, `.pulse-dot` ฯลฯ) หลงเหลือใน skills/agents/design-lab
+   — บรรทัดที่ *สั่งห้าม* ของเก่าถูกยกเว้นให้ · `REVIEW.md`/`HANDOFF.md`/`design-lab/README.md`
+   ยกเว้นทั้งไฟล์เพราะเป็นบันทึกประวัติ
+2. `skills/` ไม่สั่ง `git add -A` (เคยขัดกับ `sa-git-manager` อยู่ 2 จุด)
+3. ฟอนต์ใน `design-lab/starter/` ตรงกับที่ `USER.md` ประกาศไว้
+4. โทเคนธีมมืดครบเท่ากันทั้ง 2 บล็อก และไม่มี `var(--x)` ที่ไม่ถูกนิยาม
+5. ทุก skill มี `SKILL.md` · `name` ตรงชื่อโฟลเดอร์ · มี `description`
+6. README ตรงกับจำนวน skill จริง และรายชื่อ agent จริงบนดิสก์
+
+**pre-commit hook** (`.husky/pre-commit`) รัน prettier + secretlint + check-standards
+ให้อัตโนมัติก่อน commit — ตั้งใจให้เร็วกว่า 3 วินาที ของหนักปล่อยให้ CI รัน
+
+> **เครื่องที่โหลด Chromium ไม่ได้** (เน็ตบริษัทกรอง / มี Chromium อยู่แล้วคนละ build):
+> `PW_CHROMIUM_PATH=/path/to/chrome npm run brand:verify`
+
+---
+
 ## Workflow แนะนำ
 
 1. sa-explore → สำรวจโค้ดที่เกี่ยวข้องก่อน (โปรเจกต์ multi-file ที่ระบุขอบเขตชัดเจน รันขนานได้หลายตัว)
 2. sa-summarizer → ถ้ารัน sa-explore ขนานกันตั้งแต่ 2 ชุดขึ้นไป ใช้รวมผลเป็นรายงานเดียวก่อนไปขั้นต่อไป
-3. sa-architect → ร่าง Blueprint แล้วรอ "อนุมัติ"
+3. sa-architect → ร่าง Blueprint (มี Test Plan + Definition of Done ในนั้นแล้ว) แล้วรอ "อนุมัติ"
 4. Plan Mode (Opus) → วางแผนละเอียด
 5. Accept Edits (Sonnet) → ลงมือเขียนโค้ด
-6. sa-code-reviewer → รีวิวก่อน commit
-7. sa-debugger → ถ้าเจอ Critical issue
-8. sa-git-manager → commit/push/PR อย่างปลอดภัย
-9. sa-handoff → ก่อนปิดเครื่อง/สลับเครื่อง
+6. **`/ตรวจ`** → `npm run check` (lint + secret + unit + e2e) แล้วต่อด้วย sa-code-reviewer
+   — เดิมข้อนี้เขียนว่า "sa-code-reviewer" เฉยๆ แต่ไม่มีอะไรเรียกมันจริง ตอนนี้เป็นคำสั่งที่รันได้
+7. sa-debugger → ถ้าเจอ 🔴 Critical
+8. **`/preview`** → ได้ URL เปิดบนมือถือจริง ก่อนของขึ้น production
+9. sa-git-manager → commit/push/PR อย่างปลอดภัย
+10. `/deploy` → Deployment Checklist (จะไม่ยอมทำงานถ้ายังไม่ผ่านข้อ 6)
+11. sa-handoff → ก่อนปิดเครื่อง/สลับเครื่อง
+
+> ถ้า production พัง → `/rollback` (มี runbook ที่ตั้งเป้าให้ย้อนกลับได้ใน 5 นาที)

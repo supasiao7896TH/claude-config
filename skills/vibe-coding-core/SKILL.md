@@ -97,13 +97,27 @@ Mobile (vertical + bottom-nav):               PC/Desktop (sidebar + content):
 # 3. สร้าง CLAUDE.md (ถ้ายังไม่มี)
 # 4. Commit และ Push ทุกไฟล์
 
-git add -A
-git commit -m "feat: init [ชื่อแอป] + context + agents"
-git push origin main
+#    → มอบให้ sa-git-manager ทำ ไม่ต้องรัน git เอง
+#    เหตุผล: sa-git-manager จะ stage ทีละไฟล์ + สแกน secret ใน staged diff ก่อน commit
+#    (repo ใหม่ที่มี .gitignore จาก starter แล้ว มันจึงยอมให้ commit แรกเหมารวมได้)
+#    commit message: "feat: init [ชื่อแอป] + context + agents"
 
 # 5. แจ้ง URL GitHub Pages ให้พี่ A
 # → https://supasiao7896th.github.io/supasit-a-apps/[ชื่อแอป]/
 ```
+
+### 🆕 Step 7 — Quality Scaffold (ทำทันทีหลัง commit แรก)
+
+```bash
+npm ci            # ติดตั้ง toolchain + ติดตั้ง git hook ให้อัตโนมัติ
+npm run check     # ต้องเขียวก่อนถือว่าแอปใหม่ "เริ่มได้"
+```
+
+ชุดนี้มาจาก `design-lab/starter/` อยู่แล้วถ้า scaffold ตามขั้นตอน — ถ้า `npm test` แดง
+ตั้งแต่ยังไม่ได้เขียนอะไร แปลว่าคัดลอกไฟล์มาไม่ครบ (ไฟล์ที่ขึ้นต้นด้วยจุดมักตกหล่น)
+
+ตั้ง `APP_CONFIG.ISSUE_URL` ให้ชี้ไป `issues/new` ของ repo แอปนี้ ไม่งั้นปุ่ม
+"รายงานปัญหา" จะเงียบ → ดู `vibe-coding-quality` §25
 
 > **Branch:** ใช้ `main` เสมอ (ไม่ใช่ `master`) — ให้ตรงกับ GitHub Actions trigger ใน
 > `vibe-coding-firebase` §20 ถ้าโปรเจกต์ยังใช้ `master` อยู่ ให้ rename ก่อน push
@@ -274,33 +288,47 @@ gstatic.com/cdn.tailwindcss.com ที่ Google/Tailwind ควบคุมเ�
 
 ## § 16 · QA Checklist (ตรวจก่อน deliver ทุกครั้ง)
 
+> **ทุกข้อมีป้ายบอกว่าใครเป็นคนตรวจ** — checklist ที่ไม่บอกว่าใครรันแต่ละบรรทัด
+> คือ checklist ที่ไม่มีใครรัน
+>
+> | ป้าย | ใครตรวจ | คำสั่ง |
+> |---|---|---|
+> | `[auto:test]` | Vitest + jsdom | `npm test` |
+> | `[auto:e2e]` | Playwright + axe | `npm run e2e` |
+> | `[auto:ci]` | GitHub Actions | อัตโนมัติทุก push |
+> | `[manual]` | คนเท่านั้น — เครื่องแทนไม่ได้ | — |
+>
+> `npm run check` = `test` + `e2e` + lint + secret scan · ดู `vibe-coding-quality` §25
+> 🔴 **`npm test` ไม่ครอบคลุมหมวด ACCESSIBILITY/BRAND** เพราะ jsdom ไม่มี layout จริง
+
 ```
 FUNCTIONAL
-  [ ] ทุก button/action ทำงานถูกต้อง
-  [ ] Form validation ครบ — required, type, range
-  [ ] Error state แสดงผล — empty state, network error, loading
-  [ ] IndexedDB CRUD ครบ — create, read, update, delete
-  [ ] Dark/Light mode สลับได้ ไม่มี hardcode color
-  [ ] Responsive ทุก breakpoint — 375/768/1024/1440px
+  [auto:test] IndexedDB CRUD ครบ — create, read, update, delete
+  [auto:test] Error state แสดงผล — empty state, network error, loading
+  [auto:test] Dark/Light mode สลับได้ ไม่มี hardcode color
+  [auto:e2e ] Responsive ทุก breakpoint — 375/768/1024/1440px
+  [manual   ] ทุก button/action ทำงานถูกต้อง
+  [manual   ] Form validation ครบ — required, type, range
 
 PERFORMANCE
-  [ ] First load < 3s บน 4G
-  [ ] ไม่มี console.error ใน production
-  [ ] Images มี loading="lazy"
-  [ ] ไม่มี memory leak (event listener cleanup)
+  [auto:e2e ] ไม่มี console.error / JS error ตอนโหลด
+  [manual   ] First load < 3s บน 4G
+  [manual   ] Images มี loading="lazy"
+  [manual   ] ไม่มี memory leak (event listener cleanup)
 
 SECURITY
-  [ ] ไม่มี API key ใน source code
-  [ ] Input sanitized ก่อนแสดงผล
-  [ ] Firestore rules ไม่ใช่ allow all
-  [ ] CSP header มีอยู่จริง (§8) ใน production build
-  [ ] CDN scripts ที่รองรับ ใส่ SRI แล้ว (§8)
+  [auto:test] Input ผ่าน textContent ไม่ใช่ innerHTML (เทสต์ XSS)
+  [auto:ci  ] ไม่มี API key ใน source code (secretlint · pre-commit + CI)
+  [manual   ] Firestore rules ไม่ใช่ allow all
+  [manual   ] CSP header มีอยู่จริง (§8) ใน production build
+  [manual   ] CDN scripts ที่รองรับ ใส่ SRI แล้ว (§8)
 
-ACCESSIBILITY
-  [ ] ทุก image มี alt
-  [ ] ทุก button มี aria-label
-  [ ] Keyboard navigation ใช้ได้
-  [ ] Color contrast ผ่าน WCAG AA
+ACCESSIBILITY  ← ทั้งหมดนี้เป็นงานของ npm run e2e ไม่ใช่ npm test
+  [auto:e2e ] ทุก button มีชื่อที่ screen reader อ่านได้ (axe)
+  [auto:e2e ] Color contrast ผ่าน WCAG AA ทั้ง 2 ธีม (axe — วัดจากสีที่ render จริง)
+  [auto:e2e ] เป้าแตะ ≥44px · :focus-visible ครบทุกชิ้นที่กด Tab ไปถึง
+  [auto:e2e ] ไม่มีการเลื่อนแนวนอนที่ 390/1280px
+  [manual   ] ทุก image มี alt ที่สื่อความหมาย (เครื่องบอกได้แค่ว่า "มี" ไม่ใช่ "ดี")
   → รายละเอียดเต็ม: references/performance-and-accessibility.md
 
 BRAND (Supasit.A Studio)
@@ -323,12 +351,11 @@ BRAND (Supasit.A Studio)
 ## § 17 · Deployment Checklist (แนบท้ายทุก Code Delivery)
 
 ```
-GitHub Pages:
-  [ ] push ไปที่ branch: main (repo: supasit-a-apps)
-  [ ] GitHub Actions CI/CD ผ่าน
-  [ ] URL: https://supasiao7896th.github.io/supasit-a-apps/[app-name]/
-
-Pre-deploy:
+Pre-deploy (บังคับ — ข้อแรกสำคัญที่สุด):
+  [ ] npm run check เขียว (lint + secret + unit + e2e) — /ตรวจ
+  [ ] เปิด preview URL บนมือถือจริงแล้ว — /preview
+  [ ] รู้คำสั่ง rollback ก่อนกด deploy — references/rollback-runbook.md
+  [ ] ถ้าเปลี่ยน DB_VERSION: มีเทสต์ migration ที่พิสูจน์ว่าข้อมูลเดิมอยู่ครบ
   [ ] ลบ console.log ทั้งหมด (เว้น DEBUG_MODULE)
   [ ] minify ถ้า file > 500KB
   [ ] ทดสอบบน mobile จริงก่อน deploy
@@ -336,9 +363,15 @@ Pre-deploy:
   [ ] ถ้าใช้ Firebase: deploy flow ใหม่ตาม vibe-coding-firebase §20 (service account, ไม่ใช่ FIREBASE_TOKEN เก่า)
 
 Post-deploy:
+  [ ] build stamp บน URL จริงตรงกับ commit ที่เพิ่ง push (CI ตรวจให้ ถ้าตั้ง APP_URL)
   [ ] เปิด URL บน mobile ตรวจ PWA install prompt
   [ ] ทดสอบ offline mode
   [ ] ตรวจ Lighthouse score: Performance ≥ 80
+
+Deploy ปลายทาง:
+  [ ] GitHub Pages → ผ่าน actions/deploy-pages (gate ได้ + rollback ด้วย Re-run all jobs)
+  [ ] Cloudflare Workers → versions upload แล้วค่อย versions deploy
+  → ดู vibe-coding-quality §25.4 · references/ci-cd-templates.md
 ```
 
 ---

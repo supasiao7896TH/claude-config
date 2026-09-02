@@ -1,0 +1,30 @@
+{
+  "name": "claude-config",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "มาตรฐานและเครื่องมือกลางของ Supasit.A — skills, subagents, design system, quality gates",
+  "scripts": {
+    "brand:build": "node branding/tools/build.mjs",
+    "brand:verify": "node branding/tools/verify.mjs",
+    "check:standards": "node tools/check-standards.mjs",
+    "format": "prettier --write .",
+    "lint": "prettier --check .",
+    "secrets": "secretlint \"**/*\"",
+    "check": "npm run lint && npm run secrets && npm run check:standards",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@secretlint/secretlint-rule-pattern": "13.0.5",
+    "@secretlint/secretlint-rule-preset-recommend": "13.0.5",
+    "husky": "9.1.7",
+    "lint-staged": "17.4.1",
+    "playwright": "1.62.1",
+    "prettier": "3.9.6",
+    "secretlint": "13.0.5"
+  },
+  "lint-staged": {
+    "*.{json,mjs,js,yml,yaml}": "prettier --write",
+    "*": "secretlint"
+  }
+}

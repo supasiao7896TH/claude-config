@@ -1,0 +1,75 @@
+name: CI
+
+# ทำไมต้องมีไฟล์นี้: กฎเกือบทั้งหมดใน repo นี้เป็นข้อความใน markdown ที่ต้องจำเอง
+# CI คือที่เดียวที่บังคับได้จริง — ไม่ต้องพึ่งว่าใครจำได้หรือเปล่า
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: ติดตั้ง dependency ตาม lockfile เป๊ะๆ
+        run: npm ci
+
+      # ตรวจ format + ความลับ + ความสอดคล้องของเอกสาร — ไม่ต้องใช้เบราว์เซอร์
+      - name: format ถูกต้อง (prettier)
+        run: npm run lint
+
+      - name: ไม่มี secret หลุด (secretlint)
+        run: npm run secrets
+
+      - name: เอกสารสอดคล้องกับตัวเอง (check-standards)
+        run: npm run check:standards
+
+  branding:
+    # แยก job เพราะต้องโหลด Chromium — ถ้า job บนแดง จะได้รู้ผลเร็วโดยไม่ต้องรอโหลดเบราว์เซอร์
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: ติดตั้ง Chromium สำหรับ Playwright
+        run: npx playwright install --with-deps chromium
+
+      - name: build ไฟล์แบรนด์
+        run: npm run brand:build
+
+      - name: ตรวจไฟล์แบรนด์ที่ build ออกมา
+        run: npm run brand:verify
+
+      # ถ้า build แล้วไฟล์ที่ commit ไว้ไม่ตรงกับผลลัพธ์ แปลว่ามีคนแก้ไฟล์ export ด้วยมือ
+      #
+      # ตรวจเฉพาะ SVG กับหน้า HTML ที่ generate ออกมา เพราะสองอย่างนี้เป็นข้อความล้วน
+      # ที่ build จากเทมเพลตแบบ deterministic — build กี่ครั้ง บนเครื่องไหนก็ได้ผลเท่ากัน
+      #
+      # ❌ ไม่ตรวจ PNG โดยตั้งใจ: มันคือ screenshot จากเบราว์เซอร์ จึงเปลี่ยนทุกครั้งที่ build
+      # แม้เนื้อหาจะเหมือนเดิมทุกพิกเซล (วัดจริง 2026-09-02: d1-neon-arcade.png
+      # ของเดิม 349947 bytes · CI ได้ 350116 · อีกเครื่องได้ 350113) ถ้าเอา PNG มารวมด้วย
+      # job นี้จะแดงตลอดกาลจนสุดท้ายโดนปิดทิ้ง ซึ่งแย่กว่าไม่มีเลย
+      # เนื้อหาของ PNG มี verify.mjs ตรวจอยู่แล้วผ่านการเปิดหน้าจริงในเบราว์เซอร์
+      - name: ไฟล์ที่ generate แบบ deterministic ตรงกับผล build
+        run: |
+          DRIFT=$(git status --porcelain -- branding/exports/'*.svg' branding/aicoder-mockups.html)
+          if [ -n "$DRIFT" ]; then
+            echo "::error::ไฟล์ที่ build ได้ไม่ตรงกับที่ commit ไว้ — รัน npm run brand:build แล้ว commit ผลลัพธ์ด้วย"
+            echo "$DRIFT"
+            git --no-pager diff --stat -- branding/exports/'*.svg' branding/aicoder-mockups.html
+            exit 1
+          fi

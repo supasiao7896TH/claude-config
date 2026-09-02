@@ -74,7 +74,11 @@ if (!chromium) throw new Error("could not load playwright's chromium");
 
 mkdirSync(EXPORTS, { recursive: true });
 
-const browser = await chromium.launch();
+/* PW_CHROMIUM_PATH — เครื่องที่มี Chromium อยู่แล้วแต่โหลด build ของ Playwright ไม่ได้
+   (เน็ตบริษัทกรอง / container ที่ preinstall ไว้คนละ build) ชี้ path เองได้
+   ตัวเลือกเดียวกับใน verify.mjs */
+const executablePath = process.env.PW_CHROMIUM_PATH || undefined;
+const browser = await chromium.launch(executablePath ? { executablePath } : {});
 const page = await browser.newPage({
   viewport: { width: 1400, height: 1000 },
   deviceScaleFactor: 2
