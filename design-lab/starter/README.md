@@ -13,6 +13,9 @@
 4. แก้ `APP_CONFIG.DB_NAME` + `STORES` ให้ตรงกับข้อมูลของแอปนี้
 5. ตั้ง `APP_CONFIG.ISSUE_URL` เป็น `https://github.com/<user>/<repo>/issues/new`
    — ปุ่ม "รายงานปัญหา" จะเงียบถ้าเว้นว่างไว้
+   · ตั้ง repo variable **`APP_URL`** (Settings → Secrets and variables → Actions → Variables)
+     ให้ชี้ URL production — ใช้ทั้งตรวจ build stamp หลัง deploy และ uptime check
+   · ตั้ง repo secret **`CLOUDFLARE_API_TOKEN`** (จำกัดสิทธิ์แค่ "Edit Cloudflare Workers")
 6. ลบข้อมูลตัวอย่างใน `APP_CORE.init()` แล้วต่อกับ `STORAGE_ENGINE` ของจริง
 7. bump `CACHE_NAME` ใน `sw.js` ทุกครั้งที่แก้ไฟล์ — CI มี job `cache-guard` คอยจับให้แล้ว
 
@@ -60,7 +63,7 @@
 | `assets/icon.svg` | ไอคอนแอป (A(i)CODER ชุด Studio) |
 | `assets/d1-neon-arcade-bare.svg` · `assets/d2-crt-night-bare.svg` | นีออนกระพริบสำหรับ boot splash เท่านั้น (ดู `branding/README.md`) — ไม่มีพื้นหลังของตัวเอง ต้องวางบน `var(--bg)` เสมอ ห้ามเอาไปแทน `.logo`/`.aicoder-badge` เพราะเล็กกว่าขนาดต่ำสุดของมันมาก |
 | `tests/` + `tools/serve.mjs` | ชุดทดสอบ 2 ชั้น (รายละเอียดข้างบน) |
-| `.github/workflows/` | CI ที่กันโค้ดไม่ผ่านเทสต์ขึ้น production + preview URL ทุก PR |
+| `.github/workflows/` | CI ที่กันโค้ดไม่ผ่านเทสต์ขึ้น production · preview URL ทุก PR · uptime check รายชั่วโมง |
 | `.assetsignore` | กันไฟล์เทสต์/config หลุดขึ้น public URL ตอน deploy |
 | `.husky/pre-commit` | รัน format + secret scan + unit test ก่อน commit ให้อัตโนมัติ |
 

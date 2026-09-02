@@ -1,0 +1,12 @@
+version: 2
+updates:
+  # เปิดเฉพาะ github-actions — กัน actions/checkout@v4, wrangler-action@v4 ตกยุคเงียบๆ
+  #
+  # จงใจไม่เปิด npm ecosystem: repo นี้มี devDependency ไม่กี่ตัวและไม่มีอะไรถูกส่งไป
+  # ที่เบราว์เซอร์ PR อัปเดตรายสัปดาห์จะกลายเป็น noise จนสุดท้ายไม่มีใครอ่าน
+  # ซึ่งแย่กว่าไม่มีเลย เพราะทำให้ PR ที่สำคัญจริงถูกกลบ
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 3
