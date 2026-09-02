@@ -1,0 +1,4 @@
+# hook นี้ต้องเร็ว — เกิน ~5 วินาทีเมื่อไหร่ จะเริ่มมีคนพิมพ์ --no-verify
+# ซึ่ง sa-git-manager ห้ามไว้ · Playwright จึงไม่อยู่ในนี้ ปล่อยให้ CI รัน
+npx lint-staged
+npx vitest run --silent

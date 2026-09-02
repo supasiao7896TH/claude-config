@@ -143,6 +143,11 @@ td.num, th.num { text-align:right; font-variant-numeric:tabular-nums; }
    แล้ว .tube-s/.tube-b (infinite) กะพริบต่อเนื่องตลอดที่หน้ายังเปิดอยู่
    กว้าง 280px ผ่านขั้นต่ำ D1(≥240px)/D2(≥280px) พร้อมกัน — ไม่ใช่ badge เล็กเหมือนเดิม
    -bare ไม่มีพื้นของตัวเอง จึงวางบน var(--surface) เหมือนเป็นส่วนหนึ่งของแถบ ไม่ใช่สติกเกอร์ */
+.err-toast { position:fixed; left:50%; transform:translateX(-50%); bottom:76px; z-index:40;
+  display:flex; align-items:center; gap:12px; max-width:min(560px, calc(100vw - 32px));
+  padding:12px 16px; border-radius:var(--r-lg); border:1px solid var(--crit);
+  background:var(--crit-soft); color:var(--text); box-shadow:var(--shadow-2); }
+.err-toast[hidden] { display:none; }
 .brand-dock { position:fixed; left:0; right:0; bottom:0; z-index:30;
   height:calc(100px + env(safe-area-inset-bottom)); padding-bottom:env(safe-area-inset-bottom);
   display:flex; align-items:center; justify-content:center;
@@ -187,6 +192,13 @@ td.num, th.num { text-align:right; font-variant-numeric:tabular-nums; }
   </div>
 </main>
 
+<!-- Global Error Boundary แสดงผลที่นี่ · role=alert ให้ screen reader ประกาศทันที
+     ซ่อนด้วย [hidden] ไม่ใช่ display:none ในสไตล์ เพื่อให้ JS toggle ได้ที่เดียว -->
+<div class="err-toast" id="errorToast" role="alert" aria-live="assertive" hidden>
+  <span id="errorToastText"></span>
+  <button class="btn btn-ghost" id="reportBtn" type="button">รายงานปัญหา</button>
+</div>
+
 <a class="brand-dock" href="#" aria-label="สร้างโดย A(i)CODER">
   <img class="mark-light" src="assets/d1-neon-arcade-bare.svg" alt="" width="1200" height="300">
   <img class="mark-dark" src="assets/d2-crt-night-bare.svg" alt="" width="1200" height="300">
@@ -205,7 +217,9 @@ var APP_CONFIG = (function () {
     DB_NAME: "supasit_app",
     DB_VERSION: 1,
     STORES: ["records", "settings"],
-    THEME_KEY: "app:theme"
+    THEME_KEY: "app:theme",
+    /* ใส่ .../issues/new ของ repo แอปนี้ — ว่างไว้ = ปุ่มรายงานปัญหาจะเงียบ */
+    ISSUE_URL: ""
   });
 })();
 
@@ -233,12 +247,48 @@ var STORAGE_ENGINE = (function () {
           if (!db.objectStoreNames.contains(s)) db.createObjectStore(s, { keyPath: "id" });
         });
       };
-      req.onsuccess = function () { resolve(req.result); };
+      req.onsuccess = function () {
+        var db = req.result;
+        /* ถ้าแท็บอื่น (หรือแอปเวอร์ชันใหม่) ขอ upgrade — ต้องปิด connection นี้ทิ้ง
+           ไม่งั้น upgrade จะถูกบล็อกและแท็บนั้นค้างถาวรโดยไม่มี error ให้เห็น
+           เจอจาก tests/unit/starter-contract.test.mjs (เทสต์ migration) */
+        db.onversionchange = function () {
+          db.close();
+          dbp = null;
+          DEBUG_MODULE.log("ปิด DB เพราะมีเวอร์ชันใหม่ขอ upgrade");
+        };
+        resolve(db);
+      };
       req.onerror = function () { reject(req.error); };
+      /* onblocked = มี connection เก่าที่ยังไม่ปิด ต้องบอกให้ชัด ไม่ใช่รอเงียบๆ */
+      req.onblocked = function () {
+        reject(new Error("อัปเกรดฐานข้อมูลไม่ได้ — ปิดแท็บอื่นที่เปิดแอปนี้อยู่ก่อนค่ะ"));
+      };
     });
     return dbp;
   }
-  return { open: open };
+
+  /* หุ้ม IDBRequest ให้เป็น Promise ที่เดียว — ที่เหลือจะได้ไม่ต้องเขียน onsuccess/onerror ซ้ำ */
+  function run(store, mode, fn) {
+    return open().then(function (db) {
+      return new Promise(function (resolve, reject) {
+        var tx = db.transaction(store, mode);
+        var req = fn(tx.objectStore(store));
+        req.onsuccess = function () { resolve(req.result); };
+        req.onerror = function () { reject(req.error); };
+        tx.onabort = function () { reject(tx.error); };
+      });
+    });
+  }
+
+  return {
+    open: open,
+    /* record ต้องมี id เพราะทุก store สร้างด้วย keyPath:"id" */
+    put:    function (store, record) { return run(store, "readwrite", function (s) { return s.put(record); }); },
+    get:    function (store, id)     { return run(store, "readonly",  function (s) { return s.get(id); }); },
+    getAll: function (store)         { return run(store, "readonly",  function (s) { return s.getAll(); }); },
+    del:    function (store, id)     { return run(store, "readwrite", function (s) { return s.delete(id); }); }
+  };
 })();
 
 /* 4 · CLOUD_SYNC_MANAGER · 5 · AUTH_PROVIDER · 6 · GEMINI_AI_BRIDGE
@@ -288,10 +338,25 @@ var UI_RENDERER = (function () {
   };
 })();
 
-/* 8 · DEBUG_MODULE — เปิดด้วย ?debug=1 เท่านั้น production จึงเงียบสนิท */
+/* 8 · DEBUG_MODULE — เปิดด้วย ?debug=1 เท่านั้น production จึงเงียบสนิท
+   แต่ ring buffer เก็บ log ไว้เสมอ เพื่อให้ปุ่ม "รายงานปัญหา" มีอะไรให้แนบ */
 var DEBUG_MODULE = (function () {
   var on = new URLSearchParams(location.search).get("debug") === "1";
-  return { log: function () { if (on) console.log.apply(console, arguments); } };
+  var ring = [];          /* เก็บแค่ 20 รายการล่าสุด — พอให้ debug ไม่กินหน่วยความจำ */
+  function log() {
+    var args = Array.prototype.slice.call(arguments);
+    ring.push(new Date().toISOString().slice(11, 19) + " " + args.join(" "));
+    if (ring.length > 20) ring.shift();
+    if (on) console.log.apply(console, args);
+  }
+  return {
+    log: log,
+    recent: function () { return ring.slice(); },
+    version: function () {
+      var m = document.querySelector('meta[name="app-version"]');
+      return m ? m.content : "dev";
+    }
+  };
 })();
 
 /* 9 · APP_CORE — ประกอบทุกอย่างเข้าด้วยกัน */
@@ -314,7 +379,42 @@ var APP_CORE = (function () {
     if (saved) root.setAttribute("data-theme", saved);   /* ไม่ stamp อะไรเลย = ตามระบบ */
   }
 
+  /* Global Error Boundary — §2 ระบุว่าต้องมี แต่ starter เดิมยังไม่ได้ทำ
+     ไม่มีอันนี้ = ผู้ใช้เจอ error แล้วไม่มีใครรู้ นอกจากเขาจะเดินมาบอกเอง */
+  function installErrorBoundary() {
+    function report(kind, detail) {
+      DEBUG_MODULE.log("[" + kind + "]", detail);
+      var box = document.getElementById("errorToast");
+      var txt = document.getElementById("errorToastText");
+      if (txt) txt.textContent = "เกิดข้อผิดพลาด — กดรายงานปัญหาได้ค่ะ";
+      if (box) box.hidden = false;
+    }
+
+    /* ปุ่มรายงานปัญหา = เปิด GitHub issue ที่กรอกไว้ให้แล้ว
+       ไม่ต้องมี backend · ไม่มีค่าใช้จ่าย · ไม่มีข้อมูลออกจากเครื่องจนกว่าผู้ใช้จะกดเอง
+       ตั้ง APP_CONFIG.ISSUE_URL เป็น .../issues/new ของ repo แอปนั้น */
+    var btn = document.getElementById("reportBtn");
+    if (btn) {
+      btn.addEventListener("click", function () {
+        var body =
+          "**เกิดอะไรขึ้น:** \n\n**กดอะไรก่อนหน้านั้น:** \n\n" +
+          "---\nเวอร์ชัน: " + DEBUG_MODULE.version() +
+          "\nเบราว์เซอร์: " + navigator.userAgent +
+          "\n\nlog ล่าสุด:\n```\n" + DEBUG_MODULE.recent().join("\n") + "\n```";
+        var url = APP_CONFIG.ISSUE_URL;
+        if (!url) { DEBUG_MODULE.log("ยังไม่ได้ตั้ง APP_CONFIG.ISSUE_URL"); return; }
+        window.open(url + "?title=" + encodeURIComponent("[bug] ") +
+          "&body=" + encodeURIComponent(body), "_blank", "noopener");
+      });
+    }
+    window.addEventListener("error", function (e) { report("error", e.message); });
+    window.addEventListener("unhandledrejection", function (e) {
+      report("promise", (e.reason && e.reason.message) || String(e.reason));
+    });
+  }
+
   function init() {
+    installErrorBoundary();
     initTheme();
     document.getElementById("themeBtn").addEventListener("click", function () {
       applyTheme(currentTheme() === "dark" ? "light" : "dark");
