@@ -25,3 +25,13 @@ Respond in a mix of roughly **70% Thai / 30% English**, not full English.
 4. Rename the folder to match the `name` field inside its `.claude-plugin/marketplace.json` (this is the name the CLI expects, e.g. `anthropic-agent-skills` for repo `anthropics/skills`).
 5. Add a matching entry to `C:\Users\<username>\.claude\plugins\known_marketplaces.json` by hand, following the existing `claude-plugins-official` entry's schema (`source.source: "github"`, `source.repo`, `installLocation`, `lastUpdated`).
 6. Confirm with `/plugin marketplace list` — the marketplace should now show as configured, and `/plugin install <plugin>@<marketplace-name>` works normally from there.
+
+## Code Review Gate (all projects, บังคับ)
+
+**กติกา:** ก่อน merge/push โค้ดที่แตะ production หรือข้อมูลจริง ต้องผ่าน `/code-review` (หรือ ultrareview สำหรับงานใหญ่) แบบ **fresh session** เสมอ — ห้ามให้ session เดียวกับที่เขียนโค้ดตรวจงานตัวเอง
+
+- **ทำไม:** พี่ A ทำ vibe coding ล้วนๆ ยังไม่เขียน syntax เอง ดังนั้นถ้า AI ตัวที่เขียนโค้ดเป็นคนตรวจงานตัวเองในบริบทเดียวกัน มักมองข้ามจุดบอดที่ตัวเองสร้าง (rationalize เหตุผลที่เลือกไปแล้ว) — ต้องมี context ใหม่ที่ไม่มี bias จากการเขียนมาช่วยจับแทน
+- **ขอบเขต:** ใช้กับงานที่กระทบ production/ข้อมูลจริงเท่านั้น ไม่บังคับกับเครื่องมือทดลองเล็กๆ ที่ใช้ครั้งเดียวทิ้ง (กัน friction เกินจำเป็น)
+- **สิ่งที่พี่ A ตรวจเองได้โดยไม่ต้องอ่านโค้ด:** (1) รันแอปจริงเช็ค golden path + edge case, (2) อ่าน test description ที่เป็นประโยคอ่านออก (เช่น `it('ควรปฏิเสธการจองซ้ำ')`), (3) ให้ AI สรุป "ทำไมเลือกวิธีนี้" และ "เสี่ยง/trade-off อะไร" ก่อนขออนุมัติทุกครั้ง (ส่วนหนึ่งของ Explain-while-doing ใน USER.md)
+
+Confirmed 2569-09-02 — ตอบข้อกังวลเรื่องความเสี่ยงเชิงโครงสร้างของ vibe coding ล้วนๆ (AI ตรวจงานตัวเองในบริบทเดิม)
