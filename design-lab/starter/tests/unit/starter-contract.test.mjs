@@ -26,14 +26,17 @@ describe("STORAGE_ENGINE — IndexedDB", () => {
     const v1 = await ready(loadApp({ idb: shared }));
     await mod(v1, "STORAGE_ENGINE").put("records", { id: "เก็บไว้นะ", value: 42 });
 
-    /* จำลองแอปเวอร์ชันถัดไป: DB_VERSION 1 → 2 และเพิ่ม store "audit" */
+    /* จำลองแอปเวอร์ชันถัดไป: DB_VERSION 2 → 3 และเพิ่ม store "audit" */
     const v2 = await ready(
       loadApp({
         idb: shared,
         transform: (html) =>
           html
-            .replace("DB_VERSION: 1", "DB_VERSION: 2")
-            .replace('STORES: ["records", "settings"]', 'STORES: ["records", "settings", "audit"]')
+            .replace("DB_VERSION: 2", "DB_VERSION: 3")
+            .replace(
+              'STORES: ["records", "settings", "debugLog"]',
+              'STORES: ["records", "settings", "debugLog", "audit"]'
+            )
       })
     );
 
@@ -146,5 +149,25 @@ describe("Error boundary + ปุ่มรายงานปัญหา", () =>
     const win = await ready(loadApp());
     win.dispatchEvent(new win.ErrorEvent("error", { message: "พังโดยตั้งใจ" }));
     expect(mod(win, "DEBUG_MODULE").recent().join("\n")).toContain("พังโดยตั้งใจ");
+  });
+
+  it("log() เขียน ring ลง STORAGE_ENGINE จริง ไม่ใช่แค่ memory", async () => {
+    const win = await ready(loadApp());
+    await mod(win, "DEBUG_MODULE").log("เก็บลง IndexedDB"); /* log() คืน promise ของ persist() */
+    const rec = await mod(win, "STORAGE_ENGINE").get("debugLog", "ring");
+    expect(rec.entries.join("\n")).toContain("เก็บลง IndexedDB");
+  });
+
+  it("reload แล้ว DEBUG_MODULE ยังเห็น log เดิมที่เคย persist ไว้", async () => {
+    const shared = newIDB();
+
+    const v1 = await ready(loadApp({ idb: shared }));
+    await mod(v1, "DEBUG_MODULE").log("ของเก่าก่อน reload");
+
+    const v2 = await ready(loadApp({ idb: shared }));
+    /* init() เรียก hydrate() ให้อัตโนมัติแล้ว (fire-and-forget) — เรียกซ้ำแล้ว await
+       เพื่อไม่ต้องพึ่งจังหวะเวลาของ load event ว่า hydrate เดิมจบหรือยัง */
+    await mod(v2, "DEBUG_MODULE").hydrate();
+    expect(mod(v2, "DEBUG_MODULE").recent().join("\n")).toContain("ของเก่าก่อน reload");
   });
 });

@@ -18,8 +18,8 @@ description: >
 
 | | |
 |---|---|
-| **Version** | 1.1 |
-| **Updated** | 2026-08 |
+| **Version** | 1.2 |
+| **Updated** | 2026-09 |
 | **Brand** | A-Class WebCraft · Code • Share • Inspire · by Supasit.A |
 | **แยกออกมาจาก** | `vibe-coding-firebase` §20 (เดิมฝังอยู่ผิดที่ใต้ skill ชื่อ Firebase ทั้งที่ไม่เกี่ยว Firebase) |
 
@@ -87,10 +87,10 @@ Cloudflare Workers ให้ได้ URL ไปแชร์ทีมได้�
     "directory": "./"          // path ไปยังโฟลเดอร์ที่มี index.html — ปกติคือ root
   },
   "observability": {
-    "enabled": false,
+    "enabled": true,            // เปิด Workers Logs/Traces ให้ค่านี้ "เป็นโค้ด" จะได้ไม่หายตอน deploy รอบหน้า
     "head_sampling_rate": 1,
     "logs": {
-      "enabled": true,          // เปิด Workers Logs ให้ค่านี้ "เป็นโค้ด" จะได้ไม่หายตอน deploy รอบหน้า
+      "enabled": true,
       "head_sampling_rate": 1,
       "persist": true,
       "invocation_logs": true
@@ -172,6 +172,19 @@ jobs:
    ต้องเห็น source เป็น "Wrangler" (ไม่ใช่ "Dashboard") ถึงจะแปลว่า auto-deploy ทำงานจริง
 3. เปิด URL จริงเช็คว่าแอปโหลดได้ปกติ
 ```
+
+## ดู log จริงเวลาแอปพัง
+
+`observability.enabled: true` เปิดไว้แล้วข้างบน (ฟรี, native Cloudflare — ไม่มีอะไรออกไป
+นอกโครงสร้างที่แอป deploy อยู่แล้ว) แต่การเปิดไว้เฉยๆ ไม่มีประโยชน์ถ้าไม่รู้ว่าไปดูที่ไหน:
+
+1. **`wrangler tail <worker-name>`** — stream log สดจาก terminal (ต้อง `wrangler login`
+   ครั้งเดียวก่อน) เหมาะตอนกำลัง reproduce ปัญหาสดๆ
+2. **Cloudflare dashboard → Workers & Pages → Worker นั้น → tab Logs** — ดูย้อนหลังได้
+   โดยไม่ต้องเปิด terminal ไว้ตลอด (retention เท่าไหร่เช็คในหน้านั้นเอง เปลี่ยนได้ตาม plan
+   ไม่ตรึงตัวเลขไว้ในเอกสารนี้)
+
+→ รายละเอียดเพิ่มเติม + สิ่งที่จงใจไม่ทำ (Sentry ฯลฯ): `vibe-coding-quality` §25.5
 
 ## Error ที่เจอบ่อย + วิธีแก้
 

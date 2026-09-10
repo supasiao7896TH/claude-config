@@ -18,6 +18,8 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: dependency audit (high/critical)
+        run: npm run audit
       - run: npx playwright install --with-deps chromium
       - name: lint + secret scan + unit + build + e2e
         run: npm run check

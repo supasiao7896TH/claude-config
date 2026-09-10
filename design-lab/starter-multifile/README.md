@@ -35,6 +35,7 @@
 | `npm run e2e` | ก่อนส่งงาน — build จริง + เบราว์เซอร์จริง ตรวจ contrast/44px/โฟกัส/service worker | ~15 วิ |
 | `npm run check` | **ก่อน deploy ทุกครั้ง** — lint + secret + unit + e2e | ~20 วิ |
 | `npm run check:local` | เครื่องที่ลง Chromium ไม่ได้ (ตัด e2e ออก) | ~5 วิ |
+| `npm run audit` | ตรวจ dependency ที่มีช่องโหว่ระดับ high/critical (CI รันให้อัตโนมัติด้วย) | ~5 วิ |
 
 > เครื่องที่มี Chromium อยู่แล้วแต่โหลด build ของ Playwright ไม่ได้:
 > `PW_CHROMIUM_PATH=/path/to/chrome npm run e2e`
@@ -61,7 +62,8 @@
 | `src/modules/chart-theme.js` | ธีม Chart.js ที่อ่านสีจาก CSS variable (ลบทิ้งได้ถ้าไม่ใช้ Chart.js) |
 | `vite.config.js` | ตั้งค่า `vite-plugin-pwa` (manifest + service worker อัตโนมัติ) |
 | `tests/` | ชุดทดสอบ 2 ชั้นเดียวกับ `design-lab/starter` |
-| `.github/workflows/` | CI ที่กันโค้ดไม่ผ่านเทสต์ขึ้น production · preview URL ทุก PR · uptime check รายชั่วโมง |
+| `.github/workflows/` | CI ที่กันโค้ดไม่ผ่านเทสต์ขึ้น production · preview URL ทุก PR · uptime check รายชั่วโมง · dependency audit ก่อน deploy |
+| `.github/dependabot.yml` | อัปเดต dependency npm รายสัปดาห์ แบบ group minor/patch กัน noise (ต่างจาก root `dependabot.yml` ของ claude-config เอง — ดู comment ในไฟล์) |
 | `.husky/pre-commit` | รัน format + secret scan + unit test ก่อน commit ให้อัตโนมัติ |
 | `wrangler.jsonc.example` | ตัวอย่าง config deploy Cloudflare Workers — `assets.directory: "./dist"` |
 

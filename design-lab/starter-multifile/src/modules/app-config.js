@@ -2,8 +2,8 @@
 export const AppConfig = Object.freeze({
   APP_NAME: "ชื่อแอป",
   DB_NAME: "supasit_app",
-  DB_VERSION: 1,
-  STORES: ["records", "settings"],
+  DB_VERSION: 2,
+  STORES: ["records", "settings", "debugLog"],
   THEME_KEY: "app:theme",
   /* ใส่ .../issues/new ของ repo แอปนี้ — ว่างไว้ = ปุ่มรายงานปัญหาจะเงียบ */
   ISSUE_URL: ""

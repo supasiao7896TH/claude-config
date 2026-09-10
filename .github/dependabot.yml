@@ -7,6 +7,10 @@ updates:
   # จงใจไม่เปิด npm ecosystem: repo นี้มี devDependency ไม่กี่ตัวและไม่มีอะไรถูกส่งไป
   # ที่เบราว์เซอร์ PR อัปเดตรายสัปดาห์จะกลายเป็น noise จนสุดท้ายไม่มีใครอ่าน
   # ซึ่งแย่กว่าไม่มีเลย เพราะทำให้ PR ที่สำคัญจริงถูกกลบ
+  #
+  # นี่คือการตัดสินใจสำหรับ devDependency ของ repo นี้เองเท่านั้น — เทมเพลตแอปที่
+  # design-lab/starter-multifile/.github/dependabot.yml เปิด npm ไว้ต่างหาก เพราะ
+  # dependency ที่นั่น ship เข้าแอปจริงที่คนอื่นใช้ ไม่ใช่ devDeps ของ claude-config
   - package-ecosystem: github-actions
     directory: /
     schedule:

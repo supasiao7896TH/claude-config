@@ -72,6 +72,7 @@ function installErrorBoundary() {
 }
 
 function init() {
+  DebugModule.hydrate(); /* fire-and-forget — init() ต้องยัง sync เหมือนเดิม */
   installErrorBoundary();
   initTheme();
   document.getElementById("themeBtn").addEventListener("click", () => {

@@ -14,6 +14,7 @@
     "lint": "prettier --check .",
     "fix": "prettier --write .",
     "secrets": "secretlint \"**/*\"",
+    "audit": "npm audit --audit-level=high",
     "check": "npm run lint && npm run secrets && npm test && npm run e2e",
     "check:local": "npm run lint && npm run secrets && npm test",
     "prepare": "husky"

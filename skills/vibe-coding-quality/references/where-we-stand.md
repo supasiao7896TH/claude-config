@@ -50,6 +50,22 @@
   (เป้า < 5 นาที) และเจอบั๊กจริงในตัว runbook เอง (ลืมส่ง version-id เข้าคำสั่ง rollback) —
   ดู `rollback-runbook.md` § 7 สำหรับ timeline เต็ม
 
+✅ **ปิดช่องว่างเพิ่ม 3 ข้อ (2026-09-10):** ไม่ใช่ข้อที่เคยเป็น 🔴 ในตารางหลัก (ทั้งหมดยัง 🟢
+อยู่แล้ว) แต่เป็นช่องว่างที่เหตุผลเดิมไม่เคยครอบคลุมถึง — เจอตอนพี่ A ถามตรงๆ ว่าระบบ
+"เพียบพร้อมตามหลัก SE" หรือยัง
+
+- **Dependency scanning สำหรับ app template** — `design-lab/starter-multifile/` ไม่เคยมี
+  Dependabot/`npm audit` เลย ทั้งที่มี dependency มากกว่า meta-repo มาก (เหตุผลเดิมที่ปิด
+  Dependabot npm ไว้พูดถึงแค่ devDeps ของ `claude-config` เอง) → เปิดแยกให้แล้ว ดู
+  `vibe-coding-quality` §25.8
+- **Cloudflare observability drift** — `cloudflare-workers-deploy` skill ตั้ง
+  `observability.enabled: false` ทั้งที่ `logs.enabled: true` ขัดกันเอง (เอกสารเองเคย
+  flag ไว้ว่าเป็น known drift) → แก้ให้ตรงกับ `starter-multifile` แล้ว พร้อมเพิ่มวิธีดู
+  log จริง (`wrangler tail` / dashboard Logs tab)
+- **`DEBUG_MODULE` persist ข้าม reload** — เดิมเก็บ log ใน memory เท่านั้น หายทันทีที่
+  reload ทั้งที่เอกสารเขียนไว้ผิดว่าเขียนลง IndexedDB อยู่แล้ว → ตอนนี้ persist จริงผ่าน
+  `STORAGE_ENGINE` ที่มีอยู่แล้ว (ไม่กระทบการตัดสินใจเรื่อง Sentry — ยังไม่มี auto-upload)
+
 ## สิ่งที่จงใจข้าม และเหตุผล
 
 | ข้าม | เหตุผล |

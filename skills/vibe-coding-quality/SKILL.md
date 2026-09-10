@@ -17,7 +17,7 @@ description: >
 
 | | |
 |---|---|
-| **Version** | 1.2 |
+| **Version** | 1.3 |
 | **Updated** | 2026-09 |
 | **Sections in this file** | §25 |
 | **Related skills** | `vibe-coding-core` (§1–2, §8, §16–17) · `vibe-coding-workflow` (§18–19, §23–24) · `vibe-coding-multifile` (§21) · `cloudflare-workers-deploy` |
@@ -147,10 +147,15 @@ preview ในตัว และ deploy ลงโฟลเดอร์ `preview
 
 ทำ 4 อย่าง ฟรีทั้งหมด · เกินกว่านี้คือ over-engineering สำหรับ scale นี้
 
-1. `observability.enabled: true` ใน `wrangler.jsonc`
+1. `observability.enabled: true` ใน `wrangler.jsonc` (ทั้ง 2 starter ตั้งตรงกันแล้ว — เดิมมี
+   drift ที่ `cloudflare-workers-deploy` ตั้ง `false` ทั้งที่ `logs.enabled: true` ขัดกันเอง แก้แล้ว)
 2. ปุ่ม "รายงานปัญหา" → เปิด GitHub issue ที่กรอกไว้ล่วงหน้า (มีใน starter แล้ว)
-3. `window.onerror` + `unhandledrejection` → `DEBUG_MODULE` → toast (มีใน starter แล้ว)
+3. `window.onerror` + `unhandledrejection` → `DEBUG_MODULE` → toast (มีใน starter แล้ว
+   ตอนนี้ ring buffer คงอยู่ข้าม reload ด้วย — persist ผ่าน `STORAGE_ENGINE` ที่มีอยู่แล้ว)
 4. Uptime ด้วย GitHub Actions cron
+5. **ดู log/trace จริงเวลาแอปพัง** — `wrangler tail <worker-name>` (streams log สดจาก
+   terminal) หรือ Cloudflare dashboard → Workers & Pages → Worker นั้น → tab **Logs**
+   (retention เช็คในหน้า dashboard เอง เปลี่ยนได้ตาม plan ไม่ตรึงตัวเลขไว้ที่นี่)
 
 **Known Issues ย้ายไป GitHub Issues** — หัวข้อนั้นใน `CLAUDE.md` คือสำเนาที่การันตีว่าจะตกยุค
 
@@ -170,7 +175,7 @@ preview ในตัว และ deploy ลงโฟลเดอร์ `preview
 | Semver + CHANGELOG เขียนมือ | ไม่มีใครอ่านแล้วจะเน่า → git tag วันที่ + `gh release --generate-notes` |
 | Sentry / error SDK | ต้องแก้ CSP + script บุคคลที่สาม + ข้อมูลโรงงานไป cloud คนอื่น · คุ้มเมื่อเกิน ~20 คน |
 | Analytics ทุกชนิด | พี่ A รู้จักผู้ใช้ทุกคน เดินไปถามเร็วกว่า |
-| Dependabot สำหรับ npm | devDeps ไม่กี่ตัว จะกลายเป็น noise · เปิดเฉพาะ `github-actions` |
+| Dependabot สำหรับ npm (เฉพาะ `claude-config` เอง) | devDeps ไม่กี่ตัว จะกลายเป็น noise · เปิดเฉพาะ `github-actions` (ยังจริงสำหรับ meta-repo นี้ — แต่เปิด npm แยกให้ `design-lab/starter-multifile/` แล้ว เพราะ dependency ที่นั่น ship เข้าแอปจริงที่คนอื่นใช้ ไม่ใช่ devDeps ของ repo นี้ → ดู §25.8) |
 | Playwright ใน pre-commit hook | ช้าเกิน 5 วิเมื่อไหร่ คนจะเริ่มพิมพ์ `--no-verify` ซึ่งห้ามไว้ · ให้ CI รัน |
 | เอา lint/test ไปใส่ hooks ใน `settings.json` | PowerShell เฉพาะเครื่อง ช้า และสู้กับ agent loop · npm script + git hook เดินทางไปกับ repo และใช้ใน CI ได้ด้วย |
 | ย้ายไป Vite เพื่อให้ test ได้ | §25.2 แก้ปัญหานี้แล้ว · Decision Table ใน `vibe-coding-multifile` ยังใช้เกณฑ์เดิม |
@@ -203,6 +208,26 @@ starter — Multi-File หรือ Single HTML File) — ไม่ใช่ต�
 - UI/markup ล้วนๆ ไม่ต้องมี failing test ก่อน — จับด้วย e2e ตามปกติ
 - แอปสไตล์ DOM-driven เก่าที่ไม่มีโมดูลให้ stub — ข้าม checkpoint นี้ไปเลย (ดู `vibe-coding-core`
   §1 Step 5)
+
+---
+
+## § 25.8 · Dependency vulnerability scanning (app template)
+
+**ปัญหา:** §25.6 ปิด Dependabot สำหรับ npm ไว้จงใจ — แต่เหตุผลนั้น ("devDeps ไม่กี่ตัว
+จะกลายเป็น noise") พูดถึงแค่ devDependency ของ `claude-config` เอง (~6 ตัว ไม่มีอะไรถูก
+ship ไปไหน) ไม่เคยครอบคลุมถึง `design-lab/starter-multifile/` ซึ่งเป็นเทมเพลตที่ทุกแอปจริง
+ถูก copy ไปใช้ แล้วมี dependency มากกว่ามาก (Vite/Vitest/Firebase SDK/Chart.js ฯลฯ) ที่ถูก
+deploy ให้คนอื่นใช้งานจริง — ช่องโหว่ที่นั่นกระทบผู้ใช้จริง ต่างเหตุผลกันจึงต่างการตัดสินใจกัน
+
+**ทำ 2 อย่าง เฉพาะ `starter-multifile`:**
+1. `.github/dependabot.yml` (npm ecosystem, group `minor-and-patch` รวมเป็น PR เดียว
+   ต่อสัปดาห์กัน noise, major แยกให้เห็นทีละตัว) — advisory เท่านั้น ไม่ block อะไร
+2. `npm run audit` (`npm audit --audit-level=high`) เป็น step แยกใน CI job `check` —
+   นี่คือตัวที่ block จริงผ่าน `needs: check` ก่อนถึง `deploy` ตามหลัก "CI คือที่เดียวที่
+   บังคับได้จริง" · แยกเป็น script ของตัวเอง ไม่ยัดเข้า `check`/`check:local` เพื่อไม่ให้
+   วลี "lint + secret scan + unit + e2e" ที่ repo อื่นอ้างถึงคำต่อคำต้องเปลี่ยนตาม
+
+→ รายละเอียด YAML เต็ม: `references/ci-cd-templates.md`
 
 ---
 

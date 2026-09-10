@@ -4,14 +4,23 @@
 
 ## ปัญหาที่แก้
 
-`DEBUG_MODULE` เขียน log ลง IndexedDB ฝั่ง client เท่านั้น — **ไม่มีใครอ่านจากระยะไกลได้**
-แปลว่าถ้าเพื่อนร่วมงานเจอ error วิธีเดียวที่จะรู้คือเขาเดินมาบอก และตอนเดินมาบอกก็จำไม่ได้แล้วว่ากดอะไร
+เดิม `DEBUG_MODULE` เก็บ log ใน memory เท่านั้น หายทันทีที่ reload หน้า (2026-09-10 แก้แล้ว
+— ตอนนี้ persist ผ่าน `STORAGE_ENGINE` ที่มีอยู่แล้ว ไม่ได้เปิด IndexedDB เส้นที่สอง ดู "5 ·
+Persist ข้าม reload" ด้านล่าง) แต่ **ยังไม่มีใครอ่านจากระยะไกลได้** แปลว่าถ้าเพื่อนร่วมงาน
+เจอ error วิธีเดียวที่จะรู้คือเขาเดินมาบอก และตอนเดินมาบอกก็จำไม่ได้แล้วว่ากดอะไร —
+ปุ่ม "รายงานปัญหา" (ข้อ 2 ด้านล่าง) คือทางแก้ที่เลือกไว้ ไม่ใช่การ auto-upload
 
-## 4 อย่างที่ทำ (ฟรีทั้งหมด)
+## 5 อย่างที่ทำ (ฟรีทั้งหมด)
 
 ### 1 · เปิด Workers Logs
-`wrangler.jsonc` เดิมตั้ง `observability.enabled: false` ทั้งที่ `logs.enabled: true` — ขัดกันเอง
-เปลี่ยนเป็น `true` ได้ log ฝั่ง server ฟรี แก้บรรทัดเดียว
+แก้ไขแล้ว (2026-09-10) — เดิม `wrangler.jsonc` ของ `cloudflare-workers-deploy` skill ตั้ง
+`observability.enabled: false` ทั้งที่ `logs.enabled: true` ข้างในขัดกันเอง (parent `false`
+ทำให้ log ไม่ทำงานจริงแม้ child จะ `true`) ตอนนี้ทั้ง `design-lab/starter-multifile` และ
+ตัวอย่างใน `cloudflare-workers-deploy` skill ตั้ง `enabled: true` ตรงกันแล้ว — log ฝั่ง server ฟรี
+
+### วิธีดู log จริง
+`wrangler tail <worker-name>` (stream สดจาก terminal) หรือ Cloudflare dashboard →
+Workers & Pages → Worker นั้น → tab Logs (retention เช็คในหน้า dashboard เอง)
 
 ### 2 · ปุ่ม "รายงานปัญหา" → GitHub issue ที่กรอกไว้แล้ว
 มีใน `design-lab/starter/index.html` แล้ว ตั้ง `APP_CONFIG.ISSUE_URL` ก็ใช้ได้
@@ -72,6 +81,19 @@ jobs:
 ```
 
 ไม่แม่นระดับนาที — ซึ่งไม่สำคัญสำหรับเครื่องมือภายใน และไม่ต้องสมัคร service ใหม่
+
+### 5 · Persist ข้าม reload
+
+เดิม ring buffer อยู่ใน memory เท่านั้น — reload หน้าปุ๊บ log หายหมด ทั้งที่ผู้ใช้เพิ่งเจอ
+error ไปหมาดๆ ตอนนี้ `DEBUG_MODULE.log()` เขียนทับ record เดียวใน store `debugLog`
+ผ่าน `STORAGE_ENGINE` ที่มีอยู่แล้วทุกครั้งที่ log (ไม่เปิด IndexedDB เส้นที่สอง) และ
+`DEBUG_MODULE.hydrate()` ถูกเรียกเป็นบรรทัดแรกของ `APP_CORE.init()` (fire-and-forget)
+ดึงของเดิมกลับมา **merge** กับ ring ปัจจุบันแทนที่จะทับ — กัน log ที่เกิดขึ้นระหว่างรอ
+`hydrate()` (เช่น log "พร้อมใช้งาน" ท้าย `init()`) หายไป
+
+**ยังไม่กระทบแถว "Sentry / Rollbar" ในตาราง "สิ่งที่จงใจไม่ทำ" ด้านล่าง** — ปุ่ม
+"รายงานปัญหา" ยังเป็นทางเดียวที่ log ออกจากเครื่อง (เมื่อผู้ใช้กดเอง) ไม่มีอะไรถูก
+auto-upload ไปที่ไหนใหม่ การเปลี่ยนแปลงนี้แค่ทำให้ log ที่มีอยู่แล้วไม่หายตอน reload
 
 ## Issue tracking
 

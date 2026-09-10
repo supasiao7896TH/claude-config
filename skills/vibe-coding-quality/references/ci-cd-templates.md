@@ -60,6 +60,24 @@ GH Pages ไม่มี PR preview ในตัว และ deploy ลงโ�
 
 ดู `references/observability-and-issues.md`
 
+## dependency audit + `dependabot.yml` (`starter-multifile` เท่านั้น)
+
+ของจริงอยู่ที่ `design-lab/starter-multifile/.github/dependabot.yml` +
+step `npm run audit` ใน `ci.yml` job `check` (ต่อจาก `npm ci` ก่อนติดตั้ง Chromium — เร็ว
+ไม่ต้องรอ e2e ถ้า dependency มีช่องโหว่จริง)
+
+ทำไมแยกจาก root `.github/dependabot.yml` ของ `claude-config` เอง (ที่ปิด npm ecosystem
+ไว้จงใจ): root คือ devDependency ของ meta-repo (~6 ตัว ไม่มีอะไร ship ไปไหน) ส่วนที่นี่คือ
+เทมเพลตที่ทุกแอปจริงถูก copy ไปใช้ (Vite/Vitest/Firebase SDK/Chart.js ฯลฯ) แล้ว deploy
+ให้คนอื่นใช้งานจริง — ช่องโหว่ที่นี่กระทบผู้ใช้จริง ต่างเหตุผลกันจึงต่างการตัดสินใจกัน
+
+Dependabot เปิดเฉพาะ npm, group `minor-and-patch` รวมเป็น PR เดียวต่อสัปดาห์กัน noise
+(major แยกให้เห็นทีละตัว เพราะมักมี breaking change) `npm run audit` ใช้
+`--audit-level=high` ไม่ใช่ `moderate` ด้วยเหตุผลเดียวกับที่ root จำกัดขอบเขต Dependabot —
+กันไม่ให้ CI แดงบ่อยจนกลายเป็นของที่ถูกมองข้าม เป็น step แยกจาก `npm run check`/`check:local`
+เพื่อไม่ให้ไปรวมกับวลี "lint + secret scan + unit + e2e" ที่ repo อื่นๆ (starter เดี่ยว,
+`vibe-coding-core`, `vibe-coding-workflow`) อ้างถึงคำต่อคำ
+
 ## Secrets / variables ที่ต้องตั้ง
 
 | ชื่อ | ประเภท | ใช้ที่ไหน |

@@ -17,6 +17,7 @@ import { DebugModule } from "../../src/modules/debug-module.js";
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const CONFIG_PATH = "../../src/modules/app-config.js";
 const ENGINE_PATH = "../../src/modules/storage-engine.js";
+const DEBUG_PATH = "../../src/modules/debug-module.js";
 
 /**
  * import storage-engine.js สดใหม่ทุกครั้ง — จำเป็นเพราะโมดูลเก็บ `dbp` (promise ที่ open()
@@ -43,6 +44,15 @@ async function freshStateStore() {
   return mod.StateStore;
 }
 
+/* เหตุผลเดียวกับ freshStorageEngine() — DEBUG_MODULE import ตรงจาก storage-engine.js
+   ต้องเป็น "generation" เดียวกัน (resetModules ครั้งเดียวกัน) ถึงจะชี้ globalThis.indexedDB
+   ก้อนเดียวกับที่เทสต์นี้เพิ่งสร้างใน beforeEach */
+async function freshDebugModule() {
+  vi.resetModules();
+  const mod = await import(DEBUG_PATH);
+  return mod.DebugModule;
+}
+
 afterEach(() => {
   vi.doUnmock(CONFIG_PATH);
 });
@@ -62,11 +72,11 @@ describe("StorageEngine — IndexedDB", () => {
     const S1 = await freshStorageEngine();
     await S1.put("records", { id: "เก็บไว้นะ", value: 42 });
 
-    /* จำลองแอปเวอร์ชันถัดไป: DB_VERSION 1 → 2 และเพิ่ม store "audit"
+    /* จำลองแอปเวอร์ชันถัดไป: DB_VERSION 2 → 3 และเพิ่ม store "audit"
        ใช้ indexedDB ก้อนเดิม (ไม่ผ่าน beforeEach ใหม่ เพราะยังอยู่ใน it() เดียวกัน) */
     const S2 = await freshStorageEngine({
-      DB_VERSION: 2,
-      STORES: ["records", "settings", "audit"]
+      DB_VERSION: 3,
+      STORES: ["records", "settings", "debugLog", "audit"]
     });
     const db2 = await S2.open();
     expect([...db2.objectStoreNames]).toContain("audit");
@@ -186,5 +196,29 @@ describe("Error boundary + ปุ่มรายงานปัญหา", () =>
     AppCore.installErrorBoundary();
     window.dispatchEvent(new window.ErrorEvent("error", { message: "พังโดยตั้งใจ" }));
     expect(DebugModule.recent().join("\n")).toContain("พังโดยตั้งใจ");
+  });
+
+  it("log() เขียน ring ลง StorageEngine จริง ไม่ใช่แค่ memory", async () => {
+    const D = await freshDebugModule();
+    await D.log("เก็บลง IndexedDB"); /* log() คืน promise ของ persist() ให้เทสต์ await ได้ */
+    const S = await freshStorageEngine();
+    const rec = await S.get("debugLog", "ring");
+    expect(rec.entries.join("\n")).toContain("เก็บลง IndexedDB");
+  });
+
+  it("hydrate() merge ของเดิมกับ log() ที่เกิดระหว่างรอ hydrate ไม่ให้หาย", async () => {
+    /* จำลองสถานการณ์จริงใน init(): hydrate() ถูกเรียกก่อนแต่ไม่ await แล้ว log()
+       อื่นเกิดตามมาก่อน hydrate() จะ resolve เสร็จ (เช่น log "พร้อมใช้งาน" ท้าย init()) */
+    const S = await freshStorageEngine();
+    await S.put("debugLog", { id: "ring", entries: ["ของเก่าก่อน reload"] });
+
+    const D = await freshDebugModule();
+    const hydrating = D.hydrate();
+    D.log("log ระหว่างรอ hydrate");
+    await hydrating;
+
+    const all = D.recent().join("\n");
+    expect(all).toContain("ของเก่าก่อน reload");
+    expect(all).toContain("log ระหว่างรอ hydrate");
   });
 });

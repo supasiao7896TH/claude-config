@@ -18,7 +18,7 @@ description: >
 
 | | |
 |---|---|
-| **Version** | 1.2 |
+| **Version** | 1.3 |
 | **Updated** | 2026-09 |
 | **Brand** | A-Class WebCraft · Code • Share • Inspire · by Supasit.A |
 | **Sections in this file** | §21 |
@@ -205,7 +205,8 @@ window.saveAction = ActionLogUI.save;
 
 > `design-lab/starter-multifile/.github/workflows/ci.yml` คือไฟล์จริงที่ copy ไปใช้ตรงๆ
 > ตัวอย่างย่อด้านล่างนี้แสดงแค่โครง flow — ไฟล์จริงมีรายละเอียดเพิ่มที่ตัวอย่างนี้ไม่ได้ใส่:
-> ขั้น `playwright install --with-deps chromium` ก่อนรัน `npm run check`, ฝัง build stamp
+> ขั้น `npm run audit` (dependency scan, ดู `vibe-coding-quality` §25.8) ก่อนติดตั้ง Chromium,
+> `playwright install --with-deps chromium` ก่อนรัน `npm run check`, ฝัง build stamp
 > ลง `index.html` ก่อน build เพื่อตรวจว่า deploy จริงหรือยัง, deploy แบบ 2-step ของ
 > `wrangler-action` (`versions upload` → `versions deploy -y`) และขั้น verify URL จริงหลัง
 > deploy เทียบ commit hash — **ห้ามพิมพ์ ci.yml ใหม่ตามตัวอย่างนี้ ให้ใช้ไฟล์จริงจาก starter**
