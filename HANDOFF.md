@@ -43,6 +43,35 @@
 
 ---
 
+## 🆕 ต้องเช็ค/แก้ที่เครื่องบ้าน (home) รอบถัดไปที่เปิดเครื่อง — local git config (พบที่เครื่อง Office 2026-09-11)
+
+> เจอ 2 ปัญหานี้ที่เครื่อง Office วันนี้ แก้ที่เครื่อง Office แล้ว แต่**ยังไม่ได้เช็คว่าเครื่องบ้านเป็นเหมือนกันหรือไม่**
+> ทั้งสองข้อเป็นเรื่อง local machine config เท่านั้น ไม่เกี่ยวกับโค้ด/เนื้อหา skill ใดๆ
+
+**Trigger ที่ทำให้เจอ:** วันนี้เพิ่ม skill ใหม่ `thai-civil-criminal-law` แล้ว push ขึ้น GitHub ครั้งแรก
+CI (`check` job) แดง เพราะ README บอกจำนวน skill ไม่ตรง (24 vs 25) — ถ้า pre-commit hook active อยู่
+ก่อนหน้านั้น จะจับได้ตั้งแต่ตอน commit ไม่ต้องรอ CI (แก้ไปแล้วด้วย commit `2033447`)
+
+1. **`core.autocrlf` ควรเป็น `false`** — เดิมเครื่องทำงานตั้งเป็น `true` ซึ่งขัดกับ `.gitattributes`
+   ที่บังคับ `eol=lf` ทำให้ไฟล์ในเครื่อง (เช่น SKILL.md บางไฟล์, settings.json, skills-lock.json)
+   เช็คเอาท์มาเป็น CRLF ทั้งที่ commit จริงเป็น LF — ทำให้รันเช็ค local (`npm run check` /
+   `node tools/check-standards.mjs`) แล้วเจอ false alarm (เช่น "ไม่มี frontmatter" ทั้งที่มีจริง)
+
+   วิธีเช็ค: `git config --get core.autocrlf` ถ้าได้ `true` ให้สั่ง `git config core.autocrlf false`
+   แล้วรัน sed strip `\r` หรือ fresh clone ใหม่เพื่อให้ working tree ตรงกับที่ commit จริง
+   (ดูวิธีที่เคยทำสำเร็จแล้วในหัวข้อ "🐛 บั๊กที่พี่ A เจอจริงหลัง merge (2026-09-02) — CRLF บน Windows" ด้านล่าง)
+
+2. **Pre-commit hook (husky) อาจไม่ได้ active** — ที่เครื่องทำงานพบว่า `.git/hooks/pre-commit`
+   ไม่มีอยู่จริง และ `core.hooksPath` ไม่ได้ตั้งค่า ทั้งที่ `.husky/pre-commit` มีสคริปต์
+   (`lint-staged` + `node tools/check-standards.mjs`) เขียนไว้ครบ แปลว่า commit ที่เครื่องทำงาน
+   ไม่เคยถูกเช็คก่อน push เลย (ต้องรอไป fail ที่ CI แทน)
+
+   วิธีแก้: รัน `npm install` ครั้งเดียว (หรือ `npx husky`) จะ activate hook
+   วิธีเช็คว่าทำงานหรือยัง: `git config --get core.hooksPath` ควรได้ `.husky/_`
+   และ `.husky/_/pre-commit` ควรมีไฟล์อยู่จริง
+
+---
+
 ## 🐛 บั๊กที่พี่ A เจอจริงหลัง merge (2026-09-02) — CRLF บน Windows
 
 **อาการ:** pull โค้ดชุด Quality Gate มาที่เครื่องบ้าน (PowerShell) รัน `npm run check`
@@ -253,9 +282,13 @@ Commit `af0a4e0` — push ขึ้น https://github.com/supasiao7896TH/claude-
 ## 🚧 ค้างอยู่ / ยังไม่ได้ทำ
 - ยังไม่มี apple-touch-icon จริงของ condo-rental-app (รอไอคอนแอปจริง)
 - ยังไม่ได้ integrate A(i)CODER badge เข้ากับแอปอื่นๆ ของพี่ A นอกจาก condo-rental-app
+- **🆕 (2026-09-11)** ยังไม่ได้เช็ค `core.autocrlf` และ pre-commit hook (husky) ที่เครื่องบ้าน — ดูหัวข้อ
+  "🆕 ต้องเช็ค/แก้ที่เครื่องบ้าน (home) รอบถัดไปที่เปิดเครื่อง" ด้านบน
 
 ## 🎯 ขั้นตอนถัดไป
 - ยังไม่ได้ตกลงกับพี่ A ว่าจะต่อยอดอะไรต่อ — เริ่มจาก pull `claude-config` ให้เรียบร้อยก่อน แล้วค่อยถามพี่ A
+- **🆕 (2026-09-11, ที่เครื่องบ้าน)** เช็ค `git config --get core.autocrlf` และ `git config --get core.hooksPath`
+  ตามรายละเอียดในหัวข้อ "🆕 ต้องเช็ค/แก้ที่เครื่องบ้าน (home) รอบถัดไปที่เปิดเครื่อง" ด้านบน — แก้ให้ตรงกับที่ทำไปแล้วที่เครื่อง Office
 
 ## 🔧 คำสั่งที่ต้องรันก่อนทำงานต่อ (ที่เครื่อง Office — user `26007294`)
 0. **รอบนี้เพิ่ม:** หลัง `git pull` แล้วต้อง copy `settings.json` ทับ `C:\Users\26007294\.claude\settings.json`
@@ -273,6 +306,8 @@ Commit `af0a4e0` — push ขึ้น https://github.com/supasiao7896TH/claude-
 ## ⚠️ ข้อควรระวัง / สิ่งที่ต้องไม่ลืม
 - ห้ามลืม pull `claude-config` ก่อนเริ่มงาน UI — ไม่งั้นเครื่อง Office จะยังใช้ design system เก่า/ผิด
 - `condo-rental-app` เป็น multi-file (ต่างจากมาตรฐาน single-HTML เดิม) — เป็นข้อยกเว้นเฉพาะโปรเจกต์นี้เท่านั้น อย่าเข้าใจผิดว่ามาตรฐานเปลี่ยนทั้งหมด
+- **🆕 (2026-09-11)** ที่เครื่องบ้าน อย่าลืมเช็ค `core.autocrlf`/pre-commit hook ตามหัวข้อใหม่ด้านบนก่อนเริ่มงานเขียนโค้ด
+  ไม่งั้น `npm run check` ที่รันในเครื่องอาจ false alarm และ commit จะไม่ถูกเช็คก่อน push
 
 ---
 
