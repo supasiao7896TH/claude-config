@@ -17,7 +17,7 @@ description: >
 
 | | |
 |---|---|
-| **Version** | 1.1 |
+| **Version** | 1.2 |
 | **Updated** | 2026-09 |
 | **Sections in this file** | §25 |
 | **Related skills** | `vibe-coding-core` (§1–2, §8, §16–17) · `vibe-coding-workflow` (§18–19, §23–24) · `vibe-coding-multifile` (§21) · `cloudflare-workers-deploy` |
@@ -174,6 +174,35 @@ preview ในตัว และ deploy ลงโฟลเดอร์ `preview
 | Playwright ใน pre-commit hook | ช้าเกิน 5 วิเมื่อไหร่ คนจะเริ่มพิมพ์ `--no-verify` ซึ่งห้ามไว้ · ให้ CI รัน |
 | เอา lint/test ไปใส่ hooks ใน `settings.json` | PowerShell เฉพาะเครื่อง ช้า และสู้กับ agent loop · npm script + git hook เดินทางไปกับ repo และใช้ใน CI ได้ด้วย |
 | ย้ายไป Vite เพื่อให้ test ได้ | §25.2 แก้ปัญหานี้แล้ว · Decision Table ใน `vibe-coding-multifile` ยังใช้เกณฑ์เดิม |
+
+---
+
+## § 25.7 · TDD Checkpoint — Red ก่อน Green (บังคับที่ Step 5a ของ `vibe-coding-core` §1)
+
+> มาจาก 7 SE Fundamentals for Vibe Coding (BoomtoDev) — False Success: AI บอกว่า "เสร็จแล้ว"
+> ไม่ได้แปลว่าเสร็จจริง จนกว่าจะมีเทสต์ที่เคยแดงมาพิสูจน์
+
+**ใช้ตอนไหน:** เริ่ม logic ใหม่ที่ยังไม่เคยมี บนแอปที่มีโมดูล/ฟังก์ชันให้ stub ได้ (9-Module
+starter — Multi-File หรือ Single HTML File) — ไม่ใช่ตอนแก้บัก (นั่นคือกฎเดิมของ
+`sa-code-reviewer` ข้อ 6: ต้องมีเทสต์ที่จะแดงถ้าบักกลับมา) และไม่ใช่ "เขียนเทสต์ใหม่แล้วลอง
+ทำให้มันพัง" ของ §25.2 (นั่นใช้ตอนเทสต์ใหม่ ไม่ว่าโค้ดจะมีอยู่แล้วหรือไม่) รอบนี้ยังไม่ครอบคลุม
+งานแก้บัก/iterate แอปเดิมของ `vibe-coding-workflow` — เฉพาะโปรเจกต์ใหม่ของ `vibe-coding-core`
+
+### ทำยังไงให้ "แดง" มีความหมายจริง
+
+ปัญหา: ถ้ายังไม่มี `index.html`/module เลย เทสต์จะแดงเพราะหาไฟล์ไม่เจอ ไม่ใช่เพราะ assert
+พัง — พิสูจน์อะไรไม่ได้ ต้องมี "โครงที่เทสต์เรียกได้" ก่อนเขียน logic เสมอ:
+
+| Stack | ก่อนเขียน logic | เทสต์เรียกอะไร |
+|---|---|---|
+| Single HTML File | copy `design-lab/starter/` แล้ว stub ฟังก์ชันในโมดูลที่เกี่ยวข้อง | `mod(win, "MODULE_NAME").fn(...)` ผ่าน harness (§25.2) |
+| Multi-File | copy `design-lab/starter-multifile/`, สร้าง `src/modules/*.js` พร้อม `export` ฟังก์ชัน stub | `import` ตรงจาก module ใน Vitest (`vibe-coding-multifile` §21) |
+
+### ขอบเขต — ไม่ใช่ทุกบรรทัดโค้ด
+- เฉพาะ logic ที่ Test Plan ของ Blueprint ระบุไว้แล้ว — ไม่มีเป้า coverage เหมือนเดิม (§25.6)
+- UI/markup ล้วนๆ ไม่ต้องมี failing test ก่อน — จับด้วย e2e ตามปกติ
+- แอปสไตล์ DOM-driven เก่าที่ไม่มีโมดูลให้ stub — ข้าม checkpoint นี้ไปเลย (ดู `vibe-coding-core`
+  §1 Step 5)
 
 ---
 

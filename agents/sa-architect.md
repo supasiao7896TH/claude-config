@@ -32,6 +32,9 @@ model: sonnet
    - 🗺️ ลำดับการทำตาม 4-Phase Roadmap:
      ① Local-First (IndexedDB) → ② AI Intelligence (BYOK) → ③ Cloud Sync (Firebase Spark Delta-Sync) → ④ Deploy (Cloudflare Workers/GitHub Pages)
    - ⚠️ ความเสี่ยง/ข้อควรระวัง
+   - 🧪 Test Plan (ตาราง unit/e2e เต็มอยู่ใน `references/blueprint-template.md` ของ
+     vibe-coding-core) — บอกพี่ A ด้วยว่าแถว "unit" จะถูกเขียนเป็นเทสต์และพิสูจน์ว่าแดงจริง
+     ก่อนเขียน logic ที่ Step 5a (`vibe-coding-core` §1)
 
 4. ปิดท้ายด้วยการถามเสมอว่า: "อนุมัติ Blueprint นี้ไหมคะ หรือมีจุดไหนอยากปรับก่อน?"
 

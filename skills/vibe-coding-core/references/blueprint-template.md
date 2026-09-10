@@ -51,6 +51,9 @@ Store: [store_name]
 | [กฎ §8 ที่เกี่ยวกับแอปนี้] | unit | |
 | contrast/44px/โฟกัส ทั้ง 2 ธีม | e2e | ได้ฟรีจาก starter |
 
+> ทุกแถว "unit" ในตารางนี้ = เทสต์ที่ต้องเขียนและพิสูจน์ว่าแดงจริงที่ Step 5a
+> (`vibe-coding-core` §1) **ก่อน** logic ใดๆ ถูกเขียน — ไม่ใช่แค่แผนบนกระดาษ
+
 ### Definition of Done
 ```
 [ ] npm run check เขียว

@@ -21,7 +21,7 @@ description: >
 
 | | |
 |---|---|
-| **Version** | 7.1 |
+| **Version** | 7.2 |
 | **Updated** | 2026-09 |
 | **Brand** | A-Class WebCraft · Code • Share • Inspire · by Supasit.A |
 | **Sections in this file** | §1–2, §8, §16–17 |
@@ -41,7 +41,7 @@ Step 1 → Target Device Inquiry
 Step 2 → ASCII/Text UI Mockup
 Step 3 → Architecture Blueprint
 Step 4 → Approval
-Step 5 → Code Delivery
+Step 5 → Red-Green Code Delivery
 Step 6 → Auto-generate Context Files + Push GitHub
 ```
 
@@ -105,8 +105,33 @@ Mobile (vertical + bottom-nav):               PC/Desktop (sidebar + content):
 ถามชัดๆ ว่า:
 > *"Mockup และ Blueprint นี้โอเคไหมคะพี่ A หรือต้องการปรับอะไรก่อนเริ่มเขียนโค้ด?"*
 
-### ⛔ Step 5 — DO NOT CODE UNTIL APPROVED
-ห้ามสร้าง `index.html` จนกว่าพี่ A จะพิมพ์คำว่า **"อนุมัติ"** หรือ approve อย่างชัดเจน
+### ⛔ Step 5 — Red-Green Code Delivery (กัน False Success)
+
+> **WHY:** AI ที่เขียนโค้ดแล้วบอกว่า "เสร็จแล้วค่ะ" คือคนเขียนตัดสินเองว่าตัวเองถูก
+> ไม่มีอะไรพิสูจน์จนกว่าจะมีเทสต์ที่เคย "แดง" มาก่อน แล้วเปลี่ยนเป็น "เขียว" เพราะโค้ดที่เพิ่งเขียนจริง
+> (แรงบันดาลใจจาก "7 SE Fundamentals for Vibe Coding" — BoomtoDev)
+>
+> **ใช้เฉพาะแอปที่มีโมดูล/ฟังก์ชันให้ stub ได้ (9-Module starter)** — ถ้าโปรเจกต์เป็น
+> DOM-driven เก่าที่ไม่มีโมดูลชัดเจน ข้าม 5a/5b ไป Code Delivery ตรงๆ พร้อมบอกพี่ A ว่าทำไมข้าม
+
+ห้ามสร้าง `index.html`/`src/` จนกว่าพี่ A จะพิมพ์คำว่า **"อนุมัติ"** หรือ approve อย่างชัดเจน
+(เหมือนเดิม ไม่มี gate ใหม่) แต่หลังอนุมัติแล้ว ห้ามข้ามลำดับนี้:
+
+**5a — เทสต์ก่อน (Red):**
+- เอาแถว "unit" ทุกแถวจาก Test Plan ของ Blueprint (`references/blueprint-template.md`)
+  มาเขียนเป็นเทสต์จริงก่อน — Single HTML File ใช้ harness ตาม `vibe-coding-quality` §25.2/§25.7
+  · Multi-File ใช้ Vitest ตรงๆ ตาม `vibe-coding-multifile` §21
+- Scaffold โครง module จาก starter ให้พอมีชื่อฟังก์ชันให้เทสต์เรียก — ยังไม่มี logic ข้างใน
+  (stub `throw new Error('not implemented')` หรือ return ค่าที่ผิดเจตนา)
+- รัน `npm test` ต้องเห็นแดงจริงก่อนเขียน logic แม้แต่บรรทัดเดียว — แปะผลแดงให้พี่ A เห็น
+
+**5b — เขียน logic ให้เขียว (Green):**
+- เขียนเฉพาะให้พอเทสต์ 5a ผ่าน ไม่ยัด feature เกินขอบเขต Blueprint
+- รัน `npm test` ซ้ำจนเขียวทั้งหมด แล้วค่อยไป Step 6
+
+> ขอบเขต: เฉพาะแถว "unit" — แถว "e2e" (contrast/44px/focus) ได้ฟรีจาก starter อยู่แล้ว
+> ไม่ต้องเขียนใหม่ · ไม่มีเป้า coverage เพิ่ม (เกณฑ์เดิม "เขียนเฉพาะ logic ที่ Test Plan ระบุ"
+> ยังอยู่เหมือนเดิม)
 
 ### 🆕 Step 6 — Auto-generate Context Files + Push GitHub
 
