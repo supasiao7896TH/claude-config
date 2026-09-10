@@ -140,7 +140,7 @@ Copy-Item "$env:USERPROFILE\claude-config\settings.json" "$env:USERPROFILE\.clau
 - **`hooks.Stop` / `UserPromptSubmit` / `Notification`** — เสียงแจ้งเตือน Start/Stop/ขออนุมัติ permission ผ่าน Windows TTS
 - **`enabledPlugins` / `extraKnownMarketplaces`** — plugin ที่ติดตั้งไว้ (⚠️ ตัว plugin เองไม่ sync ผ่าน git ต้องรัน `/plugin install` ซ้ำที่เครื่องใหม่ — ดูหัวข้อด้านล่าง ไฟล์นี้แค่บันทึกว่าเปิดใช้ตัวไหนอยู่)
 
-## รายการ Skills (24 ตัว)
+## รายการ Skills (25 ตัว)
 
 - pta-exapilot-logic
 - pta-industry-insight
@@ -151,6 +151,7 @@ Copy-Item "$env:USERPROFILE\claude-config\settings.json" "$env:USERPROFILE\.clau
 - pta-safety-observation
 - star-kaizen
 - technical-timing
+- thai-civil-criminal-law
 - vi-analysis
 - vibe-coding-core
 - vibe-coding-firebase
