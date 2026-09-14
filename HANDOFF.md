@@ -2,7 +2,7 @@
 
 > ใช้ไฟล์นี้ส่งต่องานข้ามเครื่อง (บ้าน ↔ ที่ทำงาน) — อ่านไฟล์นี้ก่อนเริ่ม session ถัดไป
 
-**อัปเดตล่าสุด:** 2026-09-02 (session บนเว็บ — branch `claude/software-engineering-workflow-h8eqj3`)
+**อัปเดตล่าสุด:** 2026-09-14 (เครื่องบ้าน — แก้ `core.autocrlf` ตามที่ค้างไว้จาก Office)
 
 ---
 
@@ -43,10 +43,15 @@
 
 ---
 
-## 🆕 ต้องเช็ค/แก้ที่เครื่องบ้าน (home) รอบถัดไปที่เปิดเครื่อง — local git config (พบที่เครื่อง Office 2026-09-11)
+## ✅ เสร็จแล้ว (2026-09-14, เครื่องบ้าน) — local git config (พบที่เครื่อง Office 2026-09-11)
 
-> เจอ 2 ปัญหานี้ที่เครื่อง Office วันนี้ แก้ที่เครื่อง Office แล้ว แต่**ยังไม่ได้เช็คว่าเครื่องบ้านเป็นเหมือนกันหรือไม่**
+> เจอ 2 ปัญหานี้ที่เครื่อง Office ก่อนหน้านี้ แก้ที่เครื่อง Office แล้ว และ**เช็ค/แก้ที่เครื่องบ้านเสร็จแล้วเมื่อ 2026-09-14**
 > ทั้งสองข้อเป็นเรื่อง local machine config เท่านั้น ไม่เกี่ยวกับโค้ด/เนื้อหา skill ใดๆ
+>
+> **ผลที่เครื่องบ้าน:** `core.autocrlf` เจอเป็น `true` (ต้องแก้) → สั่ง `git config core.autocrlf false`
+> แล้วรัน `git rm -r --cached .` + `git reset --hard` เพื่อ re-checkout เป็น LF ทั้งหมด · `core.hooksPath`
+> เจอเป็น `.husky/_` อยู่แล้ว (ถูกต้อง ไม่ต้องแก้) · `npm run check` ผ่านทุกข้อหลังแก้เสร็จ (lint · secretlint ·
+> check:standards)
 
 **Trigger ที่ทำให้เจอ:** วันนี้เพิ่ม skill ใหม่ `thai-civil-criminal-law` แล้ว push ขึ้น GitHub ครั้งแรก
 CI (`check` job) แดง เพราะ README บอกจำนวน skill ไม่ตรง (24 vs 25) — ถ้า pre-commit hook active อยู่
@@ -282,13 +287,12 @@ Commit `af0a4e0` — push ขึ้น https://github.com/supasiao7896TH/claude-
 ## 🚧 ค้างอยู่ / ยังไม่ได้ทำ
 - ยังไม่มี apple-touch-icon จริงของ condo-rental-app (รอไอคอนแอปจริง)
 - ยังไม่ได้ integrate A(i)CODER badge เข้ากับแอปอื่นๆ ของพี่ A นอกจาก condo-rental-app
-- **🆕 (2026-09-11)** ยังไม่ได้เช็ค `core.autocrlf` และ pre-commit hook (husky) ที่เครื่องบ้าน — ดูหัวข้อ
-  "🆕 ต้องเช็ค/แก้ที่เครื่องบ้าน (home) รอบถัดไปที่เปิดเครื่อง" ด้านบน
+- ~~ยังไม่ได้เช็ค `core.autocrlf` และ pre-commit hook (husky) ที่เครื่องบ้าน~~ **เสร็จแล้ว 2026-09-14**
+  — ดูหัวข้อ "✅ เสร็จแล้ว (2026-09-14, เครื่องบ้าน)" ด้านบน
 
 ## 🎯 ขั้นตอนถัดไป
 - ยังไม่ได้ตกลงกับพี่ A ว่าจะต่อยอดอะไรต่อ — เริ่มจาก pull `claude-config` ให้เรียบร้อยก่อน แล้วค่อยถามพี่ A
-- **🆕 (2026-09-11, ที่เครื่องบ้าน)** เช็ค `git config --get core.autocrlf` และ `git config --get core.hooksPath`
-  ตามรายละเอียดในหัวข้อ "🆕 ต้องเช็ค/แก้ที่เครื่องบ้าน (home) รอบถัดไปที่เปิดเครื่อง" ด้านบน — แก้ให้ตรงกับที่ทำไปแล้วที่เครื่อง Office
+- ~~เช็ค `git config --get core.autocrlf` และ `git config --get core.hooksPath` ที่เครื่องบ้าน~~ **เสร็จแล้ว 2026-09-14**
 
 ## 🔧 คำสั่งที่ต้องรันก่อนทำงานต่อ (ที่เครื่อง Office — user `26007294`)
 0. **รอบนี้เพิ่ม:** หลัง `git pull` แล้วต้อง copy `settings.json` ทับ `C:\Users\26007294\.claude\settings.json`
@@ -306,8 +310,7 @@ Commit `af0a4e0` — push ขึ้น https://github.com/supasiao7896TH/claude-
 ## ⚠️ ข้อควรระวัง / สิ่งที่ต้องไม่ลืม
 - ห้ามลืม pull `claude-config` ก่อนเริ่มงาน UI — ไม่งั้นเครื่อง Office จะยังใช้ design system เก่า/ผิด
 - `condo-rental-app` เป็น multi-file (ต่างจากมาตรฐาน single-HTML เดิม) — เป็นข้อยกเว้นเฉพาะโปรเจกต์นี้เท่านั้น อย่าเข้าใจผิดว่ามาตรฐานเปลี่ยนทั้งหมด
-- **🆕 (2026-09-11)** ที่เครื่องบ้าน อย่าลืมเช็ค `core.autocrlf`/pre-commit hook ตามหัวข้อใหม่ด้านบนก่อนเริ่มงานเขียนโค้ด
-  ไม่งั้น `npm run check` ที่รันในเครื่องอาจ false alarm และ commit จะไม่ถูกเช็คก่อน push
+- ~~ที่เครื่องบ้าน อย่าลืมเช็ค `core.autocrlf`/pre-commit hook~~ **เสร็จแล้ว 2026-09-14** — `npm run check` ผ่านครบ
 
 ---
 
