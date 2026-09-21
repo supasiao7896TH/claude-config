@@ -26,12 +26,16 @@ const fail = (name, detail) => {
 };
 const check = (name, problems) => (problems.length === 0 ? pass(name) : fail(name, problems));
 
+/** skills/synced/ = skill ที่ Claude Code sync มาจากบัญชี claude.ai (ไม่ใช่ของใน repo นี้ · ไม่ commit · ไม่ตรวจ) */
+const SYNCED_DIR = join(ROOT, "skills", "synced");
+
 /** เดินไฟล์ทั้งหมดใต้ dir ที่นามสกุลตรงกับ exts */
 function walk(dir, exts, out = []) {
   if (!existsSync(dir)) return out;
   for (const entry of readdirSync(dir)) {
     if (entry === "node_modules" || entry === ".git") continue;
     const full = join(dir, entry);
+    if (full === SYNCED_DIR) continue;
     if (statSync(full).isDirectory()) walk(full, exts, out);
     else if (exts.some((e) => entry.endsWith(e))) out.push(full);
   }
@@ -190,7 +194,10 @@ const STARTERS = ["design-lab/starter/index.html", "design-lab/starter-multifile
 
 /* ── 5 · โครงสร้าง skill: ชื่อโฟลเดอร์ต้องตรงกับ frontmatter และต้องมี description ── */
 const skillDirs = existsSync(join(ROOT, "skills"))
-  ? readdirSync(join(ROOT, "skills")).filter((d) => statSync(join(ROOT, "skills", d)).isDirectory())
+  ? readdirSync(join(ROOT, "skills")).filter(
+      (d) =>
+        join(ROOT, "skills", d) !== SYNCED_DIR && statSync(join(ROOT, "skills", d)).isDirectory()
+    )
   : [];
 {
   const problems = [];

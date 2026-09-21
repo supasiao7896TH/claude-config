@@ -58,6 +58,8 @@ New-Item -ItemType Junction -Path "$env:USERPROFILE\.claude\agents" -Target "$en
 
 หลังตั้งค่าแล้ว ทุกครั้งที่อัปเดต skill/agent ใน repo นี้ → `git pull` ที่ `$env:USERPROFILE\claude-config` ก็พอ ไม่ต้อง copy ไฟล์ซ้ำอีก (เฉพาะวิธี B)
 
+> **path ของ repo ไม่จำเป็นต้องเป็น `$env:USERPROFILE\claude-config`** — เครื่องที่ทำงานเก็บไว้ที่ `$env:USERPROFILE\A(i)CODER2025TH\claude-config` `SessionStart` hook ใน `settings.json` จึงเช็คทั้ง 2 path แล้ว `git pull` เฉพาะที่มีอยู่จริง (ไม่ error ถ้าไม่เจอ) ส่วน Junction ของ `skills`/`agents` ต้องชี้ path จริงของเครื่องนั้นเอง ถ้าย้ายโฟลเดอร์ repo ต้องลบแล้วสร้าง Junction ใหม่ (ลบด้วย `(Get-Item "$env:USERPROFILE\.claude\skills" -Force).Delete()` เพื่อลบเฉพาะตัว link ไม่ใช่ไฟล์จริง)
+
 ### วิธีติดตั้ง statusline.ps1 (Multi-line statusline)
 
 `statusline.ps1` เป็น**ไฟล์เดี่ยว** ไม่ใช่โฟลเดอร์ — สร้าง Junction แบบ skills/agents ไม่ได้ (Junction ใช้ได้เฉพาะโฟลเดอร์) ส่วน Symbolic Link สำหรับไฟล์เดี่ยวต้องใช้สิทธิ์ Administrator/Developer Mode ซึ่งเครื่องที่ทำงานอาจไม่มีสิทธิ์ตั้งค่านี้ ดังนั้นใช้วิธี **copy ไฟล์** แทน (ไม่ auto-sync — ถ้าแก้ script ต้อง copy ใหม่ + commit ทั้งสองที่):

@@ -24,7 +24,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "try { git -C \"$env:USERPROFILE\\claude-config\" pull --ff-only } catch {}",
+            "command": "$p = \"$env:USERPROFILE\\claude-config\"; if (-not (Test-Path $p)) { $p = \"$env:USERPROFILE\\A(i)CODER2025TH\\claude-config\" }; if (Test-Path $p) { git -C $p pull --ff-only }",
             "shell": "powershell"
           }
         ]

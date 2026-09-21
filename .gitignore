@@ -32,3 +32,6 @@ Thumbs.db
 desktop.ini
 .vscode/
 !.vscode/extensions.json
+
+# skill ที่ Claude Code sync มาจากบัญชี claude.ai (เขียนลง ~/.claude/skills/synced ซึ่งชี้เข้า repo นี้)
+skills/synced/
