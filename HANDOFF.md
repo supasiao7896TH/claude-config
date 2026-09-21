@@ -2,14 +2,15 @@
 
 > ใช้ไฟล์นี้ส่งต่องานข้ามเครื่อง (บ้าน ↔ ที่ทำงาน) — อ่านไฟล์นี้ก่อนเริ่ม session ถัดไป
 
-**อัปเดตล่าสุด:** 2026-09-14 (เครื่องบ้าน — แก้ `core.autocrlf` ตามที่ค้างไว้จาก Office)
+**อัปเดตล่าสุด:** 2026-09-21 (เครื่อง Office — แก้ SessionStart hook · Junction เสีย · อัปเดต skill บน claude.ai — ดูหัวข้อ "✅ เสร็จแล้ว (2026-09-21)" ด้านล่าง)
 
 ---
 
 ## ⚠️ สิ่งแรกที่ต้องทำที่ทุกเครื่อง (สำคัญที่สุด)
 
 1. หาโฟลเดอร์ที่ clone `claude-config` ไว้ที่เครื่องนั้น
-   (เครื่อง Office **ยังไม่ทราบ path แน่ชัด** รู้แค่ `.claude` อยู่ที่ `C:\Users\26007294\.claude\` ต้องหา/ยืนยันเอง)
+   (เครื่อง Office ยืนยันแล้วเมื่อ 2026-09-21: `C:\Users\26007294\A(i)CODER2025TH\claude-config` — **ไม่ใช่**
+   `$env:USERPROFILE\claude-config` ตามที่คำสั่งอื่นในไฟล์นี้/README เขียนไว้ ให้แทน path ให้ตรงเครื่องเอง)
 2. รัน `git pull` ในโฟลเดอร์นั้น
 3. หลัง pull เสร็จ ระบบจะใช้ **"Supasit.A Studio"** (design system ใหม่ถาวร — แทนที่ Instrument Grade)
    อัตโนมัติทันที เพราะเก็บอยู่ใน skill ระดับ user (`~/.claude/skills/vibe-coding-core/`) ไม่ต้องตั้งค่าเพิ่มต่อโปรเจกต์
@@ -40,6 +41,73 @@
    ทำแค่ครั้งเดียวต่อ clone · `npm ci` จะติดตั้ง git hook ให้อัตโนมัติ (ผ่าน `prepare`)
    ถ้าข้ามข้อนี้ hook จะไม่ทำงานและ `npm run check` จะรันไม่ได้ — **แต่ทุกอย่างอื่นยังใช้ได้ปกติ**
    (`node_modules/` อยู่ใน `.gitignore` แล้ว จึงไม่ทำให้ `git pull` ชนกัน)
+
+---
+
+## ✅ เสร็จแล้ว (2026-09-21, เครื่อง Office) — SessionStart hook · Junction เสีย · skill บน claude.ai
+
+**อาการที่เจอ:** เปิด session แล้วขึ้น `SessionStart:startup hook error ... fatal: cannot change to
+'C:\Users\26007294\claude-config'` (non-blocking — แค่ไม่ได้ auto-pull) · ตรวจต่อพบว่า Junction
+`~\.claude\skills` กับ `~\.claude\agents` **ชี้ไป path เดิมที่ไม่มีแล้ว** (dangling) ทำให้ subagent `sa-*` ทั้ง 7 ตัวกับ
+skill 25 ตัวจาก repo **ไม่ถูกโหลดเลย** โดยไม่มี error ใดๆ บอก (สังเกตได้แค่ว่าไม่เห็นใน session)
+หลักฐานว่าโฟลเดอร์เคยอยู่ที่ `C:\Users\26007294\claude-config` (Junction ต้องถูกสร้างชี้ไปที่นั่น) แต่ไม่ทราบว่าย้ายเมื่อไหร่
+
+**สิ่งที่แก้ (push แล้ว — commit `196b0c0`):**
+
+1. `settings.json` → `SessionStart` hook เช็ค 2 path (`$env:USERPROFILE\claude-config` ก่อน แล้วค่อย
+   `$env:USERPROFILE\A(i)CODER2025TH\claude-config`) แล้ว `git pull --ff-only` เฉพาะที่มีอยู่จริง ไม่ error ถ้าไม่เจอ
+   (ที่เดิมใช้ `try/catch` ไม่ช่วย เพราะ `git` เป็น native command ไม่ throw exception ของ PowerShell)
+2. `README.md` → เพิ่มหมายเหตุว่า path ของ repo ต่างกันตามเครื่องได้ + วิธีสร้าง Junction ใหม่
+3. `.gitignore` + `tools/check-standards.mjs` → ข้าม `skills/synced/` (ดูข้อควรระวังด้านล่าง)
+4. ไฟล์ global `C:\Users\26007294\.claude\settings.json` แก้ hook ตรงกับใน repo แล้ว (ตรวจว่าตรงกันทุกตัวอักษร)
+
+**Junction สร้างใหม่ (ทำที่เครื่อง Office แล้ว — ไม่ใช่ไฟล์ใน repo จึงไม่ผ่าน git):**
+```powershell
+$r = "$env:USERPROFILE\A(i)CODER2025TH\claude-config"    # ← เปลี่ยนเป็น path จริงของเครื่องนั้น
+foreach ($n in 'skills','agents') {
+  (Get-Item "$env:USERPROFILE\.claude\$n" -Force).Delete()   # ลบเฉพาะตัว link ไม่กระทบไฟล์จริง
+  New-Item -ItemType Junction -Path "$env:USERPROFILE\.claude\$n" -Target "$r\$n"
+}
+```
+วิธีเช็คว่า Junction ยังดีอยู่: `(Get-Item "$env:USERPROFILE\.claude\skills" -Force).Target` แล้ว `Test-Path` path ที่ได้ต้องเป็น `True`
+
+**⚠️ ข้อควรระวัง (เจอจริงวันนี้):**
+
+- **`skills/synced/` โผล่ใน repo:** พอ Junction `skills` ชี้เข้า repo ได้ Claude Code จะ sync skill จากบัญชี claude.ai
+  ลงโฟลเดอร์ `~\.claude\skills\synced\` ซึ่งก็คือ `claude-config\skills\synced\` → ทำให้ pre-commit (`check-standards`)
+  แดง 5 ข้อ (เจอสำเนา `vibe-coding-*` เก่า + นับ skill เกิน) แก้แล้วโดย ignore + ข้ามโฟลเดอร์นี้ **ห้ามแก้ไฟล์ใน `synced/`**
+  (เป็นสำเนา ไม่ใช่ต้นฉบับ) และห้าม commit — ถ้าเครื่องบ้านเจอเหมือนกัน pull มาก็ได้ตัวแก้ไปด้วย
+- **อย่าใช้ `git commit --no-verify` ข้าม hook** ถ้าเจอ pre-commit แดงให้หาสาเหตุ
+
+**skill บน claude.ai (Customize → Skills — ทำผ่าน Claude in Chrome):**
+
+| Skill | ทำอะไร | เวอร์ชัน |
+|---|---|---|
+| `vibe-coding-core` | เขียนทับ | 6.0 → 7.2 |
+| `vibe-coding-firebase` | เขียนทับ | 6.0 → 6.3 |
+| `vibe-coding-multifile` | เขียนทับ | 1.0 → 1.3 |
+| `vibe-coding-workflow` | เขียนทับ | 6.0 → 6.1 |
+| `cloudflare-workers-deploy` | เขียนทับ | 1.1 → 1.2 |
+| `vibe-coding-quality` | เพิ่มใหม่ | 1.3 |
+| `thai-civil-criminal-law` | เพิ่มใหม่ | — |
+
+- จำนวน "Created by you" 20 → 22 ไม่มีรายการซ้ำ · ทดสอบแล้วว่าถามในแชตใหม่ "จะสร้างแอปใหม่ ใช้ stack อะไร" ตอบ Multi-File เป็นค่าเริ่มต้น (ตรงเวอร์ชันใหม่)
+- **จงใจไม่ upload:** `deploy` · `preview` · `rollback` · `ตรวจ` · `พัง` (คำสั่งของ Claude Code) → `deploy` บน claude.ai ยังเป็นเวอร์ชันเก่า
+  (ไม่มีขั้น `/ตรวจ` นำหน้า) · `vibe-coding-quality` บน claude.ai อ้างถึง `npm run check` และ slash command ที่ chat ไม่มี ใช้เป็นความรู้อ้างอิงเท่านั้น
+- **หน้า upload ของ claude.ai ช้า** บางรอบเกิน 10 วินาทีกว่าจะเปลี่ยนหน้า และปุ่มขึ้น "Uploading..." — **อย่ากด Save ซ้ำ**
+  รอแล้วรีโหลดรายการเช็คก่อน (ตอนแรกเข้าใจผิดว่า Save ไม่ทำงาน)
+- zip สำรองของเวอร์ชันเก่า 5 ตัวที่ถูกเขียนทับ อยู่ที่ **เครื่อง Office เท่านั้น**:
+  `C:\Users\26007294\.claude\backups\claude-ai-skills-before-2026-09-21\` (อยู่นอก repo ตั้งใจ ไม่ sync ข้ามเครื่อง)
+  ย้อนกลับ = Upload skill ด้วย zip ชื่อเดียวกัน (เขียนทับ)
+
+**ที่เครื่องบ้านต้องทำ:**
+
+1. `git pull` ใน `claude-config` (ได้ hook ใหม่ + ตัวแก้ `skills/synced/` ในคราวเดียว)
+2. `Copy-Item` `settings.json` ทับ `~\.claude\settings.json` ตามข้อ 5 ด้านบน **แล้วแก้ placeholder statusline ด้วย** (`PC 4000D`)
+3. เช็ค Junction ของเครื่องบ้านด้วยคำสั่งด้านบน (ถ้ายังชี้ path ที่มีอยู่จริง ไม่ต้องทำอะไรเพิ่ม)
+
+**ยังไม่ได้ยืนยัน:** เปิด session ใหม่ที่ Office แล้ว `SessionStart` error หายจริง + `sa-*`/skill 25 ตัวโหลดจาก repo ได้ (แก้เสร็จหลัง session ที่ใช้ทำงานนี้เปิดไปแล้ว)
+→ session ถัดไปให้เช็คทั้ง 2 ข้อก่อนเริ่มงาน
 
 ---
 
