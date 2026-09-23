@@ -22,6 +22,12 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const SKILLS_DIR = join(ROOT, "skills");
 const SYNCED_ROOT = join(SKILLS_DIR, "synced");
 
+/** skill ที่ตั้งใจให้ 2 ฝั่งไม่ตรงกัน — ไม่นับเป็นปัญหา แต่ยังแสดงให้เห็น */
+const INTENTIONAL_DRIFT = {
+  "pta-ips-writer":
+    "repo เป็น public จึงตัดชื่อคน/เบอร์ต่อ/อัตราภายในออก — ฉบับเต็มอยู่บน claude.ai"
+};
+
 const isDir = (p) => existsSync(p) && statSync(p).isDirectory();
 
 /** skill ที่มี SKILL.md อยู่ใน dir นี้ (ชื่อโฟลเดอร์ → path) */
@@ -86,7 +92,9 @@ for (const syncedDir of syncedDirs) {
     }
     const problems = diffFiles(snapshot(dir), snapshot(synced.get(name)));
     if (problems.length === 0) console.log(`  ok          ${name}`);
-    else {
+    else if (INTENTIONAL_DRIFT[name]) {
+      console.log(`  intended    ${name}  (${INTENTIONAL_DRIFT[name]})`);
+    } else {
       console.log(`  DRIFT       ${name}`);
       for (const p of problems) console.log(`                ${p}`);
       issues++;

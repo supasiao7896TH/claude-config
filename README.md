@@ -142,10 +142,11 @@ Copy-Item "$env:USERPROFILE\claude-config\settings.json" "$env:USERPROFILE\.clau
 - **`hooks.Stop` / `UserPromptSubmit` / `Notification`** — เสียงแจ้งเตือน Start/Stop/ขออนุมัติ permission ผ่าน Windows TTS
 - **`enabledPlugins` / `extraKnownMarketplaces`** — plugin ที่ติดตั้งไว้ (⚠️ ตัว plugin เองไม่ sync ผ่าน git ต้องรัน `/plugin install` ซ้ำที่เครื่องใหม่ — ดูหัวข้อด้านล่าง ไฟล์นี้แค่บันทึกว่าเปิดใช้ตัวไหนอยู่)
 
-## รายการ Skills (25 ตัว)
+## รายการ Skills (26 ตัว)
 
 - pta-exapilot-logic
 - pta-industry-insight
+- pta-ips-writer (ฉบับ repo ตัดชื่อคน/เบอร์ต่อ/อัตราภายในออก เพราะ repo เป็น public — ฉบับเต็มอยู่บน claude.ai)
 - pta-kaizen-writer
 - pta-pi-datalink-excel
 - pta-plant-reference
