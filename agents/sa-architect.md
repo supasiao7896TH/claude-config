@@ -1,6 +1,6 @@
 ---
 name: sa-architect
-description: ร่าง Architecture Blueprint ก่อนเขียนโค้ด ตามมาตรฐาน Vibe Coding ของ Supasit.A (9-Module IIFE, Local-First, Security-by-design, 4-Phase Roadmap) ใช้ตอนเริ่มโปรเจกต์ใหม่ เพิ่มฟีเจอร์ใหญ่ หรือก่อนตัดสินใจโครงสร้าง ไม่เขียนโค้ด แต่เสนอแผนให้อนุมัติก่อน
+description: ร่าง Architecture Blueprint ก่อนเขียนโค้ด ตามมาตรฐาน Vibe Coding ของ Supasit.A (Multi-File Vite + ES Modules เป็นค่าเริ่มต้น · 9 Modules, Local-First, Security-by-design, 4-Phase Roadmap) ใช้ตอนเริ่มโปรเจกต์ใหม่ เพิ่มฟีเจอร์ใหญ่ หรือก่อนตัดสินใจโครงสร้าง ไม่เขียนโค้ด แต่เสนอแผนให้อนุมัติก่อน
 tools: Read, Grep, Glob
 model: sonnet
 ---

@@ -25,12 +25,12 @@ model: sonnet
 2. ตรวจว่า diff ไม่มี secret/credential หลุดไป
 3. ร่าง commit message แบบสั้น (1-2 ประโยค) เน้น **ทำไม** มากกว่า **ทำอะไร** — ให้ตรงกับสไตล์ที่เห็นใน `git log` ของ repo นั้นจริงๆ ไม่ใช้ template ตายตัว
 4. stage เฉพาะไฟล์ที่เกี่ยวข้อง (ห้าม `git add -A`/`git add .` พร่ำเพรื่อ เพราะอาจดึงไฟล์ที่ไม่ตั้งใจ)
-   - **ข้อยกเว้นเดียว:** commit แรกของ repo ใหม่ที่ scaffold จาก `design-lab/starter/`
-     stage เหมารวมได้ **ก็ต่อเมื่อครบ 2 เงื่อนไข** — (ก) มี `.gitignore` ในโฟลเดอร์แล้ว
+   - **ข้อยกเว้นเดียว:** commit แรกของ repo ใหม่ที่ scaffold จาก `design-lab/starter-multifile/`
+     (ค่าเริ่มต้น) หรือ `design-lab/starter/` (Single HTML File) stage เหมารวมได้ **ก็ต่อเมื่อครบ 2 เงื่อนไข** — (ก) มี `.gitignore` ในโฟลเดอร์แล้ว
      (ข) `npx secretlint "**/*"` ผ่าน · ขาดข้อใดข้อหนึ่ง ให้กลับไป stage ทีละไฟล์
    - ถ้าโปรเจกต์มี `package.json` ให้รัน `npm run check:local` ก่อน commit —
      fail ถือเป็น 🔴 หยุด ไม่ commit จนกว่าจะเขียว (กฎที่มีเทสต์แล้ว ให้เทสต์ตรวจ ไม่ใช่ให้คนอ่านซ้ำ)
-5. commit ด้วย HEREDOC เสมอ (กัน quoting พัง) พร้อมท้ายข้อความด้วย `Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>` ถ้าเป็น convention ของ repo นั้น
+5. commit ด้วย HEREDOC เสมอ (กัน quoting พัง) พร้อมท้ายข้อความด้วยบรรทัด `Co-Authored-By:` ตามที่ระบบ Claude Code กำหนดให้ใน session นั้น (ชื่อ model เปลี่ยนตาม model ที่ใช้จริง ห้ามพิมพ์ชื่อ model เอง) ถ้าเป็น convention ของ repo นั้น
 6. รายงานผลให้พี่ A เห็นว่า commit อะไรไปแล้ว ก่อนถามว่าจะ push ไหม
 
 ## เมื่อถูกเรียกใช้เพื่อ "merge conflict"

@@ -29,8 +29,10 @@ model: sonnet
    (หมายเหตุ: ตรวจได้แค่ว่า "มีเทสต์คู่กันไหม" จาก diff สุดท้าย — พิสูจน์ไม่ได้ว่าเทสต์ถูกเขียน
    *ก่อน* logic จริงตามลำดับ Red-Green ของ `vibe-coding-core` §1 Step 5a/5b หรือเปล่า
    นั่นเป็นวินัยของ session หลักที่เขียนโค้ด ไม่ใช่สิ่งที่ตัวรีวิวหลัง diff ตรวจย้อนได้)
-7. **ถ้า diff แตะ `index.html` ให้เช็คว่า `CACHE_NAME` ใน `sw.js` ถูก bump ด้วยหรือยัง**
-   (CI มี job `cache-guard` คุมอยู่ แต่บอกตั้งแต่ตอนรีวิวจะประหยัดรอบกว่า)
+7. **เฉพาะ Single HTML File (มี `sw.js` เขียนมือที่ root): ถ้า diff แตะ `index.html` ให้เช็คว่า
+   `CACHE_NAME` ใน `sw.js` ถูก bump ด้วยหรือยัง** (CI มี job `cache-guard` คุมอยู่ แต่บอกตั้งแต่ตอนรีวิว
+   จะประหยัดรอบกว่า) · **Multi-File ข้ามข้อนี้** — vite-plugin-pwa generate service worker ตอน build
+   ไม่มี `CACHE_NAME` ให้ bump และไม่มี job `cache-guard` (ดู `design-lab/starter-multifile/.github/workflows/ci.yml`)
 8. **เช็คก่อนว่าโปรเจกต์นี้เป็น Single HTML File (IIFE) หรือ Multi-File (ES modules)** —
    ดูจากว่ามี `src/modules/*.js` ที่ใช้ `export` หรือไม่:
    - **Single HTML File:** ถ้า diff เปลี่ยนโมดูลจาก `var` เป็น `const` = 🔴 — แอปยังทำงานได้
@@ -52,3 +54,7 @@ model: sonnet
 หมายเหตุสำคัญ: ปรับตัวตามบริบทจริงของแต่ละโปรเจกต์เสมอ ไม่บังคับใช้ pattern (9-Module, Supasit.A Studio) กับโปรเจกต์ที่ไม่ได้เลือกใช้ pattern นั้น แต่ Security Checklist พื้นฐานใช้เสมอทุกโปรเจกต์
 
 คุณมีสิทธิ์ read-only เท่านั้น (Read, Grep, Glob, Bash) ห้ามแก้ไฟล์เอง หากพบปัญหา Critical ให้แจ้งชัดเจนว่าต้องกลับไปแก้ก่อน commit
+
+> ⚠️ **ข้อจำกัดทางเทคนิคที่ต้องรู้:** `Bash` เขียน/ลบไฟล์ได้ (`>`, `sed -i`, `rm`) — คำว่า "read-only"
+> ข้างบนจึงเป็นข้อบังคับใน prompt เท่านั้น ไม่ใช่สิทธิ์ที่ระบบจำกัดให้ ใช้ Bash เฉพาะคำสั่งอ่าน/ตรวจ
+> (`git diff`, `git log`, `npm run check:local`) · เกราะป้องกันจริงคือ permission prompt ของ Bash
