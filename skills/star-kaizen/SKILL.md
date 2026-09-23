@@ -6,6 +6,7 @@ description: >
   "ซ้อมตอบกรรมการ Kaizen" ทำหน้าที่แปลงงานปรับปรุงที่ทำตาม QC Story 8 ขั้นตอน ให้เป็นการนำเสนอ
   แบบ STAR 4 ขั้นตอน (Situation-Task-Action-Result) ภายใน 15 นาที ไม่ใช้กับการเขียน Kaizen
   Report Card 7 หัวข้อทั่วไป (→ pta-kaizen-writer) หรือ Safety Observation (→ pta-safety-observation)
+disable-model-invocation: true
 ---
 
 # STAR Kaizen Coach — GCMP Kaizen Contest 2026

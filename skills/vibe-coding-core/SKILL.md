@@ -415,7 +415,7 @@ BRAND (Supasit.A Studio)
 Pre-deploy (บังคับ — ข้อแรกสำคัญที่สุด):
   [ ] npm run check เขียว (lint + secret + unit + e2e) — /ตรวจ
   [ ] เปิด preview URL บนมือถือจริงแล้ว — /preview
-  [ ] รู้คำสั่ง rollback ก่อนกด deploy — references/rollback-runbook.md
+  [ ] รู้คำสั่ง rollback ก่อนกด deploy — vibe-coding-quality/references/rollback-runbook.md
   [ ] ถ้าเปลี่ยน DB_VERSION: มีเทสต์ migration ที่พิสูจน์ว่าข้อมูลเดิมอยู่ครบ
   [ ] ลบ console.log ทั้งหมด (เว้น DEBUG_MODULE)
   [ ] minify ถ้า file > 500KB
@@ -432,7 +432,7 @@ Post-deploy:
 Deploy ปลายทาง:
   [ ] GitHub Pages → ผ่าน actions/deploy-pages (gate ได้ + rollback ด้วย Re-run all jobs)
   [ ] Cloudflare Workers → versions upload แล้วค่อย versions deploy
-  → ดู vibe-coding-quality §25.4 · references/ci-cd-templates.md
+  → ดู vibe-coding-quality §25.4 · vibe-coding-quality/references/ci-cd-templates.md
 ```
 
 ---

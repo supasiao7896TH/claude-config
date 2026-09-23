@@ -8,6 +8,7 @@
     "brand:build": "node branding/tools/build.mjs",
     "brand:verify": "node branding/tools/verify.mjs",
     "check:standards": "node tools/check-standards.mjs",
+    "check:skill-drift": "node tools/check-skill-drift.mjs",
     "format": "prettier --write .",
     "lint": "prettier --check .",
     "secrets": "secretlint \"**/*\"",
