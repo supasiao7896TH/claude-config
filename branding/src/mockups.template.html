@@ -940,7 +940,7 @@ function lockupGeometry(W, H) {
 function wordmarkTubes(text, opts = {}) {
   const {
     px = 12, tracking = 2, x = 0, y = 0, filterId = null, seed = 0,
-    layers = [{ fill: "#000" }], accent = [], accentFill = null
+    layers = [{ fill: "#000" }], accent = [], accentFill = null, firstFill = null
   } = opts;
   /* Case matters — the lowercase i is its own 1-unit glyph — and the
      advance is per glyph, so this walks a cursor rather than multiplying
@@ -955,8 +955,11 @@ function wordmarkTubes(text, opts = {}) {
        tube, so a dropout takes the whole letter with it. Accenting only
        ever swaps the core (last) layer — a ghost, where one exists, stays
        on its own hue so the misconvergence read doesn't change. */
-    const useLayers = (accentFill && accent.includes(i))
-      ? layers.map((l, li) => li === layers.length - 1 ? { ...l, fill: accentFill } : l)
+    const coreFill = (accentFill && accent.includes(i)) ? accentFill
+                   : (firstFill && i === 0) ? firstFill
+                   : null;
+    const useLayers = coreFill
+      ? layers.map((l, li) => li === layers.length - 1 ? { ...l, fill: coreFill } : l)
       : layers;
     const art = useLayers.map(l => wordmark(ch, {
       px, tracking, fill: l.fill, x: xo + (l.dx || 0), y, attrs: l.attrs || ""
@@ -1055,7 +1058,10 @@ const MODES = {
   }
 };
 
-function lockupInner(mode, groundKind, W, H, standalone = false) {
+/* `extra` is only passed by the SVG export (see __exportSVGs): the
+   exported D1 files carry a recoloured first letter and a tagline that
+   the on-page mockups do not. */
+function lockupInner(mode, groundKind, W, H, standalone = false, extra = {}) {
   const m = MODES[mode];
   const g = lockupGeometry(W, H);
   const gr = groundLayer(groundKind, W, H, mode);
@@ -1074,10 +1080,11 @@ function lockupInner(mode, groundKind, W, H, standalone = false) {
     ${standalone ? `<style>${NEON_CSS}</style>` : ""}
     <defs>${gr.defs}${bloomDef(bloom, ...bl(m.bloom))}${bloomDef(pawB, ...bl(m.pawBloom))}</defs>
     ${gr.back}
-    ${wordmarkTubes(WORDMARK, { px: g.px, x: g.wmX, y: g.wmY, filterId: bloom, seed: 0, layers, accent: ACCENT_IDX, accentFill: m.year })}
+    ${wordmarkTubes(WORDMARK, { px: g.px, x: g.wmX, y: g.wmY, filterId: bloom, seed: 0, layers, accent: ACCENT_IDX, accentFill: m.year, firstFill: extra.firstFill })}
     <g opacity="${m.pawOpacity}">${tube(20, trail, pawB)}${tube(21, lead, pawB)}</g>
     ${wordmarkTubes(YEARMARK, { px: g.yrPx, x: g.yrX, y: g.yrY, filterId: bloom, seed: 30, layers: [{ fill: m.year }] })}
-    <g class="tube-b" style="${tubeVars(40)}">${bar({ x: g.yrX, y: g.barY, w: g.yrW, h: g.barH, white: m.barWhite })}</g>
+    <g class="tube-b" style="${tubeVars(40)}">${bar({ x: g.yrX, y: g.barY, w: g.yrW, h: g.barH, white: m.barWhite })}</g>${extra.tagline ? `
+    ${extra.tagline}` : ""}
     ${gr.front}
   `;
 }
@@ -1639,12 +1646,30 @@ function resolveTokens(s) {
   return s.replace(/var\((--sc-[a-z-]+)\)/g, (whole, key) => BRAND[key] ?? whole);
 }
 
+/* D1 export only: first letter in Ink Blue, plus the tagline. The tagline
+   tube has fixed phase values rather than tubeVars() so it keeps the
+   timing it was tuned with. */
+const D1_EXPORT_EXTRA = {
+  firstFill: "#1D4ED8",
+  tagline: `<g class="tube" style="--wd:0.3s;--bp:6.6s;--bd:-2.2s;--sp:11.4s;--sd:-4.1s"><g class="tube-s"><g class="tube-b"><text x="53" y="245" font-family="'Courier New',ui-monospace,monospace" font-size="44" font-weight="700" letter-spacing="4" fill="#131829">CODE &#183; SHARE &#183; INSPIRE</text></g></g></g>`
+};
+
+/* A bare lockup has no ground to clip to, so its bloom would be cut off
+   at the 1200×300 edge — pad the viewBox by 60 on every side. */
+function svgPadded(w, h, pad, inner) {
+  return `<svg viewBox="${-pad} ${-pad} ${w + pad * 2} ${h + pad * 2}" width="${w + pad * 2}" height="${h + pad * 2}" xmlns="http://www.w3.org/2000/svg" >${inner}</svg>`;
+}
+
 window.__exportSVGs = () => {
   const out = {};
   for (const [dir, mode] of [["d1", "light"], ["d2", "night"]]) {
     for (const groundKind of ["bare", "glow", "plate"]) {
       const name = (dir === "d1" ? "d1-neon-arcade" : "d2-crt-night") + "-" + groundKind;
-      out[name] = resolveTokens(svg(1200, 300, lockupInner(mode, groundKind, 1200, 300, true)));
+      const extra = dir === "d1" ? D1_EXPORT_EXTRA : {};
+      const inner = lockupInner(mode, groundKind, 1200, 300, true, extra);
+      out[name] = resolveTokens(dir === "d1" && groundKind === "bare"
+        ? svgPadded(1200, 300, 60, inner)
+        : svg(1200, 300, inner));
     }
   }
   return out;
