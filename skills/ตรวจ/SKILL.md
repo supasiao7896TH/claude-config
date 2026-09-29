@@ -13,7 +13,8 @@ disable-model-invocation: true
 
 1. **เช็คว่าโปรเจกต์นี้มี `package.json` ไหม**
    - ไม่มี → บอกพี่ A ว่าโปรเจกต์นี้ยังไม่มี quality gate และเสนอให้ copy จาก
-     `design-lab/starter/` (ดู `vibe-coding-quality` §25.2) แล้วหยุด
+     `design-lab/starter-multifile/` (ค่าเริ่มต้น) หรือ `design-lab/starter/` ถ้าเป็น Single HTML File
+     (ดู `vibe-coding-quality` §25.2) แล้วหยุด
 2. **รัน `npm run check`** — ถ้าเครื่องนี้ลง Chromium ไม่ได้ ให้ใช้ `npm run check:local`
    แล้วบอกตรงๆ ว่า **ข้าม e2e ไป** จึงยังไม่ได้ตรวจ contrast/44px/โฟกัส
 3. **รายงานผลทีละส่วน** ไม่ใช่แค่ "ผ่าน/ไม่ผ่าน":

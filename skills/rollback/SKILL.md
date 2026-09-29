@@ -23,8 +23,12 @@ disable-model-invocation: true
 3. `wrangler deployments list` → แสดงรายการให้พี่ A **ยืนยันว่าจะย้อนไปเวอร์ชันไหน**
    ห้ามเลือกเอง
 4. รัน rollback
-5. **bump `CACHE_NAME` เดินหน้า** (v7 → v8) แล้ว `git revert` + push
-   — ข้อนี้ห้ามข้าม ไม่งั้น rollback จะ "สำเร็จ" แต่ผู้ใช้ยังเห็นของพัง (ข้อ 3 ของ runbook)
+5. `git revert` + push ให้ git ตรงกับ production — **เช็ค stack ก่อนว่าต้อง bump `CACHE_NAME` ไหม**
+   (`grep -r CACHE_NAME` ในซอร์สจริงของแอปนั้น ไม่เดาจากชื่อ stack):
+   - **Single HTML File (มี `sw.js` เขียนมือ + `CACHE_NAME`):** bump `CACHE_NAME` เดินหน้า
+     (v7 → v8) ด้วย — ข้อนี้ห้ามข้าม ไม่งั้น rollback จะ "สำเร็จ" แต่ผู้ใช้ยังเห็นของพัง (ข้อ 3.1 ของ runbook)
+   - **Multi-File (`vite-plugin-pwa` สร้าง service worker ให้เอง ไม่มี `CACHE_NAME`):** ไม่ต้อง bump
+     แต่ให้ตรวจบนมือถือ 1 เครื่องที่เคยเปิดเวอร์ชันพังไว้ว่าได้ของที่ย้อนแล้วจริง (ข้อ 3.2 ของ runbook)
 6. เปิด URL จริง เช็ค build stamp ว่าเป็นเวอร์ชันที่ตั้งใจ
 7. **เปิด GitHub issue** บันทึกว่าเกิดอะไร และทำไมเทสต์ไม่จับ
 8. เสนอเทสต์ที่จะแดงถ้าบักนี้กลับมา — rollback ที่ไม่ตามด้วยเทสต์ คือการเลื่อนปัญหาออกไป

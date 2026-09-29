@@ -44,8 +44,10 @@ description: >
 ### กฎบังคับ (ห้ามข้าม)
 
 ```
-1. bump CACHE_NAME ใน sw.js (vX → v(X+1)) ทุกครั้งที่แก้โค้ด
+1. Single HTML File: bump CACHE_NAME ใน sw.js (vX → v(X+1)) ทุกครั้งที่แก้โค้ด
    WHY: ถ้าไม่ bump → browser ยังใช้ cache เก่า → user เห็นโค้ดเก่าโดยไม่รู้ตัว
+   Multi-File: ข้อนี้ไม่ต้องทำ — vite-plugin-pwa สร้าง service worker ให้เองทุก build
+   (ดู vibe-coding-multifile §21 / design-lab/starter-multifile/README.md)
 
 2. Firestore Rules ต้อง deploy manual แยกต่างหาก (หรือผ่าน CI ด้านล่าง)
    คำสั่ง: npx firebase-tools deploy --only firestore:rules

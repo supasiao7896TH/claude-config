@@ -8,7 +8,8 @@
 > แล้วเลือกเป็นสูตรผสม: **โครงจากเว็บทูลสมัยใหม่ · ปุ่มแคปซูลจาก Apple · โทนน้ำเงินหมึก**
 >
 > **ของจริงที่กดเล่นได้อยู่ที่ `claude-config/design-lab/preview-kit.html`**
-> **ไฟล์ตั้งต้นสำหรับเริ่มแอปใหม่อยู่ที่ `claude-config/design-lab/starter/`**
+> **ไฟล์ตั้งต้นสำหรับเริ่มแอปใหม่:** Multi-File (ค่าเริ่มต้น) → `claude-config/design-lab/starter-multifile/` ·
+> Single HTML File (ข้อยกเว้น) → `claude-config/design-lab/starter/`
 > แก้ token ต้องแก้ที่ preview kit แล้วดูของจริงก่อนเสมอ — ห้ามอนุมัติจากเอกสารเปล่าอีก
 
 ---
@@ -272,15 +273,20 @@ Lucide icon set (ไม่ใช้ emoji) — vendor ไว้ที่ public/
 manifest.webmanifest (theme_color = #F7F9FC) · sw.js cache-first · <link rel="manifest">
 <meta name="theme-color" content="#F7F9FC" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0E1219" media="(prefers-color-scheme: dark)">
-apple-mobile-web-app-capable · bump CACHE_NAME ทุกครั้งที่แก้ไฟล์
-→ ของพร้อมใช้อยู่ใน design-lab/starter/
+apple-mobile-web-app-capable
+Single HTML File: sw.js เขียนมือ — bump CACHE_NAME ทุกครั้งที่แก้ไฟล์
+Multi-File: manifest + service worker สร้างโดย vite-plugin-pwa (ตั้งใน vite.config.js) — ไม่มี CACHE_NAME
+            และ index.html "ห้ามเขียน" <link rel="manifest"> เอง (ปลั๊กอินแทรกให้แล้ว)
+→ ของพร้อมใช้อยู่ใน design-lab/starter-multifile/ (Multi-File) · design-lab/starter/ (Single HTML)
 ```
 
 ## ST-12 · Chart — Chart.js ผูกกับ token
 
 ```
-ใช้ design-lab/starter/chart-theme.js ที่อ่านสีจาก CSS variable โดยตรง
-สลับธีมแล้วเรียก CHART_THEME.refresh(chart) กราฟจะเปลี่ยนตามเอง
+ใช้ design-lab/starter/chart-theme.js (Single HTML) หรือ
+design-lab/starter-multifile/src/modules/chart-theme.js (Multi-File — export ชื่อ ChartTheme)
+ที่อ่านสีจาก CSS variable โดยตรง
+สลับธีมแล้วเรียก CHART_THEME.refresh(chart) (Single HTML) / ChartTheme.refresh(chart) (Multi-File) กราฟจะเปลี่ยนตามเอง
 เส้นหลัก = --accent · เส้นเปรียบเทียบ = --accent-2 · เส้นขีดจำกัด = ok/warn/crit
 แกน/grid = --text-3 / --border · ฟอนต์แกน Noto 11px
 ต้องเก็บ instance แล้วเรียก .destroy() ก่อนสร้างใหม่ทุกครั้งที่ re-render
@@ -343,4 +349,5 @@ studio-badge-light.svg / studio-badge-dark.svg ยังมีบทบาท �
 | Brass `#8A6D28` | `--accent-2: #8A6410` (บทบาทเดิม: ข้อมูลอ้างอิง) |
 
 > **แอปเดิมไม่ต้องรีบย้าย** — ย้ายเมื่อแอปนั้นถูกแก้ครั้งใหญ่อยู่แล้ว
-> แต่**แอปใหม่ทุกตัวเริ่มจาก `design-lab/starter/` เท่านั้น**
+> แต่**แอปใหม่ทุกตัวเริ่มจาก starter เท่านั้น** — Multi-File → `design-lab/starter-multifile/` ·
+> Single HTML File → `design-lab/starter/`

@@ -117,7 +117,8 @@ layout engine และไม่มี CSS cascade จริง หมวดน�
 [ ] npm run check เขียว (lint + secret + unit + e2e)
 [ ] เทสต์ใหม่ที่เขียน ถูกพิสูจน์แล้วว่าแดงได้จริงเมื่อทำสิ่งที่มันคุมพัง
 [ ] sa-code-reviewer ไม่เหลือ 🔴
-[ ] bump CACHE_NAME ใน sw.js (CI job cache-guard คุมให้อีกชั้น)
+[ ] Single HTML File: bump CACHE_NAME ใน sw.js (CI job cache-guard คุมให้อีกชั้น)
+    · Multi-File: ข้าม — vite-plugin-pwa สร้าง service worker ให้เอง
 [ ] เปิด preview URL บนมือถือจริงแล้ว ไม่ใช่แค่ DevTools
 [ ] รู้คำสั่ง rollback ก่อนกด deploy
 [ ] ถ้าแก้บัก — มีเทสต์ที่จะแดงถ้าบักนั้นกลับมา
@@ -135,8 +136,10 @@ preview ในตัว และ deploy ลงโฟลเดอร์ `preview
 ผลพลอยได้ที่สำคัญ: ข้อ "ทดสอบบนมือถือจริง" ใน §24.5 เกิดขึ้นได้ **ก่อน** ของขึ้น production
 เป็นครั้งแรก — ซึ่งที่ผ่านมาทำไม่ได้เลยเพราะ push main = ขึ้น production ทันที
 
-**Gate 2 ชั้นก่อน deploy:** `check` (เทสต์ทั้งหมด) + `cache-guard` (แก้ index.html แล้ว
+**Gate 2 ชั้นก่อน deploy (Single HTML File):** `check` (เทสต์ทั้งหมด) + `cache-guard` (แก้ index.html แล้ว
 ต้อง bump CACHE_NAME) — job ที่สองยาว 5 บรรทัดแต่ปิดบักที่เอกสาร 3 skill บันทึกตรงกันว่าเกิดซ้ำ
+· **Multi-File:** `starter-multifile/.github/workflows/ci.yml` มีแค่ job `check` → `deploy` — ไม่มี `cache-guard`
+เพราะไม่มี `CACHE_NAME` ให้ลืม (vite-plugin-pwa จัดการให้)
 
 → YAML เต็มทั้ง 2 workflow: `references/ci-cd-templates.md`
 → ขั้นตอน rollback พร้อมคำสั่งจริง: `references/rollback-runbook.md`

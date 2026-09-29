@@ -170,7 +170,8 @@ npm ci            # ติดตั้ง toolchain + ติดตั้ง git 
 npm run check     # ต้องเขียวก่อนถือว่าแอปใหม่ "เริ่มได้"
 ```
 
-ชุดนี้มาจาก `design-lab/starter/` อยู่แล้วถ้า scaffold ตามขั้นตอน — ถ้า `npm test` แดง
+ชุดนี้มาจาก starter อยู่แล้วถ้า scaffold ตามขั้นตอน (Multi-File → `design-lab/starter-multifile/` ·
+Single HTML File → `design-lab/starter/`) — ถ้า `npm test` แดง
 ตั้งแต่ยังไม่ได้เขียนอะไร แปลว่าคัดลอกไฟล์มาไม่ครบ (ไฟล์ที่ขึ้นต้นด้วยจุดมักตกหล่น)
 
 ตั้ง `APP_CONFIG.ISSUE_URL` ให้ชี้ไป `issues/new` ของ repo แอปนี้ ไม่งั้นปุ่ม
@@ -181,6 +182,22 @@ npm run check     # ต้องเขียวก่อนถือว่าแ
 > (`git branch -m master main && git push -u origin main`)
 
 **ผลลัพธ์ที่พี่ A จะได้:**
+
+Multi-File (ค่าเริ่มต้น — เริ่มจาก `starter-multifile/`):
+```
+[ชื่อแอป]/
+├── index.html            ✅ markup + CDN <script>
+├── src/main.js + src/modules/*.js   ✅ โค้ดแอป (1 module = 1 ไฟล์)
+├── tests/                ✅ Vitest + Playwright
+├── package.json · vite.config.js    ✅ tooling (vite.config.js ตั้ง manifest + service worker ผ่าน vite-plugin-pwa
+│                                       — ไม่มี sw.js/manifest เขียนมือ)
+├── .github/workflows/    ✅ ci.yml · preview.yml · uptime.yml
+├── context.md            ✅ ภาพรวมโปรเจกต์ (auto-generated)
+├── agents.md             ✅ กฎสำหรับ AI (auto-generated)
+└── CLAUDE.md             ✅ Claude Code instructions
+```
+
+Single HTML File (ข้อยกเว้น — เริ่มจาก `starter/`):
 ```
 [ชื่อแอป]/
 ├── index.html            ✅ โค้ดแอป
@@ -275,7 +292,9 @@ const [users, settings] = await Promise.all([
 
 > รายละเอียด Tech Stack / CDN pinning / PWA structure → `references/tech-stack.md`
 > รายละเอียด Design tokens (spacing, typography, สี, a11y) → `references/design-system.md`
-> **แอปใหม่ทุกตัวเริ่มจาก `claude-config/design-lab/starter/` — ไม่ต้องสร้าง token ขึ้นใหม่**
+> **แอปใหม่ทุกตัวเริ่มจาก starter ตาม Step 0 — ไม่ต้องสร้าง token ขึ้นใหม่:**
+> Multi-File (ค่าเริ่มต้น) → `claude-config/design-lab/starter-multifile/` ·
+> Single HTML File (ข้อยกเว้น) → `claude-config/design-lab/starter/`
 
 ---
 
@@ -393,7 +412,7 @@ ACCESSIBILITY  ← ทั้งหมดนี้เป็นงานของ 
   → รายละเอียดเต็ม: references/performance-and-accessibility.md
 
 BRAND (Supasit.A Studio)
-  [ ] เริ่มจาก design-lab/starter/ ไม่ได้สร้าง token ขึ้นใหม่เอง
+  [ ] เริ่มจาก design-lab/starter-multifile/ (Multi-File) หรือ design-lab/starter/ (Single HTML) ไม่ได้สร้าง token ขึ้นใหม่เอง
   [ ] A(i)CODER brand dock (neon d1/d2-bare, เต็มความกว้าง fixed bottom, กะพริบตลอดเวลา) · พื้นอ่าน var(--surface)/var(--border) ของแอป (กลืนกับธีมอัตโนมัติ, ดู design-system.md ST-15)
   [ ] Font Noto Sans Thai โหลดแล้ว · ตัวเลขในตาราง/KPI ใส่ tabular-nums
   [ ] --surface ต่างจาก --bg จริง
@@ -420,7 +439,8 @@ Pre-deploy (บังคับ — ข้อแรกสำคัญที่ส
   [ ] ลบ console.log ทั้งหมด (เว้น DEBUG_MODULE)
   [ ] minify ถ้า file > 500KB
   [ ] ทดสอบบน mobile จริงก่อน deploy
-  [ ] ตรวจ manifest.webmanifest + sw.js (bump CACHE_NAME ทุกครั้งที่แก้โค้ด)
+  [ ] PWA — Single HTML File: ตรวจ manifest.webmanifest + sw.js (bump CACHE_NAME ทุกครั้งที่แก้โค้ด)
+      · Multi-File: vite-plugin-pwa สร้าง manifest + service worker ให้เองทุก build — ไม่มี CACHE_NAME ให้ bump
   [ ] ถ้าใช้ Firebase: deploy flow ใหม่ตาม vibe-coding-firebase §20 (service account, ไม่ใช่ FIREBASE_TOKEN เก่า)
 
 Post-deploy:

@@ -78,7 +78,7 @@ Store: [store_name]
 ---
 
 ## 🎨 Brand & Design Rules ("Supasit.A Studio" — ดู vibe-coding-core/references/design-system.md)
-- **เริ่มจาก** `claude-config/design-lab/starter/` เสมอ — ไม่สร้าง token ขึ้นใหม่เอง
+- **เริ่มจาก** `claude-config/design-lab/starter-multifile/` (Multi-File) หรือ `design-lab/starter/` (Single HTML File) เสมอ — ไม่สร้าง token ขึ้นใหม่เอง
 - **A(i)CODER badge** → fixed bottom-right (บังคับ, ชุด Studio: `branding/exports/studio-badge-*.svg`)
 - **สี:** accent น้ำเงินหมึก `#1D4ED8` = สิ่งที่กดได้ · อำพัน `#8A6410` = ข้อมูลอ้างอิง · ok/warn/crit = สถานะ (ST-04)
 - **ST-01:** accent ต้องห่างจากสีสถานะ ≥ 50° บนวงล้อสี — เช็คก่อนเปลี่ยนสีทุกครั้ง
@@ -115,10 +115,10 @@ project/
 ├── src/
 │   ├── main.js          ← entry point
 │   └── modules/*.js     ← 1 module ต่อ 1 ไฟล์
-├── tests/*.test.js      ← Vitest
+├── tests/               ← Vitest (unit) + Playwright (e2e)
 ├── package.json
-├── manifest.webmanifest
-├── sw.js               ← Service Worker
+├── vite.config.js      ← ตั้ง manifest + service worker ผ่าน vite-plugin-pwa (ไม่มี sw.js/manifest เขียนมือ)
+├── .github/workflows/  ← ci.yml · preview.yml · uptime.yml
 ├── CLAUDE.md           ← Claude Code instructions
 ├── context.md          ← ไฟล์นี้
 └── agents.md           ← Agent rules
@@ -208,7 +208,7 @@ project/
 
 ## 🎨 Brand Identity (บังคับทุกแอป — "Supasit.A Studio")
 ```
-เริ่มจาก      : design-lab/starter/ (token + component + PWA + badge ครบแล้ว)
+เริ่มจาก      : design-lab/starter-multifile/ (Multi-File) หรือ design-lab/starter/ (Single HTML) — token + component + PWA + badge ครบแล้ว
 Badge        : A(i)CODER neon (d1/d2-bare) · brand dock เต็มความกว้าง fixed bottom · กะพริบตลอดเวลา · พื้น = var(--surface)/var(--border) ของแอป (กลืนกับธีมอัตโนมัติ)
 สี            : accent #1D4ED8 (กดได้) · อำพัน #8A6410 (อ้างอิง) · ok/warn/crit (สถานะเท่านั้น)
 Header       : sticky · พื้น --bg blur 8px · เส้นล่าง hairline

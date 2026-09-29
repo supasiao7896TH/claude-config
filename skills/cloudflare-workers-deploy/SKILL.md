@@ -192,7 +192,7 @@ jobs:
 |---|---|---|
 | `it's necessary to set a CLOUDFLARE_API_TOKEN environment variable` | ยังไม่ได้ตั้ง GitHub Secret หรือชื่อ secret สะกดผิด | เช็คชื่อ secret ต้องเป็น `CLOUDFLARE_API_TOKEN` เป๊ะๆ |
 | `Asset too large` (พบไฟล์ใน `node_modules`) | ไม่มี `.assetsignore` หรือไม่ครอบคลุม `node_modules` | เพิ่ม `.assetsignore` ตามข้อ 2 ด้านบน |
-| Deploy สำเร็จแต่หน้าเว็บยังเป็นโค้ดเก่า | ลืม bump `CACHE_NAME` ใน service worker (`sw.js`) | bump `CACHE_NAME` ทุกครั้งที่แก้ `app.js`/`index.html` |
+| Deploy สำเร็จแต่หน้าเว็บยังเป็นโค้ดเก่า | **Single HTML File:** ลืม bump `CACHE_NAME` ใน service worker (`sw.js`) · **Multi-File:** ไม่ใช่สาเหตุนี้ (`vite-plugin-pwa` สร้าง SW ให้เอง ไม่มี `CACHE_NAME`) — ให้สงสัยว่า deploy ยังไม่ขึ้นจริงก่อน | **Single HTML File:** bump `CACHE_NAME` ทุกครั้งที่แก้ `app.js`/`index.html` · **Multi-File:** เทียบ build stamp บน URL จริงกับ commit ล่าสุด ถ้าตรงแล้วยังเห็นของเก่า ให้ดูข้อ 3.2 ของ `rollback-runbook.md` |
 
 ---
 

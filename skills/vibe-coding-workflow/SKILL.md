@@ -139,7 +139,7 @@ git push origin main
 
 > **ทำไมไม่ stage แบบเหมารวม:** `sa-git-manager` ห้ามไว้เพราะมันดึงไฟล์ที่ไม่ตั้งใจติดมาด้วย
 > (ไฟล์ทดลอง · log · ไฟล์ที่มี key) ข้อยกเว้นเดียวคือ commit แรกของ repo ใหม่ที่ scaffold
-> จาก `design-lab/starter/` ซึ่งมี `.gitignore` แล้วและ secretlint ผ่านแล้ว
+> จาก `design-lab/starter-multifile/` (หรือ `design-lab/starter/` ถ้าเป็น Single HTML File) ซึ่งมี `.gitignore` แล้วและ secretlint ผ่านแล้ว
 
 ### 18.5 · Token Efficiency Tips
 

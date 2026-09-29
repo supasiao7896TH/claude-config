@@ -174,9 +174,18 @@ Step 7  npm ci && npm run check ต้องเขียว
 ## 8 · ⚠️ Known Drift — เอกสารเก่ากับ default ใหม่ (Multi-File, 2569-09-02)
 
 ตรวจเมื่อ 2569-09-29 โดยอ่าน `core` + `multifile` เต็ม และเทียบกับ `design-lab/starter-multifile/` จริง
-**ยังไม่ได้แก้** — รอพี่ A อนุมัติ
 
-### 🔴 กระทบการทำงานจริง (ขัดกับของจริง)
+**สถานะ:** 🔴 D1–D6 **แก้แล้ว 2569-09-29** (พี่ A อนุมัติ) · 🟡 D7–D11 ยังไม่ได้แก้
+
+วิธีแก้คือ **แยกให้ชัดว่าแต่ละข้อใช้กับ Multi-File หรือ Single HTML File** ไม่ได้ลบของเดิมทิ้ง
+(Single HTML ยังเป็นข้อยกเว้นที่ใช้ได้) · ระหว่างแก้พบจุดชนิดเดียวกันเพิ่มนอกตาราง และแก้ในรอบเดียวกัน:
+`quality` §25.3 (Definition of Done) + §25.4 (`cache-guard` มีเฉพาะ Single HTML) ·
+`design-system.md` ST-11/ST-12 · `layout-and-brand.md` · `workflow` §18.4 + `context-templates.md`
+
+⚠️ **ยังไม่ได้ซ้อม:** `rollback-runbook.md` ข้อ 3.2 (Multi-File) ระบุว่าไม่ต้อง bump — มาจาก `vite.config.js`
++ README ของ starter ไม่ใช่การซ้อมจริง จึงใส่คำเตือนในไฟล์ให้ตรวจบนมือถือครั้งแรกที่ rollback จริง
+
+### 🔴 กระทบการทำงานจริง (ขัดกับของจริง) — แก้แล้วทั้งหมด
 
 | # | ที่ | เขียนว่า | ความจริงใน `starter-multifile` |
 |---|---|---|---|

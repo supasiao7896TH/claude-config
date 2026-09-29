@@ -2,7 +2,7 @@
 
 > ส่วนหนึ่งของ `vibe-coding-core` — โหลดไฟล์นี้เมื่อออกแบบ layout หรือตรวจ brand compliance
 > อัปเดต 2569-08-28: คู่กับ `design-system.md` (Supasit.A Studio) — **แทนที่ Instrument Grade เดิม**
-> ของจริงที่กดเล่นได้: `claude-config/design-lab/preview-kit.html` · ไฟล์ตั้งต้น: `design-lab/starter/`
+> ของจริงที่กดเล่นได้: `claude-config/design-lab/preview-kit.html` · ไฟล์ตั้งต้น: `design-lab/starter-multifile/` (Multi-File, ค่าเริ่มต้น) · `design-lab/starter/` (Single HTML File)
 
 ---
 
@@ -71,11 +71,11 @@ A(i)CODER Badge — Brand Dock (บังคับทุกแอป, เปล�
   ใช้ assets/d1-neon-arcade-bare.svg บนพื้นสว่าง · assets/d2-crt-night-bare.svg บนพื้นมืด (ไม่ใช่ studio-badge-*.svg อีกต่อไป — ไฟล์นั้นเหลือแค่ฝังนอกแอปแบบ static)
   พื้นของแถบ = var(--surface) + var(--border) + var(--shadow-1) ของแอปเอง (เหมือน .card) จึงกลืนกับธีมแอปอัตโนมัติ ไม่ต้องเขียน [data-theme="dark"] เพิ่ม
   ตำแหน่ง: fixed เต็มความกว้างจอ ชิดล่าง (ไม่ใช่มุมขวาล่างแบบเดิม) · สูง 100px + env(safe-area-inset-bottom) · เครื่องหมายในแถบกว้าง 280px (ผ่านขั้นต่ำ D1 ≥240px และ D2 ≥280px พร้อมกัน)
-  main ต้องเผื่อ padding-bottom ให้พ้นแถบ (ดู design-lab/starter/index.html)
+  main ต้องเผื่อ padding-bottom ให้พ้นแถบ (ดู design-lab/starter-multifile/index.html หรือ design-lab/starter/index.html)
   กะพริบตลอดเวลา (ไม่ใช่แค่ตอนบูตเหมือนเดิม): .tube strike-in เล่นครั้งเดียวตอนแถบถูกโหลดเข้าหน้า (แทนที่ #bootSplash เดิมได้ในตัว) แล้ว .tube-s/.tube-b (infinite) กะพริบต่อเนื่องไปตลอด — ไม่ต้องมี JS ควบคุมเลย
   favicon/PWA icon: studio-icon.svg เท่านั้น (ตัว A เป็นเส้น อ่านออกที่ 16px) — ไม่เปลี่ยนจากเดิม
   ✅ ชุด neon (d1-neon-arcade-bare / d2-crt-night-bare) คือ badge มาตรฐานของทุกแอปแล้ว — ไม่ใช่ของต้องห้ามอีกต่อไป
-  ของพร้อมใช้: design-lab/starter/index.html มี .brand-dock แบบ inline ให้แล้ว
+  ของพร้อมใช้: index.html ของทั้ง design-lab/starter-multifile/ และ design-lab/starter/ มี .brand-dock แบบ inline ให้แล้ว
 
 Icons: Lucide เท่านั้น stroke-width 1.9 — ห้าม emoji เป็นไอคอนของปุ่ม/nav
        ปุ่มไอคอนล้วนต้องมี aria-label และ svg ข้างในใส่ aria-hidden="true"
@@ -108,7 +108,10 @@ Micro-interactions (ดู design-system.md ST-9):
 **`claude-config/design-lab/preview-kit.html`** — ของจริงที่กดเล่นได้ ไม่ใช่ภาพนิ่ง
 มีทุก component ของระบบ · สลับธีม 3 สถานะ · สลับโทนสีสำรอง · กรอบมือถือ 390px ในตัว
 
-**`claude-config/design-lab/starter/`** — ไฟล์ตั้งต้นสำหรับเริ่มแอปใหม่
+**`claude-config/design-lab/starter-multifile/`** — ไฟล์ตั้งต้นของ Multi-File (ค่าเริ่มต้น)
+token ครบ · โมดูล ES ไฟล์ละโมดูลใน `src/modules/` · PWA ผ่าน vite-plugin-pwa · badge · ธีม Chart.js · Vitest + Playwright
+
+**`claude-config/design-lab/starter/`** — ไฟล์ตั้งต้นของ Single HTML File (ข้อยกเว้น)
 token ครบ · 9 โมดูล IIFE · PWA · badge · ธีม Chart.js · CSP
 
 > **กติกาถาวรตั้งแต่รอบนี้:** จะแก้ design system ต้องแก้ที่ preview kit แล้วดูของจริงก่อน
