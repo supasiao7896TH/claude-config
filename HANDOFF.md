@@ -2,7 +2,7 @@
 
 > ใช้ไฟล์นี้ส่งต่องานข้ามเครื่อง (บ้าน ↔ ที่ทำงาน) — อ่านไฟล์นี้ก่อนเริ่ม session ถัดไป
 
-**อัปเดตล่าสุด:** 2026-09-21 (เครื่อง Office — แก้ SessionStart hook · Junction เสีย · อัปเดต skill บน claude.ai — ดูหัวข้อ "✅ เสร็จแล้ว (2026-09-21)" ด้านล่าง)
+**อัปเดตล่าสุด:** 2026-09-29 (เครื่อง Office — แผนผัง skill `ARCHITECTURE.md` · แก้ drift หลังพลิกเป็น Multi-File default · อัปเดต 6 skill บน claude.ai — ดูหัวข้อ "✅ เสร็จแล้ว (2026-09-29)" ด้านล่าง · ก่อนหน้า: 2026-09-21 แก้ SessionStart hook / Junction)
 
 ---
 
@@ -41,6 +41,60 @@
    ทำแค่ครั้งเดียวต่อ clone · `npm ci` จะติดตั้ง git hook ให้อัตโนมัติ (ผ่าน `prepare`)
    ถ้าข้ามข้อนี้ hook จะไม่ทำงานและ `npm run check` จะรันไม่ได้ — **แต่ทุกอย่างอื่นยังใช้ได้ปกติ**
    (`node_modules/` อยู่ใน `.gitignore` แล้ว จึงไม่ทำให้ `git pull` ชนกัน)
+
+---
+
+## ✅ เสร็จแล้ว (2026-09-29, เครื่อง Office) — แผนผัง skill · แก้ drift Multi-File · อัปเดต skill บน claude.ai
+
+**ที่มา:** พี่ A อยากได้แผนผังว่า skill ใน `skills/` ทำงานสัมพันธ์กันอย่างไร → ระหว่างอ่าน `vibe-coding-core` /
+`vibe-coding-multifile` เต็มๆ เทียบกับ `design-lab/starter-multifile/` จริง พบว่าหลังพลิก default เป็น Multi-File
+(2026-09-02) ส่วนลึกของเอกสารยังเขียนจากมุมของ Single HTML File
+
+**push แล้ว 3 commit ขึ้น `origin/main` (CI #43 ผ่านทั้ง job `check` + `branding` — ตรวจจากหน้า GitHub Actions จริง):**
+
+| Commit | เนื้อหา |
+|---|---|
+| `ad0041e` | เพิ่ม **`skills/ARCHITECTURE.md`** — ผัง 3 ชั้น (คำสั่ง / ความรู้ / subagent) · pipeline ไอเดีย→production · สาย PTA · รายการ drift |
+| `5069488` | แก้ drift 🔴 D1–D6 ใน 11 ไฟล์ — แยกให้ชัดว่าแต่ละข้อใช้กับ Multi-File หรือ Single HTML (ไม่ได้ลบของเดิม) |
+| `c24db3a` | แก้ drift 🟡 D7–D10 (ชื่อ job `check` ไม่ใช่ `build-and-test` · "8 โมดูล" ไม่ใช่ 7 · version footer ตรง header · `/พัง` เขียนกลางๆ IIFE/ES module) |
+
+**สาระที่ควรรู้ (เปลี่ยนวิธีทำงานจริง):**
+
+- **Multi-File ไม่มี `CACHE_NAME` / `sw.js` เขียนมือ** — `vite-plugin-pwa` (generateSW, `autoUpdate`) สร้างให้เองทุก build
+  → ขั้น "bump `CACHE_NAME`" ใน `/rollback`, `rollback-runbook.md` (ข้อ 3 แยกเป็น 3.1 Single HTML / 3.2 Multi-File),
+  `core` §17, `firebase`, `cloudflare-workers-deploy`, `quality` §25.3 **ใช้เฉพาะ Single HTML File** ·
+  job `cache-guard` ก็มีเฉพาะ Single HTML (`starter-multifile/ci.yml` มีแค่ `check` → `deploy`)
+- **starter ที่ถูกต้อง:** Multi-File (ค่าเริ่มต้น) → `design-lab/starter-multifile/` · Single HTML → `design-lab/starter/`
+  (เดิมหลายไฟล์ชี้ `starter/` ตัวเดียว แก้ใน `/ตรวจ`, `core`, `design-system.md`, `layout-and-brand.md`, `workflow`, `context-templates.md`)
+- **เลขส่วน (§) ของ skill ไล่ต่อกันเป็นระบบเดียว:** core 1–17 · workflow 18–19, 23–24 · firebase 20 · multifile 21 ·
+  `vi-analysis` 22 · quality 25 — การอ้าง `vi-analysis (§22)` ใน `core` **ถูกต้องแล้ว** (ตอนแรกหนูเข้าใจผิดว่าเป็น drift เรียกว่า D11 แล้วถอนข้อกล่าวหาใน `ARCHITECTURE.md`)
+
+**skill บน claude.ai — อัปโหลดทับแล้ว 6 ตัว (Customize → Skills → Upload skill → "Upload and replace"):**
+`vibe-coding-core` · `vibe-coding-quality` · `vibe-coding-workflow` · `vibe-coding-firebase` ·
+`vibe-coding-multifile` · `cloudflare-workers-deploy` — ทุกตัวขึ้น "Replaced …" เวอร์ชันเก่าเก็บใน version history ของ skill (ย้อนกลับได้จากหน้า skill)
+- จงใจไม่ upload: `deploy` `preview` `rollback` `ตรวจ` `พัง` (คำสั่ง Claude Code) และ `pta-ips-writer` (repo ตั้งใจตัดข้อมูลภายในออก)
+- ⚠️ ครั้งนี้ **ไม่ได้ทำ zip สำรองไว้นอก repo** เหมือนรอบ 2026-09-21 — พึ่ง version history ของ claude.ai อย่างเดียว
+- zip ที่ใช้อัปโหลดอยู่ใน scratchpad ชั่วคราวของ session (ไม่ใช่ไฟล์ถาวร)
+
+**✅ ยืนยันได้จากการเปิด session นี้ (เคยเป็น "ยังไม่ได้ยืนยัน" ในหัวข้อ 2026-09-21):**
+`SessionStart` hook ขึ้น `success: Already up to date.` (ไม่มี error แล้ว) · subagent `sa-*` ทั้ง 7 ตัวโหลดจาก repo ได้ (เห็นในรายการ agent ของ session)
+
+**ที่เครื่องบ้านต้องทำ:** `git pull` ใน `claude-config` (ได้ `ARCHITECTURE.md` + skill ที่แก้แล้ว — ไม่ต้อง copy `settings.json` ใหม่ ไม่มีไฟล์ config เปลี่ยนรอบนี้)
+
+**⚠️ ยังค้าง:**
+
+1. **`rollback-runbook.md` ข้อ 3.2 (Multi-File ไม่ต้อง bump) ยังไม่เคยซ้อมจริง** — ข้อสรุปมาจาก `vite.config.js` + README ของ starter
+   ส่วนการซ้อม 2026-09-02 ทดสอบแค่ขั้น `wrangler rollback` ไม่ได้ยืนยันว่าเบราว์เซอร์ที่ถือ service worker ตัวพังได้ของที่ย้อนแล้วจริง
+   → ครั้งแรกที่ rollback แอป Multi-File จริง ให้เปิดบนมือถือ 1 เครื่องที่เคยเปิดเวอร์ชันพัง แล้วบันทึกผลลง § 7 ของ runbook
+2. **ข้าม `/code-review` แบบ fresh session ตอน push** (พี่ A ตัดสินใจเอง) — commit `5069488` แตะขั้นตอน rollback ของ production
+   ถ้าอยากได้ชั้นตรวจตาม Code Review Gate ย้อนหลัง เปิด session ใหม่แล้วรัน `/code-review` กับ 3 commit นี้
+3. **`tools/check-skill-drift.mjs` ยังรายงาน DRIFT 6 ตัว** (ณ ตอนอัปโหลด) เพราะเทียบกับ `skills/synced/` ซึ่งเป็นสำเนาที่แอป Claude sync ลงเครื่อง
+   ยังไม่ refresh → รันซ้ำหลังแอป sync เสร็จ ถ้ายังขึ้นค่อยตรวจว่า upload ครบจริงหรือไม่
+4. **CI #37–#40 เคยแดง** (commit `196b0c0`, `1396fec`, `eea2e98`, `99cabed` — ก่อนงานรอบนี้) ยังไม่ได้เปิดดู log ว่าเพราะอะไร · #41 เป็นต้นมาผ่านแล้ว
+5. `ARCHITECTURE.md` **ยังไม่ได้ลงทะเบียนที่ README** และเป็นเอกสารที่ต้องดูแลเอง — เพิ่ม/เปลี่ยนความสัมพันธ์ระหว่าง skill เมื่อไหร่ให้แก้ไฟล์นี้ตาม
+
+**ข้อจำกัดของการตรวจรอบนี้ (อย่าเชื่อเกินจริง):** อ่านเต็มเฉพาะ `core`, `multifile`, `deploy`, `preview`, `rollback`, `ตรวจ`, `พัง`, `grilling`, `grill-with-docs` ·
+`workflow`, `quality`, `firebase`, `cloudflare-workers-deploy`, สาย PTA/ลงทุน/กฎหมาย อ่านแค่ description + หัวข้อ + grep → ความสัมพันธ์ใน `ARCHITECTURE.md` ของกลุ่มหลังมีความมั่นใจต่ำกว่า
 
 ---
 
