@@ -36,7 +36,7 @@
 - **AI:** Gemini 2.5 Flash · BYOK · 24h Cache
 - **Auth:** [Firebase Anonymous / None]
 - **Deploy:** Cloudflare Workers / GitHub Pages (ดู §21 Decision Table)
-- **Test/CI:** Vitest · GitHub Actions (build-and-test → deploy)
+- **Test/CI:** Vitest · GitHub Actions (check → deploy)
 - **Repo:** [repo URL]
 - **Branch:** main
 

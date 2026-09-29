@@ -18,7 +18,7 @@ disable-model-invocation: true
 1. ถาม: "Error message คืออะไรคะ?"
 2. ถาม: "เกิดขึ้นตอนไหน? (คลิกอะไร / หน้าไหน / ทำอะไรอยู่ก่อนพัง)"
 3. วิเคราะห์ Root Cause
-   - ถ้าโปรเจกต์ใช้ vibe-coding-core pattern (9 IIFE modules) ให้ระบุ Error Type
+   - ถ้าโปรเจกต์ใช้ vibe-coding-core pattern (9-module: IIFE ใน Single HTML File / ES module คนละไฟล์ใน Multi-File) ให้ระบุ Error Type
      ตาม Error Taxonomy ใน vibe-coding-core/references/error-handling-and-data.md
    - ใช้ Five Whys ถ้า root cause ไม่ชัดเจนตั้งแต่รอบแรก
 4. เสนอ Fix พร้อมอธิบาย WHY — ทำไมบั๊กนี้ถึงเกิด ไม่ใช่แค่ "แก้บรรทัดนี้"

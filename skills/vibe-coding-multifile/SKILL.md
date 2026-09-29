@@ -80,15 +80,16 @@ GitHub คือสะพานซิงค์เหมือนเดิม (�
 | Build tool | **Vite** | dev server + hot reload + production build |
 | Module system | **ES Modules** (`import`/`export`) | ไม่ใช้ TypeScript — ใช้ JSDoc comment แทนถ้าต้องการ type hint |
 | Unit test | **Vitest** | เขียนเทสต์เฉพาะ business logic ที่เคยมี bug จริง หรือมี logic ซับซ้อนพอจะพังเงียบๆ ได้ — ไม่ต้อง 100% coverage |
-| CI | **GitHub Actions** (`build-and-test` job) | รันทุก push/PR: `npm ci` → `npm run build` → `npm test` |
-| CD | **GitHub Actions** (`deploy` job) | รันเฉพาะ push เข้า `main` **และ** ต่อเมื่อ `build-and-test` ผ่านเท่านั้น |
+| CI | **GitHub Actions** (`check` job) | รันทุก push/PR: `npm ci` → `npm run check` (lint + secrets + unit + e2e) |
+| CD | **GitHub Actions** (`deploy` job) | รันเฉพาะ push เข้า `main` **และ** ต่อเมื่อ `check` ผ่านเท่านั้น |
 | Deploy target | Cloudflare Workers *หรือ* GitHub Pages | ดู `cloudflare-workers-deploy` skill สำหรับ setup เต็ม |
 | Third-party libs | ยังโหลดผ่าน CDN `<script>` ใน `index.html` เหมือนเดิมได้ | ไม่บังคับย้ายเป็น npm import — ดู "สิ่งที่ไม่ต้องแตะ" ด้านล่าง |
 
 ### เริ่มโปรเจกต์ใหม่ — copy จาก starter ตรงๆ ไม่ต้องสร้างเอง
 
 > `cp -r design-lab/starter-multifile <ชื่อโปรเจกต์ใหม่>` แล้ว `npm ci && npm test` ให้เขียว
-> ก่อนเริ่มฟีเจอร์แรก — มีครบ: 7 โมดูล ES · Vitest+Playwright 2 ชั้น (เทียบเท่า
+> ก่อนเริ่มฟีเจอร์แรก — มีครบ: 8 โมดูล ES ใน `src/modules/` (app-config · app-core · chart-theme ·
+> cloud-sync-manager · debug-module · state-store · storage-engine · ui-renderer) · Vitest+Playwright 2 ชั้น (เทียบเท่า
 > `design-lab/starter` ฝั่ง single-file) · `vite-plugin-pwa` (service worker generate อัตโนมัติ
 > ไม่ต้อง bump CACHE_NAME มือ) · CI/preview/uptime workflow ครบ ดูรายละเอียดที่
 > `design-lab/starter-multifile/README.md`
@@ -187,8 +188,8 @@ window.saveAction = ActionLogUI.save;
      determination ของ action log
 
 5. ตั้ง GitHub Actions CI ก่อน deploy
-   - job build-and-test รันทุก push/PR (ดู ci.yml ตัวอย่างด้านล่าง)
-   - job deploy รันเฉพาะ push เข้า main และต้องรอ build-and-test ผ่านก่อน (needs:)
+   - job check รันทุก push/PR (ดู ci.yml ตัวอย่างด้านล่าง)
+   - job deploy รันเฉพาะ push เข้า main และต้องรอ check ผ่านก่อน (needs:)
 
 6. Manual verify ผ่าน browser จริงก่อนลบไฟล์เดิม
    - ทดสอบทุก flow หลักที่แอปมี (ไม่ใช่แค่ที่มี Vitest คุ้มครอง)
@@ -282,7 +283,7 @@ npm run build         # production build -> dist/
 - CDN libs (Tailwind/XLSX/ฯลฯ) ยังโหลดใน index.html — module ที่ใช้ประกาศ /* global X */
 
 ## CI/CD
-- build-and-test รันทุก push/PR
+- check รันทุก push/PR
 - deploy รันเฉพาะ push → main และต้องรอ test ผ่านก่อน (ดู .github/workflows/ci.yml)
 - งานที่ push ตรงเข้า main = ขึ้น production อัตโนมัติเมื่อ test ผ่าน ไม่มี staging แยก
 ```
@@ -299,7 +300,7 @@ Static site ล้วน ไม่มี server-side logic  → Cloudflare Worke
 
 ---
 
-*SKILL: vibe-coding-multifile v1.2 | Section: §21*
+*SKILL: vibe-coding-multifile v1.3 | Section: §21*
 *Supasit.A × A-Class WebCraft | Code • Share • Inspire*
 *Related: vibe-coding-core · vibe-coding-workflow · cloudflare-workers-deploy*
 *Derived from: Monitor-Quality-PTA migration (August 2026 / พ.ศ. 2569)*

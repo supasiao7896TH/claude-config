@@ -474,7 +474,7 @@ Deploy ปลายทาง:
 
 ---
 
-*SKILL: vibe-coding-core v7.1 | Sections: §1–2, §8, §16–17 (+ references/)*
+*SKILL: vibe-coding-core v7.2 | Sections: §1–2, §8, §16–17 (+ references/)*
 *Supasit.A × A-Class WebCraft | Code • Share • Inspire*
 *Related: vibe-coding-workflow · vibe-coding-firebase · vi-analysis*
 *Updated: September 2026 (พ.ศ. 2569)*

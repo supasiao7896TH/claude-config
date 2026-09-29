@@ -175,7 +175,8 @@ Step 7  npm ci && npm run check ต้องเขียว
 
 ตรวจเมื่อ 2569-09-29 โดยอ่าน `core` + `multifile` เต็ม และเทียบกับ `design-lab/starter-multifile/` จริง
 
-**สถานะ:** 🔴 D1–D6 **แก้แล้ว 2569-09-29** (พี่ A อนุมัติ) · 🟡 D7–D11 ยังไม่ได้แก้
+**สถานะ:** 🔴 D1–D6 **แก้แล้ว 2569-09-29** · 🟡 D7–D10 **แก้แล้ว 2569-09-29** · D11 **ถอนข้อกล่าวหา** (ไม่ใช่ drift — ดูท้ายตาราง)
+· ตอนนี้ไม่มี drift ที่ค้างอยู่ในรายการนี้
 
 วิธีแก้คือ **แยกให้ชัดว่าแต่ละข้อใช้กับ Multi-File หรือ Single HTML File** ไม่ได้ลบของเดิมทิ้ง
 (Single HTML ยังเป็นข้อยกเว้นที่ใช้ได้) · ระหว่างแก้พบจุดชนิดเดียวกันเพิ่มนอกตาราง และแก้ในรอบเดียวกัน:
@@ -196,7 +197,7 @@ Step 7  npm ci && npm run check ต้องเขียว
 | D5 | `core` Step 7 บรรทัด 173 | ชุด quality "มาจาก `design-lab/starter/`" | multi-file มีชุดเทียบเท่าใน `starter-multifile/` |
 | D6 | `core` Step 6 "ผลลัพธ์ที่พี่ A จะได้" (บรรทัด 185–192) | `index.html · manifest.webmanifest · sw.js` | Multi-File ได้ `src/ · package.json · vite.config.js · .github/workflows/` — ผังนี้เป็นของ Single HTML |
 
-### 🟡 ไม่ตรงกันเอง / ตัวเลข
+### 🟡 ไม่ตรงกันเอง / ตัวเลข — แก้แล้ว (D11 ถอน)
 
 | # | ที่ | รายละเอียด |
 |---|---|---|
@@ -204,7 +205,9 @@ Step 7  npm ci && npm run check ต้องเขียว
 | D8 | `multifile` | ตาราง Tech Stack + Playbook + CLAUDE.md template เรียก job `build-and-test` แต่ตัวอย่าง ci.yml และไฟล์จริงชื่อ job `check` |
 | D9 | `multifile` บรรทัด 90–91 | อ้าง "7 โมดูล ES" — ไฟล์จริงมี 8 ไฟล์ใน `src/modules/` (app-config, app-core, chart-theme, cloud-sync-manager, debug-module, state-store, storage-engine, ui-renderer) |
 | D10 | `core` | header ระบุ v7.2 แต่ footer v7.1 · `multifile` header v1.3 แต่ footer v1.2 |
-| D11 | `core` บรรทัด 28 | Related skills ระบุ `vi-analysis (§22)` — ไม่เกี่ยวกับ Vibe Coding และเนื้อ `core` ไม่ได้อ้างถึงจริง |
+| ~~D11~~ | `core` บรรทัด 28 | ~~Related skills ระบุ `vi-analysis (§22)` ผิดที่~~ → **ถอน:** ตรวจแล้ว `vi-analysis` ใช้เลข §22.0–22.9 จริง เลขส่วนของ skill ไล่ต่อกันเป็นระบบเดียว (core 1–17 · workflow 18–19, 23–24 · firebase 20 · multifile 21 · vi-analysis 22 · quality 25) — การอ้างถูกต้องแล้ว ข้อกล่าวหาเดิมมาจากการเดาไม่ได้เปิดไฟล์ตรวจ |
+
+D7 แก้ `/พัง` ให้กลาง ๆ · D8 เปลี่ยนชื่อ job เป็น `check` ทุกจุด (`multifile` 5 จุด + `context-templates`) และแก้คำสั่ง CI ในตารางให้ตรงไฟล์จริง (`npm run check` ไม่ใช่ build+test) · D9 ระบุ 8 โมดูลพร้อมรายชื่อ · D10 ปรับ footer ให้ตรง header (7.2 / 1.3)
 
 ### ✅ ตรวจแล้ว "ไม่ใช่ปัญหา" (ข้อสังเกตข้อ 1 เดิม)
 
