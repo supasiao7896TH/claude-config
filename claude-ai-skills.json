@@ -1,0 +1,90 @@
+{
+  "version": 1,
+  "checkedAt": "2026-10-02",
+  "note": "สมุดบัญชี skill ที่อัปโหลดไว้บน claude.ai (Customize > Skills > Yours) — claude.ai ไม่มี API ให้ sync จากเครื่อง จึงต้องอัปโหลดมือแล้วบันทึกวันที่ที่นี่ | uploadedAt = วันอัปโหลด (approx:true = ประมาณจากคำว่า '3d ago' บนหน้าเว็บ) | repoMatchedAt = วันที่ถือว่าเนื้อหา repo ตรงกับฝั่ง claude.ai (2026-07-30 = Initial commit ที่ import skill ซึ่งอยู่บน claude.ai แล้ว ยังไม่ได้เทียบเนื้อหาจริง) | doctor เตือนเมื่อ skill ใน repo ถูก commit หลังวันเหล่านี้",
+  "skills": {
+    "vibe-coding-core": {
+      "uploadedAt": "2026-09-29",
+      "approx": true
+    },
+    "vibe-coding-quality": {
+      "uploadedAt": "2026-09-29",
+      "approx": true
+    },
+    "vibe-coding-workflow": {
+      "uploadedAt": "2026-09-29",
+      "approx": true
+    },
+    "vibe-coding-multifile": {
+      "uploadedAt": "2026-09-29",
+      "approx": true
+    },
+    "vibe-coding-firebase": {
+      "uploadedAt": "2026-09-29",
+      "approx": true
+    },
+    "cloudflare-workers-deploy": {
+      "uploadedAt": "2026-09-29",
+      "approx": true
+    },
+    "star-kaizen": {
+      "uploadedAt": "2026-09-24"
+    },
+    "deploy": {
+      "uploadedAt": "2026-09-21"
+    },
+    "thai-civil-criminal-law": {
+      "uploadedAt": "2026-09-21"
+    },
+    "pta-ips-writer": {
+      "uploadedAt": "2026-08-29",
+      "intentionalDiff": "ฉบับ repo ตัดข้อมูลภายในออกเพราะ repo เป็น public ฉบับเต็มอยู่บน claude.ai ห้ามอัปโหลดฉบับ repo ทับ"
+    },
+    "grill-with-docs": {
+      "uploadedAt": "2026-08-08"
+    },
+    "grilling": {
+      "uploadedAt": "2026-08-08"
+    },
+    "domain-modeling": {
+      "uploadedAt": "2026-08-08"
+    },
+    "pta-safety-observation": {
+      "uploadedAt": "2026-07-20",
+      "repoMatchedAt": "2026-07-30"
+    },
+    "pta-process-diagnostic": {
+      "uploadedAt": "2026-07-20",
+      "repoMatchedAt": "2026-07-30"
+    },
+    "pta-plant-reference": {
+      "uploadedAt": "2026-07-20",
+      "repoMatchedAt": "2026-07-30"
+    },
+    "pta-pi-datalink-excel": {
+      "uploadedAt": "2026-07-20",
+      "repoMatchedAt": "2026-07-30"
+    },
+    "pta-kaizen-writer": {
+      "uploadedAt": "2026-07-20",
+      "repoMatchedAt": "2026-07-30"
+    },
+    "pta-industry-insight": {
+      "uploadedAt": "2026-07-20",
+      "repoMatchedAt": "2026-07-30"
+    },
+    "pta-exapilot-logic": {
+      "uploadedAt": "2026-07-20",
+      "repoMatchedAt": "2026-07-30"
+    },
+    "vi-analysis": {
+      "uploadedAt": "2026-07-20",
+      "repoMatchedAt": "2026-07-30"
+    },
+    "technical-timing": {
+      "uploadedAt": "2026-07-20",
+      "repoMatchedAt": "2026-07-30"
+    }
+  },
+  "notOnClaudeAi": ["ตรวจ", "พัง", "preview", "rollback"]
+}

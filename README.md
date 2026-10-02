@@ -138,7 +138,7 @@ Copy-Item "$env:USERPROFILE\claude-config\settings.json" "$env:USERPROFILE\.clau
 
 ไฟล์นี้มีอะไรบ้าง:
 - **`permissions.deny`** — กันไม่ให้ Claude อ่านไฟล์ secret โดยไม่ตั้งใจ (`.env`, `secrets/**`, `*.pem`, `*.key`) แม้จะสั่ง "อ่านทุกไฟล์ในโปรเจกต์" ก็ตาม
-- **`hooks.SessionStart`** — `git pull --ff-only` อัตโนมัติที่ `claude-config` ทุกครั้งที่เปิด session ใหม่ กันลืม pull ก่อนเริ่มงาน (ถ้า offline หรือ pull ไม่ได้ hook จะเงียบๆ ผ่านไป ไม่ทำให้ session เปิดไม่ได้)
+- **`hooks.SessionStart`** — `git pull --ff-only` อัตโนมัติที่ `claude-config` ทุกครั้งที่เปิด session ใหม่ กันลืม pull ก่อนเริ่มงาน เช็กทั้ง 2 path (`~\claude-config` และ `~\A(i)CODER2025TH\claude-config`) และ pull เฉพาะที่มีอยู่จริง · hook ไม่กลืน error แล้ว (เดิมฝั่งบ้านใช้ `try … catch {}` ซึ่งซ่อนความล้มเหลว) ถ้า pull ไม่ได้จะเห็นข้อความจาก git — ยังไม่ได้ทดสอบกรณี offline จริง ใช้ `npm run doctor` ช่วยดูว่าเครื่องตามหลัง repo หรือไม่
 - **`hooks.Stop` / `UserPromptSubmit` / `Notification`** — เสียงแจ้งเตือน Start/Stop/ขออนุมัติ permission ผ่าน Windows TTS
 - **`enabledPlugins` / `extraKnownMarketplaces`** — plugin ที่ติดตั้งไว้ (⚠️ ตัว plugin เองไม่ sync ผ่าน git ต้องรัน `/plugin install` ซ้ำที่เครื่องใหม่ — ดูหัวข้อด้านล่าง ไฟล์นี้แค่บันทึกว่าเปิดใช้ตัวไหนอยู่)
 
@@ -312,6 +312,45 @@ npm run check   # lint + secret scan + ตรวจความสอดคล�
 
 > **เครื่องที่โหลด Chromium ไม่ได้** (เน็ตบริษัทกรอง / มี Chromium อยู่แล้วคนละ build):
 > `PW_CHROMIUM_PATH=/path/to/chrome npm run brand:verify`
+
+## `npm run doctor` — ตรวจว่าเครื่องนี้ตรงกับ repo
+
+ต่างจาก `npm run check` ที่ตรวจ **ตัว repo เอง** — `doctor` ตรวจ **เครื่องที่กำลังใช้อยู่** (`~/.claude`) ว่าตามทัน repo หรือไม่ อ่านอย่างเดียว ไม่แก้ไฟล์ใดๆ ออกด้วย code 1 เมื่อเจอ ❌ (ไม่รวมอยู่ใน `check` เพราะผลขึ้นกับเครื่อง ไม่ใช่กับ repo จึงรันใน CI ไม่ได้)
+
+รันหลัง `git pull` ทุกครั้งที่ย้ายไปอีกเครื่อง (บ้าน ↔ ที่ทำงาน):
+
+```bash
+git pull && npm run doctor
+```
+
+| ตรวจ | ระดับ | หมายเหตุ |
+|---|---|---|
+| `skills/` และ `agents/` เป็น Junction ชี้เข้า repo นี้จริง | ❌ | ถ้าเป็นโฟลเดอร์ธรรมดา แก้ใน repo แล้วเครื่องนี้จะไม่เห็น |
+| `settings.json` ตรงกับ repo | ⚠️ | **ข้าม** `statusLine` (path ตาม username) และ `model` เพราะต่างตามเครื่องโดยออกแบบ |
+| `statusLine` ชี้ไฟล์ที่มีอยู่จริง / ไม่ใช่ placeholder | ❌ | ดักกรณี copy template แล้วลืมแก้ username |
+| `statusline.ps1` ตรงกับ repo | ⚠️ | เทียบหลังตัดความต่าง CRLF/LF (`.gitattributes` บังคับ LF ใน repo) |
+| `USER.md` เป็น symlink หรือสำเนาตรงกับ repo | ❌ | |
+| สำเนา skill บน claude.ai ล้าสมัยหรือไม่ | ⚠️ | ดูหัวข้อถัดไป |
+
+**ไม่ตรวจ `CLAUDE.md`** — ฉบับ repo ตัดข้อความเฉพาะเครื่องออกโดยตั้งใจ จึงต่างจากฉบับในเครื่องเสมอ
+
+**ทดสอบได้แค่เครื่องที่รัน** — `doctor` บอกไม่ได้ว่าเครื่องอื่นเป็นอย่างไร ต้องรันบนแต่ละเครื่องเอง
+
+## Skill บน claude.ai — อัปโหลดมือ + สมุดบัญชี
+
+บัญชี claude.ai (Customize → Skills → Yours) เก็บสำเนา skill แยกจาก repo — **ไม่มี API ให้ sync จากเครื่อง** และโฟลเดอร์ `skills/synced/` ไม่ใช่กระจกของมัน (ตั้งชื่อเป็น UUID เทียบกับชื่อ skill ใน repo ไม่ได้) จึงต้องอัปโหลดมือแล้วจดวันที่ไว้ใน **`claude-ai-skills.json`** ให้ `doctor` เตือนเมื่อ repo ใหม่กว่า
+
+**ข้อจำกัดของการเตือน:** `doctor` เทียบ "วัน commit ล่าสุดของ skill ใน repo" กับ "วันอัปโหลดที่จดไว้" เท่านั้น ไม่เห็นเนื้อหาฝั่ง claude.ai จริง — ถ้าแก้บน claude.ai ตรงๆ โดยไม่ผ่าน repo จะไม่รู้
+
+**ขั้นตอนเมื่อแก้ skill ใน repo แล้วต้องการให้ claude.ai ได้ฉบับใหม่:**
+
+1. `npm run doctor` → ดูรายการ ⚠️ `claude.ai › <ชื่อ skill>`
+2. **ข้าม skill ที่มี `intentionalDiff`** (ตอนนี้คือ `pta-ips-writer` — ฉบับ repo ตัดข้อมูลภายในออกเพราะ repo เป็น public ฉบับเต็มอยู่บน claude.ai **ห้ามอัปโหลดฉบับ repo ทับ**)
+3. อัปโหลดผ่านหน้า Customize → Skills บน claude.ai (ปุ่ม Add ตามที่ UI แสดง — ขั้นตอนกดละเอียดและรูปแบบไฟล์ที่รับยังไม่ได้ทดสอบ ตรวจ UI จริงก่อนทำครั้งแรกแล้วบันทึกกลับมาที่นี่)
+4. เปิดรายการ Yours ยืนยันว่าวันที่อัปเดตของ skill นั้นเปลี่ยนแล้ว
+5. แก้ `uploadedAt` ของ skill นั้นใน `claude-ai-skills.json` เป็นวันนี้ (ลบ `approx` และ `repoMatchedAt` ของมัน) และอัปเดต `checkedAt` → commit
+
+**เพิ่ม skill ใหม่ใน repo:** `doctor` จะเตือน "ไม่อยู่ในสมุดบัญชี" จนกว่าจะเพิ่มใน `skills` (ถ้าอัปโหลดแล้ว) หรือใน `notOnClaudeAi` (ถ้าตั้งใจไม่อัปโหลด เช่น slash command อย่าง `/ตรวจ` `/พัง`)
 
 ---
 

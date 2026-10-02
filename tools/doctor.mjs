@@ -5,9 +5,11 @@
 // เทียบ ~/.claude กับ claude-config โดยข้ามสิ่งที่ต่างตามเครื่องโดยออกแบบ:
 //   - settings.json: ข้าม statusLine (path ตาม username) และ model
 //   - CLAUDE.md: ไม่เทียบ (ฉบับ repo ตัดข้อความเฉพาะเครื่องออกโดยตั้งใจ)
+// และเทียบสำเนา skill บน claude.ai กับสมุดบัญชี claude-ai-skills.json (ดูหัวข้อ 5 ด้านล่าง)
 // ปรับปรุงเมื่อ 2569-10-02 ตามที่ README บันทึกไว้ว่า settings.json/statusline.ps1 ต้อง copy มือ
 
-import { existsSync, lstatSync, readFileSync, realpathSync } from "node:fs";
+import { execFileSync } from "node:child_process";
+import { existsSync, lstatSync, readdirSync, readFileSync, realpathSync } from "node:fs";
 import { homedir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -88,6 +90,53 @@ else if (lstatSync(homeUser).isSymbolicLink()) add("ok", "USER.md", "เป็�
 else if (readText(homeUser) === readText(join(repo, "USER.md")))
   add("ok", "USER.md", "สำเนาตรงกับ repo (ต้อง copy ใหม่ทุกครั้งที่แก้)");
 else add("fail", "USER.md", "สำเนาเก่า ไม่ตรงกับ repo");
+
+// 5) สำเนา skill บน claude.ai: อัปโหลดมือ จึงเทียบวัน commit ล่าสุดของ skill กับวันในสมุดบัญชี
+//    (claude-ai-skills.json) — เตือนเมื่อ repo ใหม่กว่า แต่ไม่เห็นเนื้อหาฝั่ง claude.ai จริง
+const ledgerPath = join(repo, "claude-ai-skills.json");
+if (!existsSync(ledgerPath)) {
+  add("warn", "claude.ai skills", "ไม่พบ claude-ai-skills.json");
+} else {
+  const ledger = readJson(ledgerPath);
+  const lastCommitDay = (skill) => {
+    try {
+      const out = execFileSync(
+        "git",
+        ["-C", repo, "log", "-1", "--format=%cs", "--", `skills/${skill}`],
+        { encoding: "utf8" }
+      ).trim();
+      return out || null;
+    } catch {
+      return null;
+    }
+  };
+  const known = new Set([...Object.keys(ledger.skills), ...ledger.notOnClaudeAi]);
+  let stale = 0;
+  for (const [name, info] of Object.entries(ledger.skills)) {
+    const day = lastCommitDay(name);
+    if (day === null) {
+      add("warn", `claude.ai › ${name}`, "อ่านวัน commit จาก git ไม่ได้");
+    } else if (info.intentionalDiff) {
+      add("ok", `claude.ai › ${name}`, `ตั้งใจให้ต่างจาก repo: ${info.intentionalDiff}`);
+    } else if (day > (info.repoMatchedAt ?? info.uploadedAt)) {
+      stale++;
+      add(
+        "warn",
+        `claude.ai › ${name}`,
+        `repo แก้ล่าสุด ${day} หลังวันที่ตรงกัน ${info.repoMatchedAt ?? info.uploadedAt} — อัปโหลดใหม่`
+      );
+    }
+  }
+  const repoSkills = readdirSync(join(repo, "skills"), { withFileTypes: true })
+    .filter((d) => d.isDirectory() && d.name !== "synced")
+    .map((d) => d.name);
+  for (const name of repoSkills) {
+    if (!known.has(name))
+      add("warn", `claude.ai › ${name}`, "ไม่อยู่ในสมุดบัญชี — เพิ่มใน claude-ai-skills.json");
+  }
+  if (stale === 0)
+    add("ok", "claude.ai skills", `ไม่มี skill ที่ repo ใหม่กว่า (ตรวจเมื่อ ${ledger.checkedAt})`);
+}
 
 const icon = { ok: "✅", warn: "⚠️ ", fail: "❌" };
 for (const r of results)
