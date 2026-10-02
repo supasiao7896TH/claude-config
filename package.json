@@ -9,6 +9,7 @@
     "brand:verify": "node branding/tools/verify.mjs",
     "check:standards": "node tools/check-standards.mjs",
     "check:skill-drift": "node tools/check-skill-drift.mjs",
+    "doctor": "node tools/doctor.mjs",
     "format": "prettier --write .",
     "lint": "prettier --check .",
     "secrets": "secretlint \"**/*\"",

@@ -70,7 +70,7 @@
     "command": "powershell -NoProfile -File \"C:/Users/<ชื่อ user บนเครื่องนี้>/.claude/statusline.ps1\""
   },
   "enabledPlugins": {
-    "github@claude-plugins-official": true,
+    "github@claude-plugins-official": false,
     "document-skills@anthropic-agent-skills": true,
     "example-skills@anthropic-agent-skills": true
   },
@@ -85,5 +85,7 @@
   "effortLevel": "high",
   "autoUpdatesChannel": "latest",
   "tui": "fullscreen",
-  "theme": "dark"
+  "theme": "dark",
+  "agentPushNotifEnabled": true,
+  "inputNeededNotifEnabled": true
 }
