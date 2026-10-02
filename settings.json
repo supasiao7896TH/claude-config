@@ -24,7 +24,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$p = \"$env:USERPROFILE\\claude-config\"; if (-not (Test-Path $p)) { $p = \"$env:USERPROFILE\\A(i)CODER2025TH\\claude-config\" }; if (Test-Path $p) { git -C $p pull --ff-only }",
+            "command": "$p = \"$env:USERPROFILE\\claude-config\"; if (-not (Test-Path $p)) { $p = \"$env:USERPROFILE\\A(i)CODER2025TH\\claude-config\" }; $s = \"$p\\tools\\sync-pull.ps1\"; if (Test-Path $s) { & $s -Repo $p } elseif (Test-Path $p) { git -C $p pull --ff-only }",
             "shell": "powershell"
           }
         ]

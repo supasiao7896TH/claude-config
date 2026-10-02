@@ -138,6 +138,20 @@ if (!existsSync(ledgerPath)) {
     add("ok", "claude.ai skills", `ไม่มี skill ที่ repo ใหม่กว่า (ตรวจเมื่อ ${ledger.checkedAt})`);
 }
 
+// 6) sync.log: ผลการ git pull ตอนเปิด session ล่าสุด (เขียนโดย tools/sync-pull.ps1 ผ่าน SessionStart hook)
+const syncLog = join(home, "sync.log");
+if (!existsSync(syncLog)) {
+  add(
+    "warn",
+    "sync.log",
+    "ยังไม่มี — ต้องให้ SessionStart hook ในเครื่องนี้เรียก tools/sync-pull.ps1 (ดู README) แล้วเปิด session ใหม่"
+  );
+} else {
+  const last = readText(syncLog).trim().split("\n").at(-1) ?? "";
+  if (/ FAIL /.test(last)) add("warn", "sync.log", `git pull ล้มเหลวครั้งล่าสุด: ${last}`);
+  else add("ok", "sync.log", `ล่าสุด: ${last}`);
+}
+
 const icon = { ok: "✅", warn: "⚠️ ", fail: "❌" };
 for (const r of results)
   console.log(`${icon[r.level]} ${r.label}${r.detail ? ` — ${r.detail}` : ""}`);
