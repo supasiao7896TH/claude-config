@@ -41,12 +41,12 @@
    ทำแค่ครั้งเดียวต่อ clone · `npm ci` จะติดตั้ง git hook ให้อัตโนมัติ (ผ่าน `prepare`)
    ถ้าข้ามข้อนี้ hook จะไม่ทำงานและ `npm run check` จะรันไม่ได้ — **แต่ทุกอย่างอื่นยังใช้ได้ปกติ**
    (`node_modules/` อยู่ใน `.gitignore` แล้ว จึงไม่ทำให้ `git pull` ชนกัน)
-8. **🆕 ขั้นตอนใหม่ 2026-10-03 — ซิงค์ Antigravity CLI ('agy') ด้วยคำสั่งเดียว**
-   หากต้องการใช้งาน Antigravity CLI / Antigravity IDE บนเครื่องนั้น ให้รันสคริปต์นี้เพื่อตั้งค่า Skills (26 ตัว) + Rules + Persona เข้า `~/.gemini`:
+8. **🆕 ขั้นตอนใหม่ 2026-10-03 (อัปเดตแก้ UTF-8 2026-10-04) — ซิงค์ Antigravity CLI ('agy') ด้วยคำสั่งเดียว**
+   หลัง `git pull` หากต้องการใช้งาน Antigravity CLI / Antigravity IDE บนเครื่องนั้น ให้รันสคริปต์นี้เพื่อตั้งค่า Skills (26 ตัว) + Rules + Persona เข้า `~/.gemini`:
    ```powershell
    powershell -ExecutionPolicy Bypass -File .\tools\sync-antigravity.ps1
    ```
-   (สคริปต์จะคัดลอก skills, สร้าง user-profile plugin, วาง GEMINI.md, ตั้งค่าเสียงแจ้งเตือน Start/Stop hooks, ผสานฟอนต์ Cascadia Code/JetBrains Mono พร้อม Terminal Scrollback 10,000 บรรทัด + Profile "Antigravity CLI" 1-Click Launch, คีย์ลัด Alt+A สลับไป-กลับ Editor/Terminal + Shift+Enter, วาง global .geminiignore, และย้าย telemetry plugin ให้อัตโนมัติ)
+   *(สคริปต์ชุดอัปเดตใหม่นี้จะคัดลอกไฟล์ UTF-8 แท้ (`AGENTS.md` และ `antigravity-plugin.json`) เข้า `~/.gemini` โดยตรง ไม่เกิดปัญหาภาษาไทยต่างดาว/Mojibake บน Windows อีกต่อไป พร้อมทั้งคัดลอก skills, ตั้งค่า hooks เสียง Start/Stop, คีย์ลัด Alt+A, ฟอนต์ Cascadia Code, วาง global .geminiignore และย้าย telemetry plugin ให้อัตโนมัติ)*
 9. **🆕 ขั้นตอนใหม่ 2026-10-04 — เปิดใช้งาน Real-time Statusline ใน Antigravity CLI ('agy')**
    มีไฟล์ `statusline.js` อยู่ที่ root ของ `claude-config` (เทียบเท่า `statusline.ps1` ของ Claude Code) สำหรับแสดง Model, Context %, 5h Quota (พร้อมเวลานับถอยหลังรีเฟรช), Weekly Quota, และ Tier แบบ Real-time
    เมื่อเปิด `agy` ใน VS Code ให้รันคำสั่งนี้ในช่องแชท CLI เพียงครั้งเดียว:
