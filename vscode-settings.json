@@ -4,6 +4,9 @@
   "terminal.integrated.fontFamily": "'Cascadia Code', 'JetBrains Mono', Consolas, 'Courier New', monospace",
   "terminal.integrated.gpuAcceleration": "off",
   "terminal.integrated.mouseWheelScrollSensitivity": 3,
+  "terminal.integrated.scrollback": 10000,
+  "terminal.integrated.cursorBlinking": true,
+  "terminal.integrated.smoothScrolling": true,
   "git.autofetch": true,
   "git.enableSmartCommit": true,
   "workbench.iconTheme": "vs-minimal"

@@ -46,7 +46,7 @@
    ```powershell
    powershell -ExecutionPolicy Bypass -File .\tools\sync-antigravity.ps1
    ```
-   (สคริปต์จะคัดลอก skills, สร้าง user-profile plugin, วาง GEMINI.md, ตั้งค่าเสียงแจ้งเตือน Start/Stop hooks, ผสานฟอนต์ Cascadia Code/JetBrains Mono เข้ากับ VS Code, และย้าย telemetry plugin ให้อัตโนมัติ)
+   (สคริปต์จะคัดลอก skills, สร้าง user-profile plugin, วาง GEMINI.md, ตั้งค่าเสียงแจ้งเตือน Start/Stop hooks, ผสานฟอนต์ Cascadia Code/JetBrains Mono พร้อมเพิ่ม Terminal Scrollback 10,000 บรรทัดเข้ากับ VS Code, และย้าย telemetry plugin ให้อัตโนมัติ)
 9. **🆕 ขั้นตอนใหม่ 2026-10-04 — เปิดใช้งาน Real-time Statusline ใน Antigravity CLI ('agy')**
    มีไฟล์ `statusline.js` อยู่ที่ root ของ `claude-config` (เทียบเท่า `statusline.ps1` ของ Claude Code) สำหรับแสดง Model, Context %, 5h Quota (พร้อมเวลานับถอยหลังรีเฟรช), Weekly Quota, และ Tier แบบ Real-time
    เมื่อเปิด `agy` ใน VS Code ให้รันคำสั่งนี้ในช่องแชท CLI เพียงครั้งเดียว:
