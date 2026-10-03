@@ -9,5 +9,13 @@
   "terminal.integrated.smoothScrolling": true,
   "git.autofetch": true,
   "git.enableSmartCommit": true,
-  "workbench.iconTheme": "vs-minimal"
+  "workbench.iconTheme": "vs-minimal",
+  "terminal.integrated.profiles.windows": {
+    "Antigravity CLI": {
+      "source": "PowerShell",
+      "args": ["-NoExit", "-Command", "agy"],
+      "icon": "sparkle",
+      "color": "terminal.ansiCyan"
+    }
+  }
 }

@@ -168,6 +168,14 @@ if (Test-Path $srcVscodeSettings) {
   }
 }
 
+# 6. Sync Global .geminiignore
+$srcIgnore = Join-Path $RepoRoot ".geminiignore"
+if (Test-Path $srcIgnore) {
+  Write-Host "[Ignore] Syncing global .geminiignore..." -ForegroundColor Green
+  Copy-Item $srcIgnore (Join-Path $geminiDir ".geminiignore") -Force
+  Copy-Item $srcIgnore (Join-Path $configDir ".geminiignore") -Force
+}
+
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host "  Setup completed successfully!         " -ForegroundColor Green
 Write-Host "  Ready for Antigravity CLI ('agy')     " -ForegroundColor Green
