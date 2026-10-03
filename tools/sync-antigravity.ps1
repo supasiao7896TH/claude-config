@@ -142,6 +142,32 @@ $ruleContent = @"
 Set-Content -Path (Join-Path $userProfileRulesDir "AGENTS.md") -Value $ruleContent -Encoding UTF8
 Set-Content -Path (Join-Path $env:USERPROFILE "GEMINI.md") -Value $ruleContent -Encoding UTF8
 
+# 5. Sync VS Code Font & Editor Settings
+$vscodeUserDir = Join-Path $env:APPDATA "Code\User"
+$vscodeSettingsFile = Join-Path $vscodeUserDir "settings.json"
+$srcVscodeSettings = Join-Path $RepoRoot "vscode-settings.json"
+
+if (Test-Path $srcVscodeSettings) {
+  Write-Host "[VSCode] Syncing font and editor settings to $vscodeSettingsFile..." -ForegroundColor Green
+  if (Test-Path $vscodeSettingsFile) {
+    try {
+      $currentJson = Get-Content $vscodeSettingsFile -Raw | ConvertFrom-Json
+      $newJson = Get-Content $srcVscodeSettings -Raw | ConvertFrom-Json
+      foreach ($prop in $newJson.PSObject.Properties) {
+        $currentJson | Add-Member -MemberType NoteProperty -Name $prop.Name -Value $prop.Value -Force
+      }
+      $currentJson | ConvertTo-Json -Depth 10 | Set-Content $vscodeSettingsFile -Encoding UTF8
+      Write-Host "[VSCode] Merged font settings into existing VS Code settings.json" -ForegroundColor Green
+    } catch {
+      Write-Host "[VSCode] Warning: Could not merge, copying directly..." -ForegroundColor Yellow
+      Copy-Item $srcVscodeSettings $vscodeSettingsFile -Force
+    }
+  } else {
+    if (-not (Test-Path $vscodeUserDir)) { New-Item -ItemType Directory -Path $vscodeUserDir -Force | Out-Null }
+    Copy-Item $srcVscodeSettings $vscodeSettingsFile -Force
+  }
+}
+
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host "  Setup completed successfully!         " -ForegroundColor Green
 Write-Host "  Ready for Antigravity CLI ('agy')     " -ForegroundColor Green

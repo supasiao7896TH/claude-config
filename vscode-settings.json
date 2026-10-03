@@ -1,0 +1,10 @@
+{
+  "editor.fontFamily": "'Cascadia Code', 'JetBrains Mono', Consolas, 'Courier New', monospace",
+  "editor.fontLigatures": true,
+  "terminal.integrated.fontFamily": "'Cascadia Code', 'JetBrains Mono', Consolas, 'Courier New', monospace",
+  "terminal.integrated.gpuAcceleration": "off",
+  "terminal.integrated.mouseWheelScrollSensitivity": 3,
+  "git.autofetch": true,
+  "git.enableSmartCommit": true,
+  "workbench.iconTheme": "vs-minimal"
+}
