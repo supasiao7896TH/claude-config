@@ -70,6 +70,7 @@
 2. ซิงค์ Skills ทั้ง 26 รายการจาก `skills/` เข้าสู่ `~/.gemini/config/skills/`
 3. สร้าง Global Plugin `~/.gemini/config/plugins/user-profile/` พร้อม `rules/AGENTS.md` และวาง `GEMINI.md` กำหนด Persona ("หนู/ค่ะ"), มาตรฐาน Vibe Coding (9 Modules, Multi-File default, Supasit.A Studio), และ Review Gate
 4. สร้างสคริปต์ **`tools/sync-antigravity.ps1`** สำหรับรันคำสั่งเดียวเพื่อ replicate การตั้งค่าทั้งหมดบนเครื่องบ้านทันทีหลัง `git pull`
+5. แก้ไขบั๊ก Mojibake ของภาษาไทยบน Windows ใน `sync-antigravity.ps1` โดยเปลี่ยนมาใช้การคัดลอกไฟล์ `AGENTS.md` และ `antigravity-plugin.json` ตรงๆ ป้องกันการแปลง Encoding ผิดพลาดของ PowerShell 5.1 พร้อมแก้ไข Path ของ MCP Server 'context' ใน `~/.gemini/config/mcp_config.json` ให้ตรงกับเวอร์ชัน `1.0.0-universal` ที่ติดตั้งจริง
 
 ---
 
