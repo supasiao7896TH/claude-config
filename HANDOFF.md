@@ -2,7 +2,7 @@
 
 > ใช้ไฟล์นี้ส่งต่องานข้ามเครื่อง (บ้าน ↔ ที่ทำงาน) — อ่านไฟล์นี้ก่อนเริ่ม session ถัดไป
 
-**อัปเดตล่าสุด:** 2026-10-03 (เครื่อง Office — เพิ่ม Antigravity CLI 'agy' setup & sync script · sync 26 skills + rules เข้า ~/.gemini · ดูหัวข้อ "✅ เสร็จแล้ว (2026-10-03)" ด้านล่าง · ก่อนหน้า: 2026-09-29 แผนผัง skill ARCHITECTURE.md)
+**อัปเดตล่าสุด:** 2026-10-04 (เครื่อง Office — เพิ่ม Antigravity CLI statusline renderer `statusline.js` แสดง Real-time Quota/Context/Model พร้อมวิธีเปิดใช้งาน · ก่อนหน้า: 2026-10-03 setup & sync script)
 
 ---
 
@@ -47,6 +47,17 @@
    powershell -ExecutionPolicy Bypass -File .\tools\sync-antigravity.ps1
    ```
    (สคริปต์จะคัดลอก skills, สร้าง user-profile plugin, วาง GEMINI.md, และย้าย telemetry plugin ที่มีปัญหาบน Windows ให้อัตโนมัติ)
+9. **🆕 ขั้นตอนใหม่ 2026-10-04 — เปิดใช้งาน Real-time Statusline ใน Antigravity CLI ('agy')**
+   มีไฟล์ `statusline.js` อยู่ที่ root ของ `claude-config` (เทียบเท่า `statusline.ps1` ของ Claude Code) สำหรับแสดง Model, Context %, 5h Quota (พร้อมเวลานับถอยหลังรีเฟรช), Weekly Quota, และ Tier แบบ Real-time
+   เมื่อเปิด `agy` ใน VS Code ให้รันคำสั่งนี้ในช่องแชท CLI เพียงครั้งเดียว:
+   - **เครื่องบ้าน (`PC 4000D`):**
+     ```bash
+     /statusline node "C:\Users\PC 4000D\A(i)CODER2025TH\claude-config\statusline.js"
+     ```
+   - **เครื่อง Office (`26007294`):**
+     ```bash
+     /statusline node "C:\Users\26007294\A(i)CODER2025TH\claude-config\statusline.js"
+     ```
 
 ---
 
