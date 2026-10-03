@@ -166,6 +166,14 @@ if (Test-Path $srcVscodeSettings) {
     if (-not (Test-Path $vscodeUserDir)) { New-Item -ItemType Directory -Path $vscodeUserDir -Force | Out-Null }
     Copy-Item $srcVscodeSettings $vscodeSettingsFile -Force
   }
+
+  # Sync keybindings.json
+  $srcKeybindings = Join-Path $RepoRoot "keybindings.json"
+  $vscodeKeybindingsFile = Join-Path $vscodeUserDir "keybindings.json"
+  if (Test-Path $srcKeybindings) {
+    Copy-Item $srcKeybindings $vscodeKeybindingsFile -Force
+    Write-Host "[VSCode] Synced keybindings (Alt+A toggle, Shift+Enter) successfully." -ForegroundColor Green
+  }
 }
 
 # 6. Sync Global .geminiignore
