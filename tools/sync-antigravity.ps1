@@ -66,6 +66,27 @@ $pluginJson = @"
 "@
 Set-Content -Path (Join-Path $userProfilePluginDir "plugin.json") -Value $pluginJson -Encoding UTF8
 
+$hooksJson = @"
+{
+  "voice-alerts": {
+    "PreInvocation": [
+      {
+        "type": "command",
+        "command": "powershell -NoProfile -Command \"Add-Type -AssemblyName System.Speech; (New-Object System.Speech.Synthesis.SpeechSynthesizer).Speak('Start'); Write-Output '{}'\""
+      }
+    ],
+    "Stop": [
+      {
+        "type": "command",
+        "command": "powershell -NoProfile -Command \"Add-Type -AssemblyName System.Speech; (New-Object System.Speech.Synthesis.SpeechSynthesizer).Speak('Stop'); Write-Output '{}'\""
+      }
+    ]
+  }
+}
+"@
+Set-Content -Path (Join-Path $configDir "hooks.json") -Value $hooksJson -Encoding UTF8
+Set-Content -Path (Join-Path $userProfilePluginDir "hooks.json") -Value $hooksJson -Encoding UTF8
+
 $ruleContent = @"
 # Global Instructions & User Profile
 
