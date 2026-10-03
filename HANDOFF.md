@@ -2,7 +2,7 @@
 
 > ใช้ไฟล์นี้ส่งต่องานข้ามเครื่อง (บ้าน ↔ ที่ทำงาน) — อ่านไฟล์นี้ก่อนเริ่ม session ถัดไป
 
-**อัปเดตล่าสุด:** 2026-09-29 (เครื่อง Office — แผนผัง skill `ARCHITECTURE.md` · แก้ drift หลังพลิกเป็น Multi-File default · อัปเดต 6 skill บน claude.ai — ดูหัวข้อ "✅ เสร็จแล้ว (2026-09-29)" ด้านล่าง · ก่อนหน้า: 2026-09-21 แก้ SessionStart hook / Junction)
+**อัปเดตล่าสุด:** 2026-10-03 (เครื่อง Office — เพิ่ม Antigravity CLI 'agy' setup & sync script · sync 26 skills + rules เข้า ~/.gemini · ดูหัวข้อ "✅ เสร็จแล้ว (2026-10-03)" ด้านล่าง · ก่อนหน้า: 2026-09-29 แผนผัง skill ARCHITECTURE.md)
 
 ---
 
@@ -41,6 +41,24 @@
    ทำแค่ครั้งเดียวต่อ clone · `npm ci` จะติดตั้ง git hook ให้อัตโนมัติ (ผ่าน `prepare`)
    ถ้าข้ามข้อนี้ hook จะไม่ทำงานและ `npm run check` จะรันไม่ได้ — **แต่ทุกอย่างอื่นยังใช้ได้ปกติ**
    (`node_modules/` อยู่ใน `.gitignore` แล้ว จึงไม่ทำให้ `git pull` ชนกัน)
+8. **🆕 ขั้นตอนใหม่ 2026-10-03 — ซิงค์ Antigravity CLI ('agy') ด้วยคำสั่งเดียว**
+   หากต้องการใช้งาน Antigravity CLI / Antigravity IDE บนเครื่องนั้น ให้รันสคริปต์นี้เพื่อตั้งค่า Skills (26 ตัว) + Rules + Persona เข้า `~/.gemini`:
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File .\tools\sync-antigravity.ps1
+   ```
+   (สคริปต์จะคัดลอก skills, สร้าง user-profile plugin, วาง GEMINI.md, และย้าย telemetry plugin ที่มีปัญหาบน Windows ให้อัตโนมัติ)
+
+---
+
+## ✅ เสร็จแล้ว (2026-10-03, เครื่อง Office) — รองรับ Antigravity CLI ('agy') + สร้าง Sync Tool
+
+**ที่มา:** พี่ A ต้องการใช้งาน Google Antigravity CLI ('agy') ควบคู่กับ VS Code โดยใช้ Skills, Rules, และ User Profile ชุดเดียวกับ Claude Code ข้ามได้ทั้งเครื่อง Office และเครื่องบ้าน
+
+**สิ่งที่ดำเนินการแล้ว:**
+1. แก้ปัญหาบั๊ก `googlecloudtools.datacloud_telemetry` บน Windows (ย้ายออกจาก plugins เพื่อปลดล็อก tool execution)
+2. ซิงค์ Skills ทั้ง 26 รายการจาก `skills/` เข้าสู่ `~/.gemini/config/skills/`
+3. สร้าง Global Plugin `~/.gemini/config/plugins/user-profile/` พร้อม `rules/AGENTS.md` และวาง `GEMINI.md` กำหนด Persona ("หนู/ค่ะ"), มาตรฐาน Vibe Coding (9 Modules, Multi-File default, Supasit.A Studio), และ Review Gate
+4. สร้างสคริปต์ **`tools/sync-antigravity.ps1`** สำหรับรันคำสั่งเดียวเพื่อ replicate การตั้งค่าทั้งหมดบนเครื่องบ้านทันทีหลัง `git pull`
 
 ---
 
