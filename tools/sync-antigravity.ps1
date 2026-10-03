@@ -70,26 +70,12 @@ if (Test-Path $srcPluginJson) {
   Copy-Item -Path $srcPluginJson -Destination (Join-Path $userProfilePluginDir "plugin.json") -Force
 }
 
-$hooksJson = @"
-{
-  "voice-alerts": {
-    "PreInvocation": [
-      {
-        "type": "command",
-        "command": "powershell -NoProfile -Command \"Add-Type -AssemblyName System.Speech; (New-Object System.Speech.Synthesis.SpeechSynthesizer).Speak('Start'); Write-Output '{}'\""
-      }
-    ],
-    "Stop": [
-      {
-        "type": "command",
-        "command": "powershell -NoProfile -Command \"Add-Type -AssemblyName System.Speech; (New-Object System.Speech.Synthesis.SpeechSynthesizer).Speak('Stop'); Write-Output '{}'\""
-      }
-    ]
-  }
+$srcHooksJson = Join-Path $PSScriptRoot "antigravity-hooks.json"
+if (Test-Path $srcHooksJson) {
+  Copy-Item -Path $srcHooksJson -Destination (Join-Path $configDir "hooks.json") -Force
+  Copy-Item -Path $srcHooksJson -Destination (Join-Path $userProfilePluginDir "hooks.json") -Force
+  Write-Host "[Hooks] Synced voice alert hooks (no-BOM UTF-8) successfully." -ForegroundColor Green
 }
-"@
-Set-Content -Path (Join-Path $configDir "hooks.json") -Value $hooksJson -Encoding UTF8
-Set-Content -Path (Join-Path $userProfilePluginDir "hooks.json") -Value $hooksJson -Encoding UTF8
 
 # 5. Sync VS Code Font & Editor Settings
 $vscodeUserDir = Join-Path $env:APPDATA "Code\User"
