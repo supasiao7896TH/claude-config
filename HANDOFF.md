@@ -2,7 +2,7 @@
 
 > ใช้ไฟล์นี้ส่งต่องานข้ามเครื่อง (บ้าน ↔ ที่ทำงาน) — อ่านไฟล์นี้ก่อนเริ่ม session ถัดไป
 
-**อัปเดตล่าสุด:** 2026-10-04 (เครื่อง Office — เพิ่ม Antigravity CLI statusline renderer `statusline.js` แสดง Real-time Quota/Context/Model พร้อมวิธีเปิดใช้งาน · ก่อนหน้า: 2026-10-03 setup & sync script)
+**อัปเดตล่าสุด:** 2026-10-05 (เครื่องบ้าน — ติดตั้ง `agy` v1.2.17 สำเร็จ, เพิ่มขั้นตอนติดตั้ง CLI + แก้ path `statusline.js` ของเครื่องบ้านที่เคยผิด · ก่อนหน้า: 2026-10-04 เครื่อง Office — เพิ่ม Antigravity CLI statusline renderer `statusline.js` แสดง Real-time Quota/Context/Model พร้อมวิธีเปิดใช้งาน · ก่อนหน้า: 2026-10-03 setup & sync script)
 
 ---
 
@@ -41,8 +41,19 @@
    ทำแค่ครั้งเดียวต่อ clone · `npm ci` จะติดตั้ง git hook ให้อัตโนมัติ (ผ่าน `prepare`)
    ถ้าข้ามข้อนี้ hook จะไม่ทำงานและ `npm run check` จะรันไม่ได้ — **แต่ทุกอย่างอื่นยังใช้ได้ปกติ**
    (`node_modules/` อยู่ใน `.gitignore` แล้ว จึงไม่ทำให้ `git pull` ชนกัน)
-8. **🆕 ขั้นตอนใหม่ 2026-10-03 (อัปเดตแก้ UTF-8 2026-10-04) — ซิงค์ Antigravity CLI ('agy') ด้วยคำสั่งเดียว**
-   หลัง `git pull` หากต้องการใช้งาน Antigravity CLI / Antigravity IDE บนเครื่องนั้น ให้รันสคริปต์นี้เพื่อตั้งค่า Skills (26 ตัว) + Rules + Persona เข้า `~/.gemini`:
+8. **🆕 ขั้นตอนใหม่ 2026-10-03 (อัปเดตแก้ UTF-8 2026-10-04, เพิ่มขั้นตอนติดตั้ง CLI 2026-10-05) — ซิงค์ Antigravity CLI ('agy') ด้วยคำสั่งเดียว**
+   **8.0 ติดตั้ง `agy` ก่อน (ถ้าเครื่องนั้นยังไม่มี)** — `sync-antigravity.ps1` **ไม่ได้ติดตั้ง CLI ให้** แค่ตั้งค่าไฟล์ ตรวจด้วย `agy --version` ถ้าขึ้น command not found ให้ติดตั้งใน **PowerShell ธรรมดา** (ไม่ใช่ bash, ไม่ใส่ `!` นำหน้า):
+   ```powershell
+   irm https://antigravity.google/cli/install.ps1 | iex
+   ```
+   - ติดตั้งที่ `%LOCALAPPDATA%\agy\bin\agy.exe` (~189 MB) และเพิ่ม PATH ของ user ให้เอง — **ต้องปิดแล้วเปิด terminal/VS Code ใหม่** PATH ถึงจะมีผล
+   - ระหว่างโหลดสคริปต์ปิด progress bar ไว้ (`$ProgressPreference = 'SilentlyContinue'`) หน้าจอจะนิ่งเงียบ 1-3 นาที **ไม่ได้ค้าง** อย่ากด Ctrl+C
+   - ข้อความสีแดง `ERROR: logging before google.Init: I1005 ...` เป็นแค่ log ระดับ info ของ Go ไม่ใช่ error จริง
+   - ครั้งแรกที่เปิด `agy` จะเปิดเบราว์เซอร์ให้ login Google
+   - ติดตั้งแล้วที่เครื่องบ้าน 2026-10-05 (v1.2.17) · เครื่อง Office ติดตั้งไว้แล้วแต่ไม่ได้บันทึกวิธี
+   - ⚠️ ถ้าสั่งผ่านช่องพิมพ์ของ Claude Code คำสั่ง `irm ... | iex` อาจถูก auto mode บล็อก (`Code from External`) ให้รันเองใน PowerShell terminal
+
+   **8.1 ซิงค์ config** — หลัง `git pull` หากต้องการใช้งาน Antigravity CLI / Antigravity IDE บนเครื่องนั้น ให้รันสคริปต์นี้เพื่อตั้งค่า Skills (26 ตัว) + Rules + Persona เข้า `~/.gemini`:
    ```powershell
    powershell -ExecutionPolicy Bypass -File .\tools\sync-antigravity.ps1
    ```
@@ -52,8 +63,9 @@
    เมื่อเปิด `agy` ใน VS Code ให้รันคำสั่งนี้ในช่องแชท CLI เพียงครั้งเดียว:
    - **เครื่องบ้าน (`PC 4000D`):**
      ```bash
-     /statusline node "C:\Users\PC 4000D\A(i)CODER2025TH\claude-config\statusline.js"
+     /statusline node "C:\Users\PC 4000D\claude-config\statusline.js"
      ```
+     *(แก้ 2026-10-05: เดิมเขียน path เป็น `...\PC 4000D\A(i)CODER2025TH\claude-config\` ซึ่ง**ไม่มีอยู่จริง**บนเครื่องบ้าน — repo อยู่ที่ `C:\Users\PC 4000D\claude-config`)*
    - **เครื่อง Office (`26007294`):**
      ```bash
      /statusline node "C:\Users\26007294\A(i)CODER2025TH\claude-config\statusline.js"
