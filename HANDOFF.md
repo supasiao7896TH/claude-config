@@ -2,7 +2,7 @@
 
 > ใช้ไฟล์นี้ส่งต่องานข้ามเครื่อง (บ้าน ↔ ที่ทำงาน) — อ่านไฟล์นี้ก่อนเริ่ม session ถัดไป
 
-**อัปเดตล่าสุด:** 2026-10-05 (เครื่องบ้าน — ติดตั้ง `agy` v1.2.17 สำเร็จ, เพิ่มขั้นตอนติดตั้ง CLI + แก้ path `statusline.js` ของเครื่องบ้านที่เคยผิด · ก่อนหน้า: 2026-10-04 เครื่อง Office — เพิ่ม Antigravity CLI statusline renderer `statusline.js` แสดง Real-time Quota/Context/Model พร้อมวิธีเปิดใช้งาน · ก่อนหน้า: 2026-10-03 setup & sync script)
+**อัปเดตล่าสุด:** 2026-10-05 (เครื่อง Office — แยก gemini-config เป็น Standalone Repo อิสระเด็ดขาดจาก claude-config · เครื่องบ้าน: ติดตั้ง agy v1.2.17 สำเร็จ + แก้ path statusline.js · ก่อนหน้า: 2026-10-04 statusline.js · 2026-10-03 sync script)
 
 ---
 
@@ -70,6 +70,16 @@
      ```bash
      /statusline node "C:\Users\26007294\A(i)CODER2025TH\claude-config\statusline.js"
      ```
+
+10. **🆕 ขั้นตอนใหม่ 2026-10-05 — แยก `gemini-config` เป็น Standalone Repo (ป้องกันปนกับ `claude-config` & กู้ชีพฉุกเฉิน)**
+    การตั้งค่า Antigravity / Gemini CLI ทั้งหมดถูกแยกออกเป็นอิสระอยู่ที่ repo:
+    👉 **https://github.com/supasiao7896TH/gemini-config**
+    เมื่อสลับไปเครื่องบ้าน (`PC 4000D`) หรือย้ายเครื่องใหม่/ข้อมูลหาย ให้รันคำสั่งนี้:
+    ```powershell
+    git clone https://github.com/supasiao7896TH/gemini-config.git "$env:USERPROFILE\A(i)CODER2025TH\gemini-config"
+    powershell -ExecutionPolicy Bypass -File "$env:USERPROFILE\A(i)CODER2025TH\gemini-config\setup-junctions.ps1"
+    ```
+    *(สคริปต์จะผูก Directory Junction ให้ `~/.gemini/config/skills` และ Plugins ชี้เข้า repo ทันที แก้ไข/อัปเดตอะไรจะซิงค์ผ่าน Git แยกจาก Claude Code เด็ดขาด 100%)*
 
 ---
 
