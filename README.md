@@ -139,8 +139,31 @@ Copy-Item "$env:USERPROFILE\claude-config\settings.json" "$env:USERPROFILE\.clau
 ไฟล์นี้มีอะไรบ้าง:
 - **`permissions.deny`** — กันไม่ให้ Claude อ่านไฟล์ secret โดยไม่ตั้งใจ (`.env`, `secrets/**`, `*.pem`, `*.key`) แม้จะสั่ง "อ่านทุกไฟล์ในโปรเจกต์" ก็ตาม
 - **`hooks.SessionStart`** — `git pull --ff-only` อัตโนมัติที่ `claude-config` ทุกครั้งที่เปิด session ใหม่ กันลืม pull ก่อนเริ่มงาน เช็กทั้ง 2 path (`~\claude-config` และ `~\A(i)CODER2025TH\claude-config`) และ pull เฉพาะที่มีอยู่จริง · hook เรียก `tools/sync-pull.ps1` (ถ้าเครื่องนั้นยังไม่มีไฟล์นี้ จะถอยไปใช้ `git pull --ff-only` ธรรมดา) สคริปต์นี้จดผลทุกครั้งลง **`~/.claude/sync.log`** (เวลา · OK/FAIL · exit code · บรรทัดแรกของข้อความจาก git — เก็บ 200 บรรทัดล่าสุด ไฟล์อยู่ในเครื่อง ไม่อยู่ใน repo) เงียบเมื่อ "Already up to date", พิมพ์ `[sync-pull] updated: …` เมื่อมี commit ใหม่เข้ามา และพิมพ์ `[sync-pull] git pull FAILED …` เมื่อล้มเหลว (เห็นตอนเปิด session) — ออกด้วย exit 0 เสมอ จึงไม่ทำให้ session เปิดไม่ได้ · `npm run doctor` อ่านบรรทัดล่าสุดของ log แล้วเตือนถ้าเป็น FAIL · ทดสอบแล้วว่า remote เข้าไม่ได้และโฟลเดอร์ที่ไม่ใช่ repo ถูกจับเป็น FAIL; ยังไม่ได้ทดสอบกรณี branch แยกทางจริง (ควรได้ FAIL เพราะ `--ff-only`) และบนเครื่องที่ทำงาน
-- **`hooks.Stop` / `UserPromptSubmit` / `Notification`** — เสียงแจ้งเตือน Start/Stop/ขออนุมัติ permission ผ่าน Windows TTS
+- **`hooks.PreToolUse` (security gate)** — ก่อน `Bash`/`PowerShell`/`Write`/`Edit` ทุกครั้ง `tools/security-gate.ps1` จะ **ถามพี่ A ก่อน** ถ้าคำสั่งแตะไฟล์ secret (`cat .env`, `*.pem`, `credentials.json` ฯลฯ — `permissions.deny` ด้านบนกันได้แค่ tool `Read` ไม่กัน Bash) หรือเป็นคำสั่งทำลายล้าง/ย้อนยาก (`git push --force`, `git reset --hard`, `git clean -f`, `rm -rf` ยกเว้น `node_modules`/`dist`/`build`, `DROP TABLE`, `npm publish`, `irm … | iex` ฯลฯ) · ผลลัพธ์เป็น **ask เสมอ ไม่ใช่ block** พี่ A กดอนุญาตได้ · ถ้าสคริปต์อ่าน input ไม่ได้จะ **ปล่อยผ่าน (fail-open)** เพื่อไม่ให้ session ใช้ไม่ได้ · พิสูจน์ว่ากฎยังทำงาน: `Test-ClaudeGate` หรือ `powershell -File tools/test-security-gate.ps1` (30 เคส + 3 กรณี fail-open) · แก้กฎแล้วต้องรันเทสต์นี้เสมอ
+- **`hooks.Stop` / `UserPromptSubmit` / `Notification`** — เสียงแจ้งเตือน Start/Stop/ขออนุมัติ permission ผ่าน Windows TTS (ใช้ `SAPI.SpVoice` ไม่ใช่ `System.Speech` เพราะไม่ต้องโหลด assembly ทุกครั้ง จึงเร็วกว่า)
 - **`enabledPlugins` / `extraKnownMarketplaces`** — plugin ที่ติดตั้งไว้ (⚠️ ตัว plugin เองไม่ sync ผ่าน git ต้องรัน `/plugin install` ซ้ำที่เครื่องใหม่ — ดูหัวข้อด้านล่าง ไฟล์นี้แค่บันทึกว่าเปิดใช้ตัวไหนอยู่)
+
+## เครื่องมือช่วยงาน (tools/)
+
+| สคริปต์ | ใช้ทำอะไร | หมายเหตุ |
+|---|---|---|
+| `tools/security-gate.ps1` | PreToolUse hook ถามก่อนแตะ secret / คำสั่งทำลายล้าง | ต่อสายใน `settings.json` · `check:standards` ตรวจว่าต่อสายจริง |
+| `tools/test-security-gate.ps1` | ทดสอบ gate 30 เคส + 3 กรณี fail-open | exit 1 ถ้ามีเคสผิด |
+| `tools/new-vibe-project.ps1` | สร้างโปรเจกต์ใหม่จาก `design-lab/starter-multifile` ในคำสั่งเดียว | ไม่ทับโฟลเดอร์ที่มีของ · ไม่ `npm install`/deploy ให้ · ใส่ `CLAUDE.md` + `AGENTS.md` + first commit |
+| `tools/bootstrap.ps1` | กู้สภาพแวดล้อม Claude Code บนเครื่องใหม่ | `-DryRun` ดูก่อนได้ · ไม่ลบอะไร (ของเดิมย้ายเป็น `.bak-<เวลา>`) · ไม่ทับ `settings.json` ที่มีอยู่ |
+| `tools/powershell-profile-snippet.ps1` | คำสั่งลัด `c`, `Sync-Claude`, `Doctor-Claude`, `Test-ClaudeGate`, `New-VibeProject` | dot-source เข้า `$PROFILE` (วิธีอยู่ในหัวไฟล์) |
+
+> สคริปต์ `.ps1` ทุกตัวเป็น **ASCII ล้วน** โดยตั้งใจ — Windows PowerShell 5.1 อ่านไฟล์ไม่มี BOM เป็น ANSI ภาษาไทยจะเพี้ยน `check:standards` ข้อ 9 บังคับให้
+
+### MCP: Firebase (ทางเลือก — ติดตั้งเองต่อเครื่อง)
+
+`vibe-coding-firebase` skill ใช้คู่กับ Firebase MCP ได้ ค่า MCP ของ Claude Code เก็บใน `~/.claude.json` (ไม่ sync ผ่าน repo) จึงต้องเพิ่มเองทีละเครื่อง:
+
+```powershell
+claude mcp add firebase -- npx -y firebase-tools@15.33.0 mcp
+```
+
+pin เวอร์ชันไว้โดยตั้งใจ (ไม่ใช้ `@latest`) — เวอร์ชันล่าสุด ณ 2026-10-10 ตาม `npm view firebase-tools version` · อัปเดตเมื่อพร้อมทดสอบ · ไม่ได้ติดตั้ง `server-puppeteer` เพราะ Claude มี Chrome extension อยู่แล้ว
 
 ## รายการ Skills (26 ตัว)
 
@@ -291,7 +314,7 @@ npm run check   # lint + secret scan + ตรวจความสอดคล�
 
 ### `tools/check-standards.mjs` ตรวจอะไร
 
-กฎที่เคยเป็นแค่ข้อความใน markdown ตอนนี้ทำให้ CI แดงได้จริง 8 ข้อ:
+กฎที่เคยเป็นแค่ข้อความใน markdown ตอนนี้ทำให้ CI แดงได้จริง 10 ข้อ:
 
 1. ไม่มีคำที่ตกยุค (`Sarabun`, `Instrument Grade`, `.pulse-dot` ฯลฯ) หลงเหลือใน skills/agents/design-lab
    — บรรทัดที่ *สั่งห้าม* ของเก่าถูกยกเว้นให้ · `REVIEW.md`/`HANDOFF.md`/`design-lab/README.md`
@@ -306,6 +329,8 @@ npm run check   # lint + secret scan + ตรวจความสอดคล�
    (ตรวจแค่ "ตรงกัน" ไม่ตรึงว่าต้องเป็นเลขอะไร ไม่งั้น linter จะตกยุคเองแทน)
 8. `.gitattributes` มีอยู่พร้อม `eol=lf` ทั้งที่ root และ `design-lab/starter/`
    (กันปัญหา CRLF บน Windows ที่เจอจริง 2026-09-02 — ดู HANDOFF.md)
+9. `tools/security-gate.ps1` ถูกเรียกจาก `settings.json › hooks.PreToolUse` จริง (matcher ครอบ `Bash`) และ `tools/*.ps1` ทุกตัวเป็น ASCII ล้วน
+10. `agents/*.md` ทุกตัวมีบุคลิก `หนู` / `ค่ะ` / `พี่ A` (subagent ไม่การันตีว่า inherit กฎจาก CLAUDE.md)
 
 **pre-commit hook** (`.husky/pre-commit`) รัน prettier + secretlint + check-standards
 ให้อัตโนมัติก่อน commit — ตั้งใจให้เร็วกว่า 3 วินาที ของหนักปล่อยให้ CI รัน

@@ -306,6 +306,55 @@ const skillDirs = existsSync(join(ROOT, "skills"))
   check(".gitattributes บังคับ eol=lf ทั้ง root และ starter ทั้ง 2 ตัว", problems);
 }
 
+/* ── 9 · security gate ต้องต่อสายจริง และสคริปต์ PowerShell ต้องเป็น ASCII ──
+   ทำไม: gate ที่มีไฟล์แต่ไม่ถูกเรียกจาก settings.json = ความรู้สึกปลอดภัยปลอมๆ
+   และ Windows PowerShell 5.1 อ่านไฟล์ที่ไม่มี BOM เป็น ANSI — ภาษาไทยในสคริปต์
+   จะกลายเป็นขยะ แล้ว regex/ข้อความพังแบบเงียบๆ (sync-pull.ps1 เขียนเตือนไว้แล้ว) */
+{
+  const problems = [];
+  const gate = join(ROOT, "tools", "security-gate.ps1");
+  if (!existsSync(gate)) problems.push("ไม่พบ tools/security-gate.ps1");
+  try {
+    const settings = JSON.parse(read(join(ROOT, "settings.json")));
+    const pre = settings.hooks?.PreToolUse ?? [];
+    const wired = pre.some(
+      (e) =>
+        /Bash/.test(e.matcher ?? "") &&
+        (e.hooks ?? []).some((h) => /security-gate\.ps1/.test(h.command ?? ""))
+    );
+    if (!wired)
+      problems.push(
+        "settings.json › hooks.PreToolUse ไม่ได้เรียก security-gate.ps1 (matcher ต้องครอบ Bash)"
+      );
+  } catch (err) {
+    problems.push(`อ่าน settings.json ไม่ได้: ${err.message}`);
+  }
+  const toolsDir = join(ROOT, "tools");
+  for (const f of existsSync(toolsDir) ? readdirSync(toolsDir) : []) {
+    if (!f.endsWith(".ps1")) continue;
+    const bytes = readFileSync(join(toolsDir, f));
+    if (bytes.some((b) => b > 127))
+      problems.push(`tools/${f} มีตัวอักษรที่ไม่ใช่ ASCII (PowerShell 5.1 จะอ่านเพี้ยน)`);
+  }
+  check("security-gate ต่อสายใน settings.json · tools/*.ps1 เป็น ASCII ล้วน", problems);
+}
+
+/* ── 10 · subagent ทุกตัวต้องมี persona (หนู/ค่ะ/พี่ A) ─────────────────────
+   ทำไม: subagent ได้ system prompt ของตัวเอง ไม่รับประกันว่าจะ inherit กฎบุคลิกจาก
+   CLAUDE.md — เขียนซ้ำไว้ในตัว agent เองคือทางเดียวที่ไม่ต้องเดา */
+{
+  const problems = [];
+  const dir = join(ROOT, "agents");
+  for (const f of existsSync(dir) ? readdirSync(dir) : []) {
+    if (!f.endsWith(".md")) continue;
+    const t = read(join(dir, f));
+    for (const word of ["หนู", "ค่ะ", "พี่ A"]) {
+      if (!t.includes(word)) problems.push(`agents/${f} ไม่มีคำว่า "${word}"`);
+    }
+  }
+  check("agents/*.md ทุกตัวมี persona หนู/ค่ะ/พี่ A", problems);
+}
+
 console.log(
   failures === 0
     ? "\nผ่านทุกข้อ — repo สอดคล้องกับมาตรฐานตัวเอง"

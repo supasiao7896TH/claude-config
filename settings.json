@@ -30,12 +30,24 @@
         ]
       }
     ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash|PowerShell|Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "shell": "powershell",
+            "command": "$p = \"$env:USERPROFILEclaude-config\"; if (-not (Test-Path $p)) { $p = \"$env:USERPROFILEA(i)CODER2025THclaude-config\" }; $g = \"$p\toolssecurity-gate.ps1\"; if (Test-Path $g) { & $g }"
+          }
+        ]
+      }
+    ],
     "Stop": [
       {
         "hooks": [
           {
             "type": "command",
-            "command": "Add-Type -AssemblyName System.Speech; (New-Object System.Speech.Synthesis.SpeechSynthesizer).Speak('Stop')",
+            "command": "(New-Object -ComObject SAPI.SpVoice).Speak('Stop') | Out-Null",
             "shell": "powershell"
           }
         ]
@@ -46,7 +58,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "Add-Type -AssemblyName System.Speech; (New-Object System.Speech.Synthesis.SpeechSynthesizer).Speak('Start')",
+            "command": "(New-Object -ComObject SAPI.SpVoice).Speak('Start') | Out-Null",
             "shell": "powershell"
           }
         ]
@@ -58,7 +70,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "Add-Type -AssemblyName System.Speech; (New-Object System.Speech.Synthesis.SpeechSynthesizer).Speak('Please approve')",
+            "command": "(New-Object -ComObject SAPI.SpVoice).Speak('Please approve') | Out-Null",
             "shell": "powershell"
           }
         ]
