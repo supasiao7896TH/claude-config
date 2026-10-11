@@ -43,6 +43,8 @@
 | drift 2 repo | `npm run doctor` มีหัวข้อ "gemini-config drift" เทียบ `USER.md` + skills/agents ที่ชื่อซ้ำ |
 | เครื่องบ้าน | หลัง `git pull` ทั้ง 2 repo → รัน `setup-junctions.ps1` (path ของ hook/statusline/mcp ถูกคำนวณตามเครื่อง) · `$PROFILE` ของเครื่องบ้านต้องแก้เองให้เหมือนกัน (ไม่ได้อยู่ใน git) |
 
+**กับดักที่ 2 (เจอจริง 2026-10-11 หลัง push):** **Antigravity ไม่ตีความเครื่องหมายคำพูด** ใน `command` ของ hook/statusline — ส่งเป็นตัวอักษรจริงให้โปรแกรมปลายทาง ทำให้ `node "path"` และ `powershell -File "path"` พัง · ต้องเขียน path ไม่มี quote (path มีช่องว่าง → ใช้ชื่อสั้น 8.3) · และห้ามใช้ `cmd /c` ทดสอบ เพราะ cmd ตีความ quote ให้จนผลผ่านปลอม ดูรายละเอียดใน README ของ gemini-config
+
 **กับดักที่ต้องระวัง:** อย่าเขียน path แบบ `\tools\…` ตรงๆ ใน JSON/สคริปต์ที่ generate ผ่านเครื่องมือ — ทั้ง JSON และ Bash tool แปลง backslash ให้เพี้ยน (เจอซ้ำ 2 รอบในงานนี้) ให้ใช้ `Join-Path` หรือ `/` แล้วตรวจด้วย `npm run check:standards`
 
 **⚠️ ขั้นตอนเก่าด้านล่างที่ล้าสมัยแล้ว:** ข้อ 5 (`Copy-Item settings.json` ทับ → statusline หายและทับ plugin/autoMode ของเครื่อง ให้ merge แทน) · ข้อ 8–10 ที่เรียก `tools\sync-antigravity.ps1` ใช้ไม่ได้แล้ว → ใช้ `gemini-config\setup-junctions.ps1` (ดูข้อ 10) และ `tools\sync-vscode.ps1` สำหรับ VS Code
