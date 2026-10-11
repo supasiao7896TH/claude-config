@@ -19,7 +19,7 @@
 | `CLAUDE.md` โหลดซ้ำ | ต้นฉบับ global ย้ายไป **`global/CLAUDE.md`** (copy ไป `~/.claude/CLAUDE.md`) · `CLAUDE.md` ที่ root เหลือกฎเฉพาะ repo |
 | `doctor` | เพิ่ม: เทียบ `CLAUDE.md` global กับ `global/CLAUDE.md` · ❌ ถ้า gate ไม่ต่อสายใน `~/.claude/settings.json` |
 | เสียง "Start" | เอาออก (spawn PowerShell ทุก prompt ไม่ได้ข้อมูลใหม่) เหลือ Stop + Please approve |
-| Antigravity | ลบ `.geminiignore`, `tools/antigravity-*.json` (ซ้ำกับ `gemini-config`) · `sync-antigravity.ps1` → **`sync-vscode.ps1`** (เหลือเฉพาะ VS Code) · เก็บ `AGENTS.md` (scaffolder ใช้) และ `statusline.js` |
+| Antigravity | ลบ `.geminiignore`, `tools/antigravity-*.json` (ซ้ำกับ `gemini-config`) · `sync-antigravity.ps1` → **`sync-vscode.ps1`** (เหลือเฉพาะ VS Code) · เก็บ `AGENTS.md` (scaffolder ใช้) · `statusline.js` ย้ายไป `gemini-config/tools/` (ดูแถว `statusline.js` ด้านล่าง) |
 | ต้นทุน gate | วัดแล้ว ≈ **0.3 วินาที/tool call** (PowerShell เปล่า ≈ 0.19) |
 
 **ทำที่เครื่อง Office แล้ว (ไม่อยู่ใน git):** `~/.claude/settings.json` ใหม่ (ปิด plugin `github` ที่ MCP ล้ม 400) · ย้าย `autoMode` ของ Monitor ไป `D:\Monitor log sheet boardman\.claude\settings.local.json` · copy `global/CLAUDE.md` + `USER.md` · `npm run doctor` = ❌ 0 · ⚠️ 1 (`sync.log` จะมีหลังเปิด session ใหม่)

@@ -130,7 +130,7 @@ if (-not (Test-Path $settingsDst) -and (Test-Path $settingsSrc)) {
   Do-It 'install settings.json (statusLine path set for this user)' {
     $utf8 = New-Object System.Text.UTF8Encoding($false)
     $t = [IO.File]::ReadAllText($settingsSrc, [Text.Encoding]::UTF8)
-    $t = [regex]::Replace($t, '<[^>"]+>', $env:USERNAME)
+    $t = [regex]::Replace($t, '(?<=C:/Users/)<[^>/"]+>(?=/\.claude)', $env:USERNAME)
     [IO.File]::WriteAllText($settingsDst, $t, $utf8)
   }
   if (-not $DryRun) { Ok 'settings.json installed (hooks incl. security-gate)' }

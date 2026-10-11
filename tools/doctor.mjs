@@ -115,7 +115,22 @@ else add("fail", "CLAUDE.md", "สำเนาเก่า ไม่ตรงก
     );
   else if (/[\x00-\x1f]/.test(gateCmd))
     add("fail", "security gate", "command มีอักขระควบคุม (เช่น TAB จาก \\t) — path พัง gate เงียบ");
-  else add("ok", "security gate", "ต่อสายใน ~/.claude/settings.json");
+  else {
+    // the hook runs the gate only if it can find it: it tries these two folders, in this order
+    const candidates = [
+      join(homedir(), "claude-config"),
+      join(homedir(), "A(i)CODER2025TH", "claude-config")
+    ];
+    const repoDir = candidates.find((d) => existsSync(d));
+    const gateFile = repoDir ? join(repoDir, "tools", "security-gate.ps1") : null;
+    if (!gateFile || !existsSync(gateFile))
+      add(
+        "fail",
+        "security gate",
+        `hook ต่อสายแล้วแต่ไม่พบ tools/security-gate.ps1 ใน ${candidates.join(" หรือ ")} — gate จะเงียบ`
+      );
+    else add("ok", "security gate", `ต่อสายใน ~/.claude/settings.json และพบ ${gateFile}`);
+  }
 }
 
 // 4d) ไฟล์ที่ถือ 2 สำเนา (claude-config ↔ gemini-config): เตือนเมื่อเนื้อหาไม่ตรงกัน
