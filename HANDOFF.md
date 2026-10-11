@@ -2,7 +2,40 @@
 
 > ใช้ไฟล์นี้ส่งต่องานข้ามเครื่อง (บ้าน ↔ ที่ทำงาน) — อ่านไฟล์นี้ก่อนเริ่ม session ถัดไป
 
-**อัปเดตล่าสุด:** 2026-10-05 (เครื่อง Office — แยก gemini-config เป็น Standalone Repo อิสระเด็ดขาดจาก claude-config · เครื่องบ้าน: ติดตั้ง agy v1.2.17 สำเร็จ + แก้ path statusline.js · ก่อนหน้า: 2026-10-04 statusline.js · 2026-10-03 sync script)
+**อัปเดตล่าสุด:** 2026-10-11 (เครื่อง Office — แก้ security gate ที่พังเงียบ + ล้างค่าซ้ำ/ล้าสมัยของ config · commit `c60c80a` · ก่อนหน้า: 2026-10-05 แยก gemini-config เป็น Standalone Repo · 2026-10-04 statusline.js · 2026-10-03 sync script)
+
+---
+
+## 🆕 รอบ 2026-10-11 — ตรวจ config แล้วแก้ (อ่านก่อนหัวข้ออื่น)
+
+**ทำไม:** ตรวจ commit `3bf7844` แล้วพบว่า security gate ไม่เคยทำงานจริง และไฟล์ global ใน `~/.claude/` ล้าสมัยขัดกับ repo
+
+**แก้แล้ว (commit `c60c80a`, push แล้ว):**
+
+| เรื่อง | สิ่งที่เปลี่ยน |
+|---|---|
+| Security gate พัง | path ใน `settings.json` มี `\t` (JSON ตีเป็น TAB) → `Test-Path` เท็จ → ปล่อยผ่านเงียบทุกคำสั่ง · แก้เป็น `Join-Path` |
+| ตรวจไม่เจอเพราะ | `check-standards` ข้อ 9 แค่ regex หาชื่อไฟล์ · ตอนนี้ **รัน command จริง** บน HOME จำลอง 2 โครงสร้าง (ทดสอบแล้วว่าจับบั๊กเดิมได้) |
+| `CLAUDE.md` โหลดซ้ำ | ต้นฉบับ global ย้ายไป **`global/CLAUDE.md`** (copy ไป `~/.claude/CLAUDE.md`) · `CLAUDE.md` ที่ root เหลือกฎเฉพาะ repo |
+| `doctor` | เพิ่ม: เทียบ `CLAUDE.md` global กับ `global/CLAUDE.md` · ❌ ถ้า gate ไม่ต่อสายใน `~/.claude/settings.json` |
+| เสียง "Start" | เอาออก (spawn PowerShell ทุก prompt ไม่ได้ข้อมูลใหม่) เหลือ Stop + Please approve |
+| Antigravity | ลบ `.geminiignore`, `tools/antigravity-*.json` (ซ้ำกับ `gemini-config`) · `sync-antigravity.ps1` → **`sync-vscode.ps1`** (เหลือเฉพาะ VS Code) · เก็บ `AGENTS.md` (scaffolder ใช้) และ `statusline.js` |
+| ต้นทุน gate | วัดแล้ว ≈ **0.3 วินาที/tool call** (PowerShell เปล่า ≈ 0.19) |
+
+**ทำที่เครื่อง Office แล้ว (ไม่อยู่ใน git):** `~/.claude/settings.json` ใหม่ (ปิด plugin `github` ที่ MCP ล้ม 400) · ย้าย `autoMode` ของ Monitor ไป `D:\Monitor log sheet boardman\.claude\settings.local.json` · copy `global/CLAUDE.md` + `USER.md` · `npm run doctor` = ❌ 0 · ⚠️ 1 (`sync.log` จะมีหลังเปิด session ใหม่)
+
+**ที่ต้องทำต่อ:**
+
+| เมื่อไหร่ | ทำอะไร |
+|---|---|
+| เปิด session ใหม่บนเครื่อง Office | gate เริ่มทำงานจริง (session ที่แก้โหลด hook ไปก่อนแล้ว) · `sync.log` ถูกสร้าง |
+| **เครื่องบ้าน** | `git pull` → `tools\bootstrap.ps1 -DryRun` ดูก่อน แล้วรันจริง · bootstrap copy `global\CLAUDE.md` + `USER.md` ให้ แต่**ไม่ทับ `settings.json`** → ต้อง merge `hooks.PreToolUse` (+ ลบ `UserPromptSubmit`, ปิด `github` plugin) เอง แล้ว `npm run doctor` ต้องไม่มี ❌ |
+| เมื่อสะดวก | `/code-review` ใน **fresh session** กับ `c60c80a` (Code Review Gate ยังไม่ได้ทำ) |
+| หลังใช้ 2–3 วันไม่มีปัญหา | ลบ `~/.claude/backups/config-fix-20261011-082614/` (เก็บเฉพาะเครื่อง Office) |
+
+**กับดักที่ต้องระวัง:** อย่าเขียน path แบบ `\tools\…` ตรงๆ ใน JSON/สคริปต์ที่ generate ผ่านเครื่องมือ — ทั้ง JSON และ Bash tool แปลง backslash ให้เพี้ยน (เจอซ้ำ 2 รอบในงานนี้) ให้ใช้ `Join-Path` หรือ `/` แล้วตรวจด้วย `npm run check:standards`
+
+**⚠️ ขั้นตอนเก่าด้านล่างที่ล้าสมัยแล้ว:** ข้อ 5 (`Copy-Item settings.json` ทับ → statusline หายและทับ plugin/autoMode ของเครื่อง ให้ merge แทน) · ข้อ 8–10 ที่เรียก `tools\sync-antigravity.ps1` ใช้ไม่ได้แล้ว → ใช้ `gemini-config\setup-junctions.ps1` (ดูข้อ 10) และ `tools\sync-vscode.ps1` สำหรับ VS Code
 
 ---
 
