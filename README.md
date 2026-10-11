@@ -143,6 +143,16 @@ Copy-Item "$env:USERPROFILE\claude-config\settings.json" "$env:USERPROFILE\.clau
 - **`hooks.Stop` / `Notification`** — เสียงแจ้งเตือน Stop/ขออนุมัติ permission ผ่าน Windows TTS (ใช้ `SAPI.SpVoice` ไม่ใช่ `System.Speech` เพราะไม่ต้องโหลด assembly ทุกครั้ง จึงเร็วกว่า) · **ไม่มีเสียง Start แล้ว** (เอาออก 2026-10-11: spawn PowerShell ทุกครั้งที่ส่ง prompt แต่ไม่ได้ข้อมูลใหม่ — รู้อยู่แล้วว่าเพิ่งกด Enter)
 - **`enabledPlugins` / `extraKnownMarketplaces`** — plugin ที่ติดตั้งไว้ (⚠️ ตัว plugin เองไม่ sync ผ่าน git ต้องรัน `/plugin install` ซ้ำที่เครื่องใหม่ — ดูหัวข้อด้านล่าง ไฟล์นี้แค่บันทึกว่าเปิดใช้ตัวไหนอยู่)
 
+## เจ้าของไฟล์ — ใช้คู่กับ Antigravity CLI (กันสองเครื่องมือทับกัน)
+
+| ตำแหน่ง | เจ้าของ (เขียนได้ผู้เดียว) | ฝั่งนี้ต้อง |
+|---|---|---|
+| `~/.claude/**` (settings.json, CLAUDE.md, USER.md, statusline.ps1, skills/, agents/) | **claude-config** (`tools/bootstrap.ps1`) | — |
+| `~/.gemini/**`, `~/GEMINI.md`, shortcut Startup ของ logbook | **gemini-config** (`setup-junctions.ps1`) | **ห้ามเขียน/ลบ** — `tools/sync-antigravity.ps1` ถูกถอดออกเพราะเหตุนี้ |
+| VS Code `settings.json` / `keybindings.json` | **claude-config** (`tools/sync-vscode.ps1`) | — |
+
+กฎ: (1) สคริปต์ห้าม `Remove-Item` / `Copy-Item -Force` ลงโฟลเดอร์ของอีกฝั่ง (2) **ก่อนเปลี่ยนชื่อ/ย้ายไฟล์ที่อีกฝั่งอ่านอยู่ ให้ `grep` ใน `gemini-config` ก่อน** — เคยพลาดมาแล้ว: การแยก `global/CLAUDE.md` ทำให้ `gemini-config/bootstrap.ps1` (ที่ copy `CLAUDE.md` ที่ root ทับ global) เกือบลบกฎส่วนกลาง · แก้แล้วโดยให้ bootstrap นั้นเรียก `tools/bootstrap.ps1` ของ repo นี้แทน (3) ห้ามใส่ HOME หรือ `~/.claude` ใน `trustedWorkspaces` ของ Antigravity (4) `bootstrap.ps1` ของ repo นี้ต้องรันได้เอง (`-SkipWinget` ให้ผู้เรียกจาก gemini-config ข้ามการติดตั้งเครื่องมือซ้ำ)
+
 ## เครื่องมือช่วยงาน (tools/)
 
 | สคริปต์ | ใช้ทำอะไร | หมายเหตุ |
