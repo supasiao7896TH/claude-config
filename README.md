@@ -92,10 +92,10 @@ Copy-Item "$env:USERPROFILE\claude-config\statusline.ps1" "$env:USERPROFILE\.cla
 
 ### วิธีติดตั้ง CLAUDE.md (Global preferences)
 
-`CLAUDE.md` เป็นไฟล์เดี่ยวเหมือน `statusline.ps1` — ใช้วิธี **copy** เช่นกัน (ไม่ auto-sync):
+ต้นฉบับอยู่ที่ **`global/CLAUDE.md`** (ส่วน `CLAUDE.md` ที่ root เป็นกฎเฉพาะ repo นี้ ไม่ใช่ตัวที่ copy — แยกกันเพื่อไม่ให้ Claude โหลดเนื้อหาเดียวกันซ้ำ 2 รอบ) เป็นไฟล์เดี่ยวเหมือน `statusline.ps1` — ใช้วิธี **copy** (ไม่ auto-sync):
 
 ```powershell
-Copy-Item "$env:USERPROFILE\claude-config\CLAUDE.md" "$env:USERPROFILE\.claude\CLAUDE.md" -Force
+Copy-Item "$env:USERPROFILE\claude-config\global\CLAUDE.md" "$env:USERPROFILE\.claude\CLAUDE.md" -Force
 ```
 
 ไฟล์นี้เก็บ preference ที่ apply กับทุก project เช่น communication style (ตอนนี้คือ 70% Thai / 30% English) — Claude Code จะ load ไฟล์นี้อัตโนมัติทุก session ไม่ว่าจะเปิด project ไหนก็ตาม
@@ -139,8 +139,8 @@ Copy-Item "$env:USERPROFILE\claude-config\settings.json" "$env:USERPROFILE\.clau
 ไฟล์นี้มีอะไรบ้าง:
 - **`permissions.deny`** — กันไม่ให้ Claude อ่านไฟล์ secret โดยไม่ตั้งใจ (`.env`, `secrets/**`, `*.pem`, `*.key`) แม้จะสั่ง "อ่านทุกไฟล์ในโปรเจกต์" ก็ตาม
 - **`hooks.SessionStart`** — `git pull --ff-only` อัตโนมัติที่ `claude-config` ทุกครั้งที่เปิด session ใหม่ กันลืม pull ก่อนเริ่มงาน เช็กทั้ง 2 path (`~\claude-config` และ `~\A(i)CODER2025TH\claude-config`) และ pull เฉพาะที่มีอยู่จริง · hook เรียก `tools/sync-pull.ps1` (ถ้าเครื่องนั้นยังไม่มีไฟล์นี้ จะถอยไปใช้ `git pull --ff-only` ธรรมดา) สคริปต์นี้จดผลทุกครั้งลง **`~/.claude/sync.log`** (เวลา · OK/FAIL · exit code · บรรทัดแรกของข้อความจาก git — เก็บ 200 บรรทัดล่าสุด ไฟล์อยู่ในเครื่อง ไม่อยู่ใน repo) เงียบเมื่อ "Already up to date", พิมพ์ `[sync-pull] updated: …` เมื่อมี commit ใหม่เข้ามา และพิมพ์ `[sync-pull] git pull FAILED …` เมื่อล้มเหลว (เห็นตอนเปิด session) — ออกด้วย exit 0 เสมอ จึงไม่ทำให้ session เปิดไม่ได้ · `npm run doctor` อ่านบรรทัดล่าสุดของ log แล้วเตือนถ้าเป็น FAIL · ทดสอบแล้วว่า remote เข้าไม่ได้และโฟลเดอร์ที่ไม่ใช่ repo ถูกจับเป็น FAIL; ยังไม่ได้ทดสอบกรณี branch แยกทางจริง (ควรได้ FAIL เพราะ `--ff-only`) และบนเครื่องที่ทำงาน
-- **`hooks.PreToolUse` (security gate)** — ก่อน `Bash`/`PowerShell`/`Write`/`Edit` ทุกครั้ง `tools/security-gate.ps1` จะ **ถามพี่ A ก่อน** ถ้าคำสั่งแตะไฟล์ secret (`cat .env`, `*.pem`, `credentials.json` ฯลฯ — `permissions.deny` ด้านบนกันได้แค่ tool `Read` ไม่กัน Bash) หรือเป็นคำสั่งทำลายล้าง/ย้อนยาก (`git push --force`, `git reset --hard`, `git clean -f`, `rm -rf` ยกเว้น `node_modules`/`dist`/`build`, `DROP TABLE`, `npm publish`, `irm … | iex` ฯลฯ) · ผลลัพธ์เป็น **ask เสมอ ไม่ใช่ block** พี่ A กดอนุญาตได้ · ถ้าสคริปต์อ่าน input ไม่ได้จะ **ปล่อยผ่าน (fail-open)** เพื่อไม่ให้ session ใช้ไม่ได้ · พิสูจน์ว่ากฎยังทำงาน: `Test-ClaudeGate` หรือ `powershell -File tools/test-security-gate.ps1` (30 เคส + 3 กรณี fail-open) · แก้กฎแล้วต้องรันเทสต์นี้เสมอ
-- **`hooks.Stop` / `UserPromptSubmit` / `Notification`** — เสียงแจ้งเตือน Start/Stop/ขออนุมัติ permission ผ่าน Windows TTS (ใช้ `SAPI.SpVoice` ไม่ใช่ `System.Speech` เพราะไม่ต้องโหลด assembly ทุกครั้ง จึงเร็วกว่า)
+- **`hooks.PreToolUse` (security gate)** — ก่อน `Bash`/`PowerShell`/`Write`/`Edit` ทุกครั้ง `tools/security-gate.ps1` จะ **ถามพี่ A ก่อน** ถ้าคำสั่งแตะไฟล์ secret (`cat .env`, `*.pem`, `credentials.json` ฯลฯ — `permissions.deny` ด้านบนกันได้แค่ tool `Read` ไม่กัน Bash) หรือเป็นคำสั่งทำลายล้าง/ย้อนยาก (`git push --force`, `git reset --hard`, `git clean -f`, `rm -rf` ยกเว้น `node_modules`/`dist`/`build`, `DROP TABLE`, `npm publish`, `irm … | iex` ฯลฯ) · ต้นทุนที่วัดจริง (2026-10-11): ≈ **0.3 วินาทีต่อ tool call** (PowerShell เปล่าๆ ≈ 0.19 วินาที) · `check:standards` ข้อ 9 **รัน command จาก settings.json จริง** บน HOME จำลอง 2 โครงสร้าง ไม่ใช่แค่ regex หาชื่อไฟล์ (เคยพังเงียบเพราะ `\t` ใน JSON เป็น TAB) · ผลลัพธ์เป็น **ask เสมอ ไม่ใช่ block** พี่ A กดอนุญาตได้ · ถ้าสคริปต์อ่าน input ไม่ได้จะ **ปล่อยผ่าน (fail-open)** เพื่อไม่ให้ session ใช้ไม่ได้ · พิสูจน์ว่ากฎยังทำงาน: `Test-ClaudeGate` หรือ `powershell -File tools/test-security-gate.ps1` (30 เคส + 3 กรณี fail-open) · แก้กฎแล้วต้องรันเทสต์นี้เสมอ
+- **`hooks.Stop` / `Notification`** — เสียงแจ้งเตือน Stop/ขออนุมัติ permission ผ่าน Windows TTS (ใช้ `SAPI.SpVoice` ไม่ใช่ `System.Speech` เพราะไม่ต้องโหลด assembly ทุกครั้ง จึงเร็วกว่า) · **ไม่มีเสียง Start แล้ว** (เอาออก 2026-10-11: spawn PowerShell ทุกครั้งที่ส่ง prompt แต่ไม่ได้ข้อมูลใหม่ — รู้อยู่แล้วว่าเพิ่งกด Enter)
 - **`enabledPlugins` / `extraKnownMarketplaces`** — plugin ที่ติดตั้งไว้ (⚠️ ตัว plugin เองไม่ sync ผ่าน git ต้องรัน `/plugin install` ซ้ำที่เครื่องใหม่ — ดูหัวข้อด้านล่าง ไฟล์นี้แค่บันทึกว่าเปิดใช้ตัวไหนอยู่)
 
 ## เครื่องมือช่วยงาน (tools/)
@@ -151,6 +151,7 @@ Copy-Item "$env:USERPROFILE\claude-config\settings.json" "$env:USERPROFILE\.clau
 | `tools/test-security-gate.ps1` | ทดสอบ gate 30 เคส + 3 กรณี fail-open | exit 1 ถ้ามีเคสผิด |
 | `tools/new-vibe-project.ps1` | สร้างโปรเจกต์ใหม่จาก `design-lab/starter-multifile` ในคำสั่งเดียว | ไม่ทับโฟลเดอร์ที่มีของ · ไม่ `npm install`/deploy ให้ · ใส่ `CLAUDE.md` + `AGENTS.md` + first commit |
 | `tools/bootstrap.ps1` | กู้สภาพแวดล้อม Claude Code บนเครื่องใหม่ | `-DryRun` ดูก่อนได้ · ไม่ลบอะไร (ของเดิมย้ายเป็น `.bak-<เวลา>`) · ไม่ทับ `settings.json` ที่มีอยู่ |
+| `tools/sync-vscode.ps1` | ใส่ `vscode-settings.json` + `keybindings.json` เข้า VS Code เครื่องนี้ | merge ทับเฉพาะ key ที่กำหนด · ของ Gemini/Antigravity ย้ายไป repo `gemini-config` แล้ว (ไม่เก็บที่นี่) |
 | `tools/powershell-profile-snippet.ps1` | คำสั่งลัด `c`, `Sync-Claude`, `Doctor-Claude`, `Test-ClaudeGate`, `New-VibeProject` | dot-source เข้า `$PROFILE` (วิธีอยู่ในหัวไฟล์) |
 
 > สคริปต์ `.ps1` ทุกตัวเป็น **ASCII ล้วน** โดยตั้งใจ — Windows PowerShell 5.1 อ่านไฟล์ไม่มี BOM เป็น ANSI ภาษาไทยจะเพี้ยน `check:standards` ข้อ 9 บังคับให้
@@ -357,7 +358,7 @@ git pull && npm run doctor
 | `USER.md` เป็น symlink หรือสำเนาตรงกับ repo | ❌ | |
 | สำเนา skill บน claude.ai ล้าสมัยหรือไม่ | ⚠️ | ดูหัวข้อถัดไป |
 
-**ไม่ตรวจ `CLAUDE.md`** — ฉบับ repo ตัดข้อความเฉพาะเครื่องออกโดยตั้งใจ จึงต่างจากฉบับในเครื่องเสมอ
+**`CLAUDE.md` (global)** เทียบกับ `global/CLAUDE.md` — ❌ ถ้าสำเนาเก่า · **security gate** ❌ ถ้า `~/.claude/settings.json` ไม่มี PreToolUse หรือ command มีอักขระควบคุม (เช่น TAB)
 
 **ทดสอบได้แค่เครื่องที่รัน** — `doctor` บอกไม่ได้ว่าเครื่องอื่นเป็นอย่างไร ต้องรันบนแต่ละเครื่องเอง
 

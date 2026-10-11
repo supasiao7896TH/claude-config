@@ -114,7 +114,8 @@ foreach ($name in @('skills', 'agents')) {
 }
 
 foreach ($f in @('CLAUDE.md', 'USER.md', 'statusline.ps1')) {
-  $src = Join-Path $repo $f
+  # repo-root CLAUDE.md holds repo-only rules; the global one lives in global/CLAUDE.md
+  $src = if ($f -eq 'CLAUDE.md') { Join-Path (Join-Path $repo 'global') $f } else { Join-Path $repo $f }
   if (-not (Test-Path $src)) { continue }
   $dst = Join-Path $claudeHome $f
   if ((Test-Path $dst) -and ((Get-FileHash $src).Hash -eq (Get-FileHash $dst).Hash)) { Ok "$f already up to date"; continue }

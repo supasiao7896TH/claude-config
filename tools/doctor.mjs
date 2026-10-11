@@ -4,7 +4,7 @@
 //
 // เทียบ ~/.claude กับ claude-config โดยข้ามสิ่งที่ต่างตามเครื่องโดยออกแบบ:
 //   - settings.json: ข้าม statusLine (path ตาม username) และ model
-//   - CLAUDE.md: ไม่เทียบ (ฉบับ repo ตัดข้อความเฉพาะเครื่องออกโดยตั้งใจ)
+//   - CLAUDE.md: เทียบ ~/.claude/CLAUDE.md กับ global/CLAUDE.md (CLAUDE.md ที่ root เป็นกฎเฉพาะ repo)
 // และเทียบสำเนา skill บน claude.ai กับสมุดบัญชี claude-ai-skills.json (ดูหัวข้อ 5 ด้านล่าง)
 // ปรับปรุงเมื่อ 2569-10-02 ตามที่ README บันทึกไว้ว่า settings.json/statusline.ps1 ต้อง copy มือ
 
@@ -90,6 +90,33 @@ else if (lstatSync(homeUser).isSymbolicLink()) add("ok", "USER.md", "เป็�
 else if (readText(homeUser) === readText(join(repo, "USER.md")))
   add("ok", "USER.md", "สำเนาตรงกับ repo (ต้อง copy ใหม่ทุกครั้งที่แก้)");
 else add("fail", "USER.md", "สำเนาเก่า ไม่ตรงกับ repo");
+
+// 4b) CLAUDE.md (global) ต้องตรงกับ global/CLAUDE.md — ถ้าเก่า Claude ทุกโปรเจกต์จะได้กฎที่ล้าสมัย
+const homeClaude = join(home, "CLAUDE.md");
+const repoGlobalClaude = join(repo, "global", "CLAUDE.md");
+if (!existsSync(homeClaude)) add("fail", "CLAUDE.md", "ไม่พบ");
+else if (!existsSync(repoGlobalClaude)) add("warn", "CLAUDE.md", "ไม่พบ global/CLAUDE.md ใน repo");
+else if (readText(homeClaude) === readText(repoGlobalClaude))
+  add("ok", "CLAUDE.md", "สำเนาตรงกับ global/CLAUDE.md");
+else add("fail", "CLAUDE.md", "สำเนาเก่า ไม่ตรงกับ global/CLAUDE.md — copy ใหม่ (ดู README)");
+
+// 4c) security gate ต้องต่อสายในเครื่องนี้จริง และ command ต้องไม่มีอักขระควบคุม (\t จาก JSON escape ผิด)
+{
+  const hs = existsSync(homeSettingsPath) ? readJson(homeSettingsPath) : {};
+  const gateCmd = (hs.hooks?.PreToolUse ?? [])
+    .flatMap((e) => e.hooks ?? [])
+    .map((h) => h.command ?? "")
+    .find((c) => /security-gate\.ps1/.test(c));
+  if (!gateCmd)
+    add(
+      "fail",
+      "security gate",
+      "ไม่มี PreToolUse hook ใน ~/.claude/settings.json — gate ไม่ทำงาน"
+    );
+  else if (/[\x00-\x1f]/.test(gateCmd))
+    add("fail", "security gate", "command มีอักขระควบคุม (เช่น TAB จาก \\t) — path พัง gate เงียบ");
+  else add("ok", "security gate", "ต่อสายใน ~/.claude/settings.json");
+}
 
 // 5) สำเนา skill บน claude.ai: อัปโหลดมือ จึงเทียบวัน commit ล่าสุดของ skill กับวันในสมุดบัญชี
 //    (claude-ai-skills.json) — เตือนเมื่อ repo ใหม่กว่า แต่ไม่เห็นเนื้อหาฝั่ง claude.ai จริง

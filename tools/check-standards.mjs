@@ -10,7 +10,18 @@
  * Exit code 1 เมื่อเจอปัญหาข้อใดข้อหนึ่ง — ใช้ gate commit/CI ได้
  */
 
-import { readFileSync, readdirSync, existsSync, statSync } from "node:fs";
+import {
+  readFileSync,
+  readdirSync,
+  existsSync,
+  statSync,
+  mkdtempSync,
+  mkdirSync,
+  copyFileSync,
+  rmSync
+} from "node:fs";
+import { spawnSync } from "node:child_process";
+import { tmpdir } from "node:os";
 import { resolve, dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -326,6 +337,41 @@ const skillDirs = existsSync(join(ROOT, "skills"))
       problems.push(
         "settings.json › hooks.PreToolUse ไม่ได้เรียก security-gate.ps1 (matcher ต้องครอบ Bash)"
       );
+
+    /* รันคำสั่งใน settings.json จริงบน HOME จำลอง (2 โครงสร้างโฟลเดอร์ที่ hook รองรับ)
+       แล้วต้องได้ "ask" กลับมา — จับบั๊ก escape (\t ใน JSON = TAB) ที่ regex ข้างบนมองไม่เห็น
+       ข้ามเงียบๆ ถ้าเครื่องนี้ไม่มี powershell (เช่น CI บน Linux) */
+    const entry = pre.find((e) => /Bash/.test(e.matcher ?? ""));
+    const cmd = entry?.hooks?.find((h) => /security-gate\.ps1/.test(h.command ?? ""))?.command;
+    if (wired && cmd && existsSync(gate)) {
+      const payload = JSON.stringify({
+        tool_name: "Bash",
+        tool_input: { command: "git reset --hard" }
+      });
+      for (const nested of [false, true]) {
+        const home = mkdtempSync(join(tmpdir(), "gate-home-"));
+        try {
+          const repoDir = nested
+            ? join(home, "A(i)CODER2025TH", "claude-config")
+            : join(home, "claude-config");
+          mkdirSync(join(repoDir, "tools"), { recursive: true });
+          copyFileSync(gate, join(repoDir, "tools", "security-gate.ps1"));
+          const r = spawnSync("powershell", ["-NoProfile", "-NonInteractive", "-Command", cmd], {
+            input: payload,
+            encoding: "utf8",
+            env: { ...process.env, USERPROFILE: home },
+            timeout: 20000
+          });
+          if (r.error?.code === "ENOENT") break; // ไม่มี powershell บนเครื่องนี้ → ข้าม
+          if (!/"permissionDecision"\s*:\s*"ask"/.test(r.stdout ?? ""))
+            problems.push(
+              `hook PreToolUse รันจริงแล้วไม่ถาม (โครงสร้าง ${nested ? "A(i)CODER2025TH/claude-config" : "claude-config"}) — path ใน command พัง? stdout=${JSON.stringify((r.stdout ?? "").slice(0, 80))} stderr=${JSON.stringify((r.stderr ?? "").slice(0, 80))}`
+            );
+        } finally {
+          rmSync(home, { recursive: true, force: true });
+        }
+      }
+    }
   } catch (err) {
     problems.push(`อ่าน settings.json ไม่ได้: ${err.message}`);
   }

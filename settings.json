@@ -37,7 +37,7 @@
           {
             "type": "command",
             "shell": "powershell",
-            "command": "$p = \"$env:USERPROFILEclaude-config\"; if (-not (Test-Path $p)) { $p = \"$env:USERPROFILEA(i)CODER2025THclaude-config\" }; $g = \"$p\toolssecurity-gate.ps1\"; if (Test-Path $g) { & $g }"
+            "command": "$r = $env:USERPROFILE; $p = Join-Path $r 'claude-config'; if (-not (Test-Path $p)) { $p = Join-Path (Join-Path $r 'A(i)CODER2025TH') 'claude-config' }; $g = Join-Path $p 'tools/security-gate.ps1'; if (Test-Path $g) { & $g }"
           }
         ]
       }
@@ -48,17 +48,6 @@
           {
             "type": "command",
             "command": "(New-Object -ComObject SAPI.SpVoice).Speak('Stop') | Out-Null",
-            "shell": "powershell"
-          }
-        ]
-      }
-    ],
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "(New-Object -ComObject SAPI.SpVoice).Speak('Start') | Out-Null",
             "shell": "powershell"
           }
         ]
@@ -79,7 +68,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "powershell -NoProfile -File \"C:/Users/<ชื่อ user บนเครื่องนี้>/.claude/statusline.ps1\""
+    "command": "powershell -NoProfile -ExecutionPolicy Bypass -File \"C:/Users/<ชื่อ user บนเครื่องนี้>/.claude/statusline.ps1\""
   },
   "enabledPlugins": {
     "github@claude-plugins-official": false,
