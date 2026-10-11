@@ -150,6 +150,9 @@ Copy-Item "$env:USERPROFILE\claude-config\settings.json" "$env:USERPROFILE\.clau
 | `~/.claude/**` (settings.json, CLAUDE.md, USER.md, statusline.ps1, skills/, agents/) | **claude-config** (`tools/bootstrap.ps1`) | — |
 | `~/.gemini/**`, `~/GEMINI.md`, shortcut Startup ของ logbook | **gemini-config** (`setup-junctions.ps1`) | **ห้ามเขียน/ลบ** — `tools/sync-antigravity.ps1` ถูกถอดออกเพราะเหตุนี้ |
 | VS Code `settings.json` / `keybindings.json` | **claude-config** (`tools/sync-vscode.ps1`) | — |
+| `tools/powershell-profile-snippet.ps1` (`c`, `Sync-Claude`, `Doctor-Claude`, `Test-ClaudeGate`, `New-VibeProject`) | **claude-config** — `$PROFILE` โหลดผ่าน dot-source และ **ห้ามนิยามชื่อเหล่านี้ซ้ำใน `$PROFILE`** (ตัวหลังชนะเงียบๆ) | `a`, `Sync-Gemini`, `Doctor-Gemini` เป็นของ gemini-config |
+| `design-lab/starter-multifile` + ตัวสร้างโปรเจกต์ | **claude-config** | gemini-config ถือสำเนา · `npm run doctor` เทียบ `USER.md` + skills ที่ชื่อซ้ำ + agents (ไม่นับบรรทัด `model:` และชื่อ repo ในเส้นทาง) แล้วเตือนเมื่อไม่ตรง |
+| statusline ของ Antigravity (`statusline.js`) | **gemini-config** (`tools/statusline.js`) | claude-config ถอดสำเนาออกแล้ว |
 
 กฎ: (1) สคริปต์ห้าม `Remove-Item` / `Copy-Item -Force` ลงโฟลเดอร์ของอีกฝั่ง (2) **ก่อนเปลี่ยนชื่อ/ย้ายไฟล์ที่อีกฝั่งอ่านอยู่ ให้ `grep` ใน `gemini-config` ก่อน** — เคยพลาดมาแล้ว: การแยก `global/CLAUDE.md` ทำให้ `gemini-config/bootstrap.ps1` (ที่ copy `CLAUDE.md` ที่ root ทับ global) เกือบลบกฎส่วนกลาง · แก้แล้วโดยให้ bootstrap นั้นเรียก `tools/bootstrap.ps1` ของ repo นี้แทน (3) ห้ามใส่ HOME หรือ `~/.claude` ใน `trustedWorkspaces` ของ Antigravity (4) `bootstrap.ps1` ของ repo นี้ต้องรันได้เอง (`-SkipWinget` ให้ผู้เรียกจาก gemini-config ข้ามการติดตั้งเครื่องมือซ้ำ)
 

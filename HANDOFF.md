@@ -33,6 +33,16 @@
 | เมื่อสะดวก | `/code-review` ใน **fresh session** กับ `c60c80a` (Code Review Gate ยังไม่ได้ทำ) |
 | หลังใช้ 2–3 วันไม่มีปัญหา | ลบ `~/.claude/backups/config-fix-20261011-082614/` (เก็บเฉพาะเครื่อง Office) |
 
+**ต่อยอดวันเดียวกัน — Claude Code ↔ Antigravity อยู่ร่วมกัน:** ตรวจแล้วแก้ 4 ข้อ (gemini-config `34224aa`) + เก็บกวาดที่เหลือ ดูตารางเจ้าของไฟล์ใน README ทั้ง 2 repo
+
+| เรื่อง | ผล |
+|---|---|
+| `$PROFILE` (อยู่บน OneDrive) | ชื่อ `c`/`Sync-Claude`/`New-VibeProject` ซ้ำกับ snippet ของ claude-config → ให้ `$PROFILE` dot-source snippet แล้วลบนิยามซ้ำ · เหลือ `a`, `Sync-Gemini`, `Doctor-Gemini` ใน `$PROFILE` · ทดสอบแล้วทุกคำสั่งมีเจ้าของเดียว |
+| `statusline.js` ของ Antigravity | เดิมเป็นไฟล์นอก repo (`A(i)CODER2025TH\statusline.js`) → ย้ายเข้า `gemini-config/tools/statusline.js` (ตรวจแล้วเหมือนของเดิมหลัง prettier) · ลบสำเนาออกจาก claude-config · `settings.json` ของ agy ชี้ผ่าน junction · ไฟล์เดิมนอก repo **ยังไม่ได้ลบ** |
+| `mcp_config.json` | ไม่มี BOM · pin `firebase-tools@15.33.0`, `server-puppeteer@2025.5.12` · ⚠️ `server-puppeteer` ถูก npm ติดป้าย "no longer supported" |
+| drift 2 repo | `npm run doctor` มีหัวข้อ "gemini-config drift" เทียบ `USER.md` + skills/agents ที่ชื่อซ้ำ |
+| เครื่องบ้าน | หลัง `git pull` ทั้ง 2 repo → รัน `setup-junctions.ps1` (path ของ hook/statusline/mcp ถูกคำนวณตามเครื่อง) · `$PROFILE` ของเครื่องบ้านต้องแก้เองให้เหมือนกัน (ไม่ได้อยู่ใน git) |
+
 **กับดักที่ต้องระวัง:** อย่าเขียน path แบบ `\tools\…` ตรงๆ ใน JSON/สคริปต์ที่ generate ผ่านเครื่องมือ — ทั้ง JSON และ Bash tool แปลง backslash ให้เพี้ยน (เจอซ้ำ 2 รอบในงานนี้) ให้ใช้ `Join-Path` หรือ `/` แล้วตรวจด้วย `npm run check:standards`
 
 **⚠️ ขั้นตอนเก่าด้านล่างที่ล้าสมัยแล้ว:** ข้อ 5 (`Copy-Item settings.json` ทับ → statusline หายและทับ plugin/autoMode ของเครื่อง ให้ merge แทน) · ข้อ 8–10 ที่เรียก `tools\sync-antigravity.ps1` ใช้ไม่ได้แล้ว → ใช้ `gemini-config\setup-junctions.ps1` (ดูข้อ 10) และ `tools\sync-vscode.ps1` สำหรับ VS Code
