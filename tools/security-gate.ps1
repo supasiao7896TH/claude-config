@@ -94,6 +94,7 @@ $rules = @(
   @{ re = 'wrangler\s+(delete|secret\s+delete)\b';                             why = 'deletes a Cloudflare Worker/secret' },
   @{ re = 'gh\s+repo\s+(delete|edit\b[^\n;|]*--visibility)';                   why = 'changes or deletes a GitHub repo' },
   @{ re = 'npm\s+publish\b';                                                   why = 'npm publish is public and hard to undo' },
+  @{ re = '\bSet-ExecutionPolicy\b';                                           why = 'changes the PowerShell execution policy (persistent security setting)' },
   @{ re = '\b(curl|wget|irm|iwr|Invoke-WebRequest|Invoke-RestMethod)\b[^\n;]*\|\s*(sh|bash|iex|Invoke-Expression)\b'; why = 'pipes a remote script straight into a shell' }
 )
 foreach ($r in $rules) {
