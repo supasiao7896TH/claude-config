@@ -118,6 +118,82 @@ else add("fail", "CLAUDE.md", "สำเนาเก่า ไม่ตรงก
   else add("ok", "security gate", "ต่อสายใน ~/.claude/settings.json");
 }
 
+// 4d) ไฟล์ที่ถือ 2 สำเนา (claude-config ↔ gemini-config): เตือนเมื่อเนื้อหาไม่ตรงกัน
+//     ต้นฉบับอยู่ที่ claude-config · agents ต่างกันได้เฉพาะบรรทัด `model:` (sonnet vs flash)
+{
+  const sibling = resolve(repo, "..", "gemini-config");
+  if (!existsSync(join(sibling, "skills"))) {
+    add("ok", "gemini-config drift", "ไม่พบ ../gemini-config บนเครื่องนี้ — ข้าม");
+  } else {
+    // ชื่อ repo ในเส้นทางอ้างอิง (`gemini-config/design-lab/...`) ปรับตามเจ้าของ repo ได้โดยตั้งใจ
+    // จึงเทียบหลังแปลงเป็นชื่อเดียวกัน — ไม่นับเป็น drift
+    const text = (p, dropModel = false) => {
+      const t = readText(p).replace(/gemini-config\//g, "claude-config/");
+      return dropModel ? t.replace(/^model:.*$/m, "model: -") : t;
+    };
+    const files = (dir, base = dir, out = []) => {
+      for (const e of readdirSync(dir, { withFileTypes: true })) {
+        if (e.name === "node_modules" || e.name === ".git") continue;
+        const full = join(dir, e.name);
+        if (e.isDirectory()) files(full, base, out);
+        else
+          out.push(
+            full
+              .slice(base.length + 1)
+              .split("\\")
+              .join("/")
+          );
+      }
+      return out;
+    };
+    const diffs = [];
+    const same = (a, b, label, dropModel = false) => {
+      const ea = existsSync(a);
+      const eb = existsSync(b);
+      if (ea !== eb) diffs.push(`${label} (มีแค่ฝั่ง ${ea ? "claude-config" : "gemini-config"})`);
+      else if (ea && text(a, dropModel) !== text(b, dropModel))
+        diffs.push(`${label} (เนื้อหาต่าง)`);
+    };
+
+    same(join(repo, "USER.md"), join(sibling, "USER.md"), "USER.md");
+
+    const skillNames = (d) =>
+      existsSync(d)
+        ? readdirSync(d, { withFileTypes: true })
+            .filter((e) => e.isDirectory() && e.name !== "synced")
+            .map((e) => e.name)
+        : [];
+    const theirSkills = new Set(skillNames(join(sibling, "skills")));
+    const sharedSkills = skillNames(join(repo, "skills")).filter((n) => theirSkills.has(n));
+    for (const n of sharedSkills) {
+      const a = join(repo, "skills", n);
+      const b = join(sibling, "skills", n);
+      for (const f of new Set([...files(a), ...files(b)]))
+        same(join(a, f), join(b, f), `skills/${n}/${f}`);
+    }
+
+    const agentFiles = (d) =>
+      existsSync(d) ? readdirSync(d).filter((f) => f.endsWith(".md")) : [];
+    const theirAgents = new Set(agentFiles(join(sibling, "agents")));
+    const sharedAgents = agentFiles(join(repo, "agents")).filter((f) => theirAgents.has(f));
+    for (const f of sharedAgents)
+      same(join(repo, "agents", f), join(sibling, "agents", f), `agents/${f}`, true);
+
+    if (diffs.length === 0)
+      add(
+        "ok",
+        "gemini-config drift",
+        `USER.md + ${sharedSkills.length} skills + ${sharedAgents.length} agents ตรงกัน (agents เทียบโดยไม่นับ model:)`
+      );
+    else
+      add(
+        "warn",
+        "gemini-config drift",
+        `${diffs.length} จุดไม่ตรงกัน (ต้นฉบับ = claude-config): ${diffs.slice(0, 6).join(" · ")}${diffs.length > 6 ? " …" : ""}`
+      );
+  }
+}
+
 // 5) สำเนา skill บน claude.ai: อัปโหลดมือ จึงเทียบวัน commit ล่าสุดของ skill กับวันในสมุดบัญชี
 //    (claude-ai-skills.json) — เตือนเมื่อ repo ใหม่กว่า แต่ไม่เห็นเนื้อหาฝั่ง claude.ai จริง
 const ledgerPath = join(repo, "claude-ai-skills.json");
