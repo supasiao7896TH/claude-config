@@ -315,10 +315,13 @@ VS Code extension เป็น UI wrapper ของ engine เดียวกั
 |---|---|
 | `a-guard` | ถามก่อน `git push` เข้า `main`/`master` (force-push ปล่อยให้ `security-gate.ps1` ดูแล) + status line `🏠 บ้าน · ✓ 0 ไม่ commit · ↑N ไม่ push` |
 
-ติดตั้งต่อเครื่อง **ครั้งเดียว** (ไม่ผ่าน junction เหมือน skills/agents) พิมพ์ใน terminal session:
+| `a-session` | ตอนเปิด session แสดงวันที่/เครื่องที่เขียน `HANDOFF.md` ล่าสุด (เตือน "อ่านก่อนเริ่ม" ถ้าเขียนจากอีกเครื่อง) + notification เมื่อ turn ยาว ≥ 60 วินาที (เสียง "Stop" เดิมใน `settings.json` ยังอยู่ — mod เล่นเสียงบน Windows ไม่ได้) |
+
+ติดตั้งต่อเครื่อง **ครั้งเดียวต่อ mod** (ไม่ผ่าน junction เหมือน skills/agents) พิมพ์ใน terminal session:
 
 ```
 /plugin install a-guard --marketplace supasiao7896TH/claude-config
+/plugin install a-session --marketplace supasiao7896TH/claude-config
 ```
 
 > ⚠️ **ข้อจำกัด:** ใน **auto mode** คำเตือน `ask` ถูกส่งให้ตัวตัดสินของโหมดจึงอาจไม่เด้งถาม

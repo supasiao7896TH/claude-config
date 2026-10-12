@@ -1,0 +1,6 @@
+{
+  "name": "a-session",
+  "version": "0.1.0",
+  "description": "On session start shows the last HANDOFF.md date and machine; after a long turn raises a native notification with its duration.",
+  "author": { "name": "Supasit A" }
+}

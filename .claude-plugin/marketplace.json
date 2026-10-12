@@ -7,6 +7,11 @@
       "name": "a-guard",
       "source": "./mods/a-guard",
       "description": "Asks before git push to main/master; shows machine + uncommitted/unpushed git state in a status line."
+    },
+    {
+      "name": "a-session",
+      "source": "./mods/a-session",
+      "description": "Shows the last HANDOFF.md date and machine on session start; native notification after a long turn."
     }
   ]
 }
