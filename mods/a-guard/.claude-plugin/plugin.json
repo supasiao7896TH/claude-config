@@ -1,0 +1,6 @@
+{
+  "name": "a-guard",
+  "version": "0.1.0",
+  "description": "Asks before git push to main/master; shows machine + uncommitted/unpushed git state in a status line.",
+  "author": { "name": "Supasit A" }
+}

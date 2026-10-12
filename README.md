@@ -309,6 +309,23 @@ VS Code extension เป็น UI wrapper ของ engine เดียวกั
 > ไม่ใช่การบังคับที่ tool level — อย่ารัน agent เหล่านี้ในโหมด auto-accept/bypass-permissions
 > ถ้าต้องการให้ขอบเขตนี้เข้มงวดจริง
 
+## Mods (`mods/`)
+
+| Mod | ทำอะไร |
+|---|---|
+| `a-guard` | ถามก่อน `git push` เข้า `main`/`master` (force-push ปล่อยให้ `security-gate.ps1` ดูแล) + status line `🏠 บ้าน · ✓ 0 ไม่ commit · ↑N ไม่ push` |
+
+ติดตั้งต่อเครื่อง **ครั้งเดียว** (ไม่ผ่าน junction เหมือน skills/agents) พิมพ์ใน terminal session:
+
+```
+/plugin install a-guard --marketplace supasiao7896TH/claude-config
+```
+
+> ⚠️ **ข้อจำกัด:** ใน **auto mode** คำเตือน `ask` ถูกส่งให้ตัวตัดสินของโหมดจึงอาจไม่เด้งถาม
+> (ยืนยันจากการใช้จริง 2569-10-12) ใช้เป็น "ตัวเตือน" ไม่ใช่กำแพงกัน — อย่าพึ่งตอน push ขึ้น production ใน auto mode
+>
+> mod ใช้ชื่อเครื่องจาก path (`26007294` = ที่ทำงาน · `PC 4000D` = บ้าน) ถ้า user บนเครื่องเปลี่ยนต้องแก้ `machineLabel` ใน `mods/a-guard/hooks/register.ts`
+
 ## Quality Gate (เฟส 0 — ติดตั้งแล้ว)
 
 repo นี้ตรวจตัวเองได้แล้ว ไม่ต้องพึ่งความจำ รันครั้งเดียวต่อเครื่อง:

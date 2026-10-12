@@ -1,0 +1,12 @@
+{
+  "name": "claude-config",
+  "owner": { "name": "Supasit A" },
+  "description": "Personal Claude Code mods by Supasit.A (A-Class WebCraft).",
+  "plugins": [
+    {
+      "name": "a-guard",
+      "source": "./mods/a-guard",
+      "description": "Asks before git push to main/master; shows machine + uncommitted/unpushed git state in a status line."
+    }
+  ]
+}
