@@ -2,11 +2,40 @@
 
 > ใช้ไฟล์นี้ส่งต่องานข้ามเครื่อง (บ้าน ↔ ที่ทำงาน) — อ่านไฟล์นี้ก่อนเริ่ม session ถัดไป
 
-**อัปเดตล่าสุด:** 2026-10-11 (เครื่อง Office — แก้ security gate ที่พังเงียบ + ล้างค่าซ้ำ/ล้าสมัยของ config · commit `c60c80a` · ก่อนหน้า: 2026-10-05 แยก gemini-config เป็น Standalone Repo · 2026-10-04 statusline.js · 2026-10-03 sync script)
+**อัปเดตล่าสุด:** 2026-10-12 (เครื่องบ้าน — เพิ่ม mods `a-guard` + `a-session` · commit `54c0f1e` · ก่อนหน้า: 2026-10-11 เครื่อง Office แก้ security gate ที่พังเงียบ + ล้างค่าซ้ำ/ล้าสมัยของ config `c60c80a` · 2026-10-05 แยก gemini-config เป็น Standalone Repo · 2026-10-04 statusline.js · 2026-10-03 sync script)
 
 ---
 
-## 🆕 รอบ 2026-10-11 — ตรวจ config แล้วแก้ (อ่านก่อนหัวข้ออื่น)
+## 🆕 รอบ 2026-10-12 — เพิ่ม Claude Code mods (`mods/`)
+
+**ทำไม:** Claude Code เปิดให้เขียน mod ได้ — เริ่มจากของที่เห็นผลทันทีและเสี่ยงต่ำ
+
+**ทำแล้ว (push แล้ว `5a5efca`, `54c0f1e`):**
+
+| Mod | ทำอะไร | ยืนยันในจอจริง |
+|---|---|---|
+| `a-guard` | ถามก่อน `git push` เข้า `main`/`master` (force-push ยังเป็นหน้าที่ `security-gate.ps1`) + status line `🏠 บ้าน · ✓ 0 ไม่ commit · ↑N ไม่ push` | ✅ status line · ✅ ถามก่อน push (ต้องไม่ใช่ auto mode) |
+| `a-session` | toast ตอนเปิด session บอกวันที่/เครื่องที่เขียน `HANDOFF.md` ล่าสุด + notification เมื่อ turn ≥ 60 วินาที | ✅ toast · ⏳ notification ยังไม่เคยเห็นจริง |
+
+**ที่ต้องทำต่อ:**
+
+| เมื่อไหร่ | ทำอะไร |
+|---|---|
+| **เครื่อง Office** | `git pull` แล้วพิมพ์ใน Claude Code: `/plugin install a-guard --marketplace supasiao7896TH/claude-config` และ `/plugin install a-session --marketplace supasiao7896TH/claude-config` · ถ้า status line แสดง `💻 <ชื่อ user>` แปลว่า path ไม่ตรง `26007294` → แก้ `machineLabel` ใน `mods/a-guard/hooks/register.ts` (และ `currentMachine` ใน `mods/a-session`) |
+| **เครื่องบ้าน** | ติดตั้งแบบถาวรด้วยคำสั่งเดียวกัน แล้วลบสำเนา `~/.claude/dev-mods/ffdb0863-…/a-guard` และ `a-session` (ไม่งั้นโหลดชื่อซ้ำ) |
+| เมื่อสั่งงานเกิน 1 นาที | เช็กว่า notification ขึ้นไหม · ถ้าได้แต่ toast = `preferredNotifChannel` ปิดอยู่ |
+| เมื่อสะดวก | `/code-review` ใน **fresh session** กับ `5a5efca` และ `54c0f1e` (Code Review Gate — ยังไม่ได้ทำ พี่ A ตัดสินข้ามเอง) |
+
+**ข้อจำกัดที่ต้องรู้:**
+
+- **auto mode ข้ามคำเตือน `ask`** ของ `a-guard` (ตัวตัดสินของโหมดตัดสินแทน) — ใช้เป็นตัวเตือน ไม่ใช่กำแพง
+- mod เล่นเสียงบน Windows ไม่ได้ (`$.audio.play` ไม่มี player) — เสียง "Stop"/"Please approve" ยังมาจาก hook เดิมใน `settings.json`
+- ยังไม่เคยติดตั้งผ่าน marketplace จาก GitHub จริง ถ้าเจอ `EBUSY` → `claude plugin marketplace add "<path ของ repo>"` (ดู Known Issues ใน `global/CLAUDE.md`)
+- `a-session` อ่านรูปแบบบรรทัด `**อัปเดตล่าสุด:** YYYY-MM-DD (เครื่อง …` ด้วย regex — **ห้ามเปลี่ยนรูปแบบบรรทัดนี้** ไม่งั้น toast จะบอกแค่ "อ่านวันที่ไม่ได้"
+
+---
+
+## รอบ 2026-10-11 — ตรวจ config แล้วแก้
 
 **ทำไม:** ตรวจ commit `3bf7844` แล้วพบว่า security gate ไม่เคยทำงานจริง และไฟล์ global ใน `~/.claude/` ล้าสมัยขัดกับ repo
 
